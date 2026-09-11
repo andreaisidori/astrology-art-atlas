@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { X, Plus, Trash2, Edit3, Save, Download, Copy, Check, Lock, Sparkles, Image, Compass, Calendar, Moon } from 'lucide-react';
 import { ZODIAC_SIGNS } from '../../utils/astronomy';
 
@@ -12,6 +12,9 @@ export default function AdminCuratorPanel({
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [passwordInput, setPasswordInput] = useState('');
   const [authError, setAuthError] = useState(false);
+  const [sliderProgress, setSliderProgress] = useState(0);
+  const sliderTrackRef = useRef(null);
+  const isDraggingSlider = useRef(false);
 
   // Selected artwork for editing or null for new
   const [editingArt, setEditingArt] = useState(null);
@@ -37,18 +40,69 @@ export default function AdminCuratorPanel({
     link_fonte: '',
   });
 
-  if (!isOpen) return null;
-
-  // Authentication check (Default password: warburg or aaa)
-  const handleLogin = (e) => {
-    e.preventDefault();
+  // Authentication check
+  const verifyPassword = () => {
     if (passwordInput === 'warburg' || passwordInput === 'aaa' || passwordInput === 'admin') {
       setIsAuthenticated(true);
       setAuthError(false);
+      setSliderProgress(100);
     } else {
       setAuthError(true);
+      setSliderProgress(0);
     }
   };
+
+  const handleLogin = (e) => {
+    if (e) e.preventDefault();
+    verifyPassword();
+  };
+
+  // Slider Drag & Swipe Logic
+  const handleSliderStart = (e) => {
+    isDraggingSlider.current = true;
+    updateSlider(e);
+  };
+
+  const updateSlider = (e) => {
+    if (!sliderTrackRef.current) return;
+    const rect = sliderTrackRef.current.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const offsetX = Math.max(0, Math.min(rect.width, clientX - rect.left));
+    const percent = Math.round((offsetX / rect.width) * 100);
+    setSliderProgress(percent);
+
+    if (percent >= 90) {
+      isDraggingSlider.current = false;
+      verifyPassword();
+    }
+  };
+
+  useEffect(() => {
+    const handleMove = (e) => {
+      if (!isDraggingSlider.current) return;
+      updateSlider(e);
+    };
+
+    const handleEnd = () => {
+      if (!isDraggingSlider.current) return;
+      isDraggingSlider.current = false;
+      setSliderProgress(prev => (prev >= 90 ? prev : 0));
+    };
+
+    window.addEventListener('mousemove', handleMove);
+    window.addEventListener('mouseup', handleEnd);
+    window.addEventListener('touchmove', handleMove);
+    window.addEventListener('touchend', handleEnd);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMove);
+      window.removeEventListener('mouseup', handleEnd);
+      window.removeEventListener('touchmove', handleMove);
+      window.removeEventListener('touchend', handleEnd);
+    };
+  }, [passwordInput]);
+
+  if (!isOpen) return null;
 
   // Start creating new artwork
   const handleStartNew = () => {
@@ -245,34 +299,75 @@ export default function AdminCuratorPanel({
 
         {/* Auth Barrier if not logged in */}
         {!isAuthenticated ? (
-          <div className="p-8 md:p-12 flex flex-col items-center justify-center my-auto text-center max-w-md mx-auto space-y-5">
-            <div className="w-14 h-14 rounded-2xl bg-zinc-900 border border-white/20 flex items-center justify-center text-zinc-300 shadow-xl">
-              <Lock className="w-6 h-6" />
+          <div className="p-8 md:p-12 flex flex-col items-center justify-center my-auto text-center max-w-md mx-auto space-y-6">
+            <div className="w-16 h-16 rounded-2xl bg-zinc-900 border border-white/20 flex items-center justify-center text-amber-300 shadow-2xl shadow-amber-500/10">
+              <Lock className="w-7 h-7" />
             </div>
-            <div className="space-y-1">
-              <h3 className="text-lg font-bold">Accesso Riservato Curatore</h3>
-              <p className="text-xs text-zinc-400">
-                Inserisci la password di amministrazione per modificare le anagrafiche, le opere e le coordinate 3D.
+            <div className="space-y-1.5">
+              <h3 className="text-xl font-bold tracking-tight">Curator Studio &bull; Accesso Riservato</h3>
+              <p className="text-xs text-zinc-400 leading-relaxed">
+                Area protetta per la gestione delle schede degli artisti, dei temi natali e delle coordinate tridimensionali.
               </p>
             </div>
-            <form onSubmit={handleLogin} className="w-full space-y-3">
-              <input
-                type="password"
-                placeholder="Password (es. warburg)"
-                value={passwordInput}
-                onChange={(e) => setPasswordInput(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl bg-black border border-white/20 text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400 text-center font-mono"
-                autoFocus
-              />
+            <form onSubmit={handleLogin} className="w-full space-y-4">
+              <div className="relative">
+                <input
+                  type="password"
+                  placeholder="Inserisci password di sicurezza"
+                  value={passwordInput}
+                  onChange={(e) => {
+                    setPasswordInput(e.target.value);
+                    setAuthError(false);
+                  }}
+                  className="w-full px-4 py-3 rounded-2xl bg-black/80 border border-white/20 text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent text-center font-mono placeholder:text-zinc-600 transition-all shadow-inner"
+                  autoFocus
+                />
+              </div>
+
               {authError && (
-                <p className="text-xs text-rose-400 font-mono">Password non corretta. Riprova.</p>
+                <p className="text-xs text-rose-400 font-mono animate-shake">
+                  Password non corretta. Verifica e riprova.
+                </p>
               )}
-              <button
-                type="submit"
-                className="w-full py-2.5 rounded-xl bg-white text-black font-medium text-sm hover:bg-zinc-200 transition-all shadow-md"
-              >
-                Accedi al Backend
-              </button>
+
+              {/* Interactive Swipe Captcha Slider */}
+              <div className="pt-2">
+                <div
+                  ref={sliderTrackRef}
+                  onMouseDown={handleSliderStart}
+                  onTouchStart={handleSliderStart}
+                  className="relative w-full h-12 rounded-2xl bg-zinc-900/90 border border-white/15 overflow-hidden flex items-center select-none cursor-pointer shadow-inner"
+                >
+                  {/* Fill progress track */}
+                  <div
+                    className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-amber-500/30 via-amber-400/40 to-amber-300/60 transition-all duration-75"
+                    style={{ width: `${Math.max(sliderProgress, 8)}%` }}
+                  />
+
+                  {/* Centered track instruction label */}
+                  <span
+                    className="absolute inset-0 flex items-center justify-center text-[11px] font-mono tracking-wider uppercase text-zinc-400 pointer-events-none transition-opacity duration-200"
+                    style={{ opacity: Math.max(0, 1 - sliderProgress / 60) }}
+                  >
+                    Trascina per verificare ➔
+                  </span>
+
+                  {/* Draggable handle knob */}
+                  <div
+                    className={`absolute top-1 bottom-1 w-10 rounded-xl bg-gradient-to-tr from-amber-400 to-amber-200 text-black flex items-center justify-center shadow-lg transition-transform duration-75 ${
+                      sliderProgress >= 95 ? 'bg-emerald-400 text-black' : ''
+                    }`}
+                    style={{
+                      left: `calc(${sliderProgress}% - ${(sliderProgress / 100) * 40}px)`,
+                    }}
+                  >
+                    <Lock className="w-4 h-4" />
+                  </div>
+                </div>
+                <p className="text-[10px] font-mono text-zinc-500 mt-2 text-center">
+                  Inserisci la password e trascina il cursore verso destra per sbloccare
+                </p>
+              </div>
             </form>
           </div>
         ) : (
