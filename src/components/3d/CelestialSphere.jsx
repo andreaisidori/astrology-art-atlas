@@ -136,23 +136,21 @@ export default function CelestialSphere({ activeSignId, onSelectSign, sphereRadi
               </Html>
             </group>
 
-            {/* 2. IN BASSO: Nome Latino Accentuato e Ben Visibile */}
+            {/* 2. IN BASSO: Nome Latino Ingrandito, Pulito e Arioso */}
             <group position={[x, -14, z]}>
               <Html center distanceFactor={45}>
                 <button
                   onClick={() => onSelectSign(sign.id)}
-                  title={`${sign.latin} (${sign.name}) &bull; ${sign.element}`}
-                  className={`pointer-events-auto cursor-pointer transition-all duration-300 flex flex-col items-center px-4 py-1.5 rounded-2xl backdrop-blur-md border shadow-2xl ${
+                  title={`${sign.latin} — Focus sulla costellazione`}
+                  className={`pointer-events-auto cursor-pointer transition-all duration-300 flex items-center justify-center px-5 py-2 rounded-2xl backdrop-blur-md border shadow-2xl ${
                     isActive
-                      ? 'bg-white/25 text-white border-white shadow-cyan-500/20 scale-110'
-                      : 'bg-black/80 hover:bg-black/95 text-white/90 hover:text-white border-white/30 hover:border-white/60'
+                      ? 'bg-white/30 text-white border-white shadow-cyan-400/30 scale-120'
+                      : 'bg-black/80 hover:bg-black/95 text-white/90 hover:text-white border-white/35 hover:border-white/80 hover:scale-105'
                   }`}
+                  style={{ borderColor: isActive ? sign.color : undefined }}
                 >
-                  <span className="font-bold text-xs md:text-sm tracking-widest uppercase font-mono text-white">
+                  <span className="font-serif text-sm md:text-base tracking-[0.25em] uppercase text-white font-medium drop-shadow-lg select-none">
                     {sign.latin}
-                  </span>
-                  <span className="text-[9px] font-mono text-zinc-400 tracking-wider">
-                    {sign.name} &bull; {sign.element}
                   </span>
                 </button>
               </Html>

@@ -67,8 +67,7 @@ export default function ArtworkModal({ artwork, onClose, onSelectSign, onSelectK
                   }}
                 >
                   <ZodiacGlyph sign={signInfo.id} className="w-4 h-4 text-white" />
-                  <span className="font-bold">{signInfo.latin}</span>
-                  <span className="opacity-60 text-[10px]">({signInfo.name} &bull; {signInfo.element})</span>
+                  <span className="font-bold tracking-widest">{signInfo.latin}</span>
                 </button>
               </div>
             )}
