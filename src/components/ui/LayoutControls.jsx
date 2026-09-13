@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Layers, Clock, Palette, Sparkles, Eye, Square, ChevronDown, SlidersHorizontal } from 'lucide-react';
+import { Layers, Clock, Palette, Sparkles, Eye, Square, ChevronUp, SlidersHorizontal } from 'lucide-react';
 
 export default function LayoutControls({
   currentMode,
@@ -17,41 +17,39 @@ export default function LayoutControls({
     { id: 'chromatic', label: 'Cromatico', icon: Palette, desc: 'Spettro delle tinte dominanti' },
   ];
 
-  const currentModeLabel = modes.find(m => m.id === currentMode)?.label || 'Manuale';
-
   return (
-    <div className="fixed top-20 right-4 md:right-8 z-20 pointer-events-auto w-60 sm:w-64 font-mono select-none">
-      <div className="rounded-2xl bg-black/85 backdrop-blur-2xl border border-white/20 shadow-2xl overflow-hidden transition-all duration-300">
-        {/* Accordion / Header Bar */}
+    <div className="fixed top-20 right-4 md:right-8 z-20 pointer-events-auto font-mono select-none flex flex-col items-end">
+      {/* If collapsed: only the settings logo button */}
+      {isCollapsed ? (
         <button
-          onClick={() => setIsCollapsed(prev => !prev)}
-          className="w-full flex items-center justify-between px-3.5 py-2.5 bg-zinc-900/60 hover:bg-white/10 transition-colors border-b border-white/10 text-left"
-          title={isCollapsed ? 'Espandi pannello controlli vista' : 'Comprimi pannello controlli vista'}
+          type="button"
+          onClick={() => setIsCollapsed(false)}
+          title="Parametri e Controlli Vista"
+          className="p-3 rounded-2xl bg-black/85 hover:bg-black border border-white/20 text-amber-400 hover:text-amber-300 shadow-2xl backdrop-blur-2xl transition-all duration-300 hover:scale-105 active:scale-95 group focus:outline-none"
         >
-          <div className="flex items-center gap-2">
-            <SlidersHorizontal className="w-3.5 h-3.5 text-amber-400" />
-            <span className="text-[11px] font-mono font-bold tracking-wider text-white uppercase">
-              Controlli Vista
-            </span>
-          </div>
-
-          <div className="flex items-center gap-1.5">
-            {isCollapsed && (
-              <span className="text-[9px] font-mono text-zinc-400 bg-white/10 px-1.5 py-0.5 rounded">
-                {showImages ? 'Opere' : 'Sagome'} • {currentModeLabel.split(' ')[0]}
-              </span>
-            )}
-            <ChevronDown
-              className={`w-4 h-4 text-white/70 transition-transform duration-300 ${
-                isCollapsed ? '-rotate-90' : 'rotate-0'
-              }`}
-            />
-          </div>
+          <SlidersHorizontal className="w-5 h-5 transition-transform duration-300 group-hover:rotate-45" />
         </button>
+      ) : (
+        /* Expanded Card collapsing vertically */
+        <div className="w-60 sm:w-64 rounded-2xl bg-black/85 backdrop-blur-2xl border border-white/20 shadow-2xl overflow-hidden transition-all duration-300 animate-fadeIn">
+          {/* Header Bar: Only the settings logo on the left + collapse button on the right (NO text title) */}
+          <div className="flex items-center justify-between px-3.5 py-2.5 bg-zinc-900/70 border-b border-white/10">
+            <div className="flex items-center gap-2 text-amber-400">
+              <SlidersHorizontal className="w-4 h-4" />
+            </div>
 
-        {/* Collapsible Body */}
-        {!isCollapsed && (
-          <div className="p-3 space-y-3 animate-fadeIn">
+            <button
+              type="button"
+              onClick={() => setIsCollapsed(true)}
+              className="p-1 rounded-lg hover:bg-white/10 text-white/70 hover:text-white transition-colors focus:outline-none"
+              title="Comprimi pannello controlli"
+            >
+              <ChevronUp className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Controls Body */}
+          <div className="p-3 space-y-3">
             {/* 1. Toggle Mostra Opere / Sagome */}
             <div className="flex items-center justify-between gap-2 p-2 rounded-xl bg-white/[0.04] border border-white/10">
               <div className="flex items-center gap-2">
@@ -72,6 +70,7 @@ export default function LayoutControls({
 
               {/* Toggle Switch */}
               <button
+                type="button"
                 onClick={onToggleShowImages}
                 title={showImages ? 'Disattiva immagini per massima fluidità' : 'Carica e visualizza le immagini delle opere'}
                 className={`relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
@@ -100,6 +99,7 @@ export default function LayoutControls({
                   return (
                     <button
                       key={m.id}
+                      type="button"
                       onClick={() => onSelectMode(m.id)}
                       title={m.desc}
                       className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-mono transition-all text-left ${
@@ -143,8 +143,8 @@ export default function LayoutControls({
               </div>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

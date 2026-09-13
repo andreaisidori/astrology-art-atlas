@@ -135,15 +135,17 @@ export default function App() {
     setTargetFlightSign(null);
   };
 
-  // Handle Left / Right Arrow Rotation
-  const handleRotateLeft = (speed = 0.25) => {
-    setManualRotateVelocity(-speed);
-    setTimeout(() => setManualRotateVelocity(0), 100);
+  // Handle Left / Right Arrow Rotation (Left turns view left, Right turns view right)
+  const handleRotateLeft = (speed = 0.65) => {
+    setManualRotateVelocity(speed);
   };
 
-  const handleRotateRight = (speed = 0.25) => {
-    setManualRotateVelocity(speed);
-    setTimeout(() => setManualRotateVelocity(0), 100);
+  const handleRotateRight = (speed = 0.65) => {
+    setManualRotateVelocity(-speed);
+  };
+
+  const handleStopRotate = () => {
+    setManualRotateVelocity(0);
   };
 
   if (loading) {
@@ -235,6 +237,7 @@ export default function App() {
           <NavigationArrows
             onRotateLeft={handleRotateLeft}
             onRotateRight={handleRotateRight}
+            onStopRotate={handleStopRotate}
           />
 
           {/* Spatial Layout Controls (Warburg / Chrono / Chromatic + Magnitude Slider + Mostra Opere Toggle) */}
