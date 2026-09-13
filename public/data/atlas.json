@@ -20,7 +20,7 @@
     "descrizione": "Atlante mnemotecnico e archivio dinamico in 3D per l'immaginario artistico contemporaneo.",
     "ispirazione": "Aby Warburg — Bilderatlas Mnemosyne",
     "totale_artisti": 174,
-    "aggiornato_il": "2026-09-13T15:52:16.933Z"
+    "aggiornato_il": "2026-09-13T15:52:39.033Z"
   },
   "opere": [
     {
@@ -4249,7 +4249,14 @@
       "link_fonte": "",
       "data_nascita": "26 January 1945",
       "anno_morte": "",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "posizione_manuale": {
+        "x": 17.25,
+        "y": -12.92,
+        "z": -46.1
+      },
+      "scala": 1.95,
+      "dimensione": 1.95
     },
     {
       "id": "jackson_pollock_146",
