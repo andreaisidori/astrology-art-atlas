@@ -16,6 +16,7 @@ import ArtworkNode from './components/3d/ArtworkNode';
 import ConstellationLines from './components/3d/ConstellationLines';
 import NavigationArrows from './components/ui/NavigationArrows';
 import ZoomControls from './components/ui/ZoomControls';
+import BackgroundMusic from './components/audio/BackgroundMusic';
 import CameraController from './components/3d/CameraController';
 import { getCurrentMoonPosition } from './utils/astronomy';
 import { computeArtworkPositions } from './utils/layouts';
@@ -282,8 +283,12 @@ export default function App() {
             onToggleShowImages={() => setShowImages((prev) => !prev)}
           />
 
-          {/* Bottom-Left Effetto Cupola Semicircle Button */}
-          <div className="fixed bottom-6 left-4 md:left-8 z-30 pointer-events-auto">
+          {/* Bottom-Left Controls: Mute/Unmute Audio + Effetto Cupola */}
+          <div className="fixed bottom-6 left-4 md:left-8 z-30 pointer-events-auto flex items-center gap-2.5">
+            {/* 1. Mute / Unmute Background Music Button */}
+            <BackgroundMusic isHome={true} />
+
+            {/* 2. Effetto Cupola Semicircle Button */}
             <button
               onClick={() => setIsDomeView(d => !d)}
               title={isDomeView ? 'Disattiva Effetto Cupola' : 'Attiva Effetto Cupola'}
