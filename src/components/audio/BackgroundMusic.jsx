@@ -5,118 +5,156 @@ const YOUTUBE_VIDEO_ID = 'm86mBRKZHY0';
 
 export default function BackgroundMusic({ isHome = true }) {
   const [isMuted, setIsMuted] = useState(false);
-  const [isReady, setIsReady] = useState(false);
-  const playerRef = useRef(null);
+  const [hasStarted, setHasStarted] = useState(false);
+  const iframeRef = useRef(null);
+  const audioCtxRef = useRef(null);
+  const synthNodesRef = useRef(null);
+  const synthGainRef = useRef(null);
+
+  // Send command to YouTube Iframe via postMessage
+  const sendIframeCommand = (func, args = '') => {
+    if (iframeRef.current && iframeRef.current.contentWindow) {
+      iframeRef.current.contentWindow.postMessage(
+        JSON.stringify({ event: 'command', func, args }),
+        '*'
+      );
+    }
+  };
+
+  // Ethereal Celestial Web Audio Synthesizer (Harmonic 432Hz ambient drone) as backup
+  const initCelestialSynth = () => {
+    try {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return;
+
+      if (!audioCtxRef.current) {
+        audioCtxRef.current = new AudioContext();
+      }
+
+      if (audioCtxRef.current.state === 'suspended') {
+        audioCtxRef.current.resume();
+      }
+
+      if (synthNodesRef.current) return;
+
+      const ctx = audioCtxRef.current;
+      const masterGain = ctx.createGain();
+      masterGain.gain.setValueAtTime(0.001, ctx.currentTime);
+      masterGain.gain.exponentialRampToValueAtTime(0.22, ctx.currentTime + 3);
+      masterGain.connect(ctx.destination);
+      synthGainRef.current = masterGain;
+
+      // Celestial Frequencies (Cosmic F# Major / 432Hz harmonic constellation chord)
+      const freqs = [108, 144, 216, 288, 432, 648];
+      const oscillators = freqs.map((freq, i) => {
+        const osc = ctx.createOscillator();
+        const oscGain = ctx.createGain();
+        const panner = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+
+        osc.type = i % 2 === 0 ? 'sine' : 'triangle';
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+
+        // Subtle slow frequency shimmer
+        const lfo = ctx.createOscillator();
+        const lfoGain = ctx.createGain();
+        lfo.frequency.value = 0.08 + i * 0.02;
+        lfoGain.gain.value = 0.8;
+        lfo.connect(osc.frequency);
+        lfo.start();
+
+        const vol = (0.18 / freqs.length) * (1 - i * 0.1);
+        oscGain.gain.setValueAtTime(vol, ctx.currentTime);
+
+        if (panner) {
+          panner.pan.value = (i / (freqs.length - 1)) * 1.6 - 0.8;
+          osc.connect(panner);
+          panner.connect(oscGain);
+        } else {
+          osc.connect(oscGain);
+        }
+
+        oscGain.connect(masterGain);
+        osc.start();
+        return osc;
+      });
+
+      synthNodesRef.current = oscillators;
+    } catch (e) {
+      console.warn('Web Audio synth unavailable:', e);
+    }
+  };
+
+  const startAudio = () => {
+    // 1. Try YouTube unMute and playVideo
+    sendIframeCommand('unMute');
+    sendIframeCommand('setVolume', [80]);
+    sendIframeCommand('playVideo');
+
+    // 2. Also prepare Web Audio backup in case YouTube is blocked
+    initCelestialSynth();
+    setHasStarted(true);
+  };
 
   useEffect(() => {
-    // 1. Load YouTube IFrame API if not already present
-    if (!window.YT) {
-      const tag = document.createElement('script');
-      tag.src = 'https://www.youtube.com/iframe_api';
-      const firstScriptTag = document.getElementsByTagName('script')[0];
-      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    }
-
-    // 2. Initialize player when YT API is ready
-    const initPlayer = () => {
-      if (window.YT && window.YT.Player && !playerRef.current) {
-        playerRef.current = new window.YT.Player('youtube-audio-player', {
-          height: '1',
-          width: '1',
-          videoId: YOUTUBE_VIDEO_ID,
-          playerVars: {
-            autoplay: 1,
-            loop: 1,
-            playlist: YOUTUBE_VIDEO_ID,
-            controls: 0,
-            disablekb: 1,
-            fs: 0,
-            rel: 0,
-            modestbranding: 1,
-            playsinline: 1,
-            enablejsapi: 1,
-            origin: typeof window !== 'undefined' ? window.location.origin : '',
-          },
-          events: {
-            onReady: (event) => {
-              setIsReady(true);
-              try {
-                event.target.playVideo();
-                event.target.setVolume(70);
-                // Try unmuting immediately
-                event.target.unMute();
-              } catch (e) {
-                console.warn('Autoplay waiting for user gesture:', e);
-              }
-            },
-            onStateChange: (event) => {
-              // Ensure continuous loop
-              if (window.YT && event.data === window.YT.PlayerState.ENDED) {
-                event.target.playVideo();
-              }
-            },
-          },
-        });
-      }
+    // Attempt playback immediately and on any user interaction (to bypass browser autoplay lock)
+    const handleInteraction = () => {
+      startAudio();
     };
 
-    if (window.YT && window.YT.Player) {
-      initPlayer();
-    } else {
-      window.onYouTubeIframeAPIReady = initPlayer;
-    }
+    window.addEventListener('click', handleInteraction, { passive: true });
+    window.addEventListener('touchstart', handleInteraction, { passive: true });
+    window.addEventListener('pointerdown', handleInteraction, { passive: true });
+    window.addEventListener('keydown', handleInteraction, { passive: true });
 
-    // 3. User interaction listener to satisfy browser autoplay policy on first click/touch
-    const unlockAudio = () => {
-      if (playerRef.current && typeof playerRef.current.playVideo === 'function') {
-        try {
-          playerRef.current.playVideo();
-          if (!isMuted) {
-            playerRef.current.unMute();
-            playerRef.current.setVolume(70);
-          }
-        } catch (e) {
-          // ignore
-        }
-      }
-    };
-
-    window.addEventListener('click', unlockAudio, { passive: true });
-    window.addEventListener('touchstart', unlockAudio, { passive: true });
-    window.addEventListener('pointerdown', unlockAudio, { passive: true });
-    window.addEventListener('keydown', unlockAudio, { passive: true });
+    // Try starting immediately
+    const timer = setTimeout(() => {
+      startAudio();
+    }, 500);
 
     return () => {
-      window.removeEventListener('click', unlockAudio);
-      window.removeEventListener('touchstart', unlockAudio);
-      window.removeEventListener('pointerdown', unlockAudio);
-      window.removeEventListener('keydown', unlockAudio);
+      clearTimeout(timer);
+      window.removeEventListener('click', handleInteraction);
+      window.removeEventListener('touchstart', handleInteraction);
+      window.removeEventListener('pointerdown', handleInteraction);
+      window.removeEventListener('keydown', handleInteraction);
     };
-  }, [isMuted]);
+  }, []);
 
   const toggleMute = () => {
-    if (playerRef.current && typeof playerRef.current.mute === 'function') {
-      if (isMuted) {
-        playerRef.current.unMute();
-        playerRef.current.playVideo();
-        setIsMuted(false);
-      } else {
-        playerRef.current.mute();
-        setIsMuted(true);
+    if (isMuted) {
+      // UNMUTE
+      sendIframeCommand('unMute');
+      sendIframeCommand('playVideo');
+      if (synthGainRef.current && audioCtxRef.current) {
+        synthGainRef.current.gain.setValueAtTime(0.22, audioCtxRef.current.currentTime);
       }
+      setIsMuted(false);
     } else {
-      setIsMuted(!isMuted);
+      // MUTE
+      sendIframeCommand('mute');
+      if (synthGainRef.current && audioCtxRef.current) {
+        synthGainRef.current.gain.setValueAtTime(0.0001, audioCtxRef.current.currentTime);
+      }
+      setIsMuted(true);
     }
   };
 
   return (
     <>
-      {/* Hidden YouTube IFrame Container */}
+      {/* 
+        YouTube IFrame Player (rendered on-screen with near-zero opacity so YouTube API doesn't suspend it)
+      */}
       <div
-        className="fixed -top-96 -left-96 opacity-0 pointer-events-none w-1 h-1 overflow-hidden"
+        className="fixed bottom-0 left-0 w-8 h-8 opacity-[0.01] pointer-events-none z-[-1] overflow-hidden"
         aria-hidden="true"
       >
-        <div id="youtube-audio-player" />
+        <iframe
+          ref={iframeRef}
+          title="AAA Background Audio"
+          src={`https://www.youtube-nocookie.com/embed/${YOUTUBE_VIDEO_ID}?enablejsapi=1&autoplay=1&mute=0&loop=1&playlist=${YOUTUBE_VIDEO_ID}&playsinline=1&controls=0&disablekb=1&fs=0&rel=0&origin=${typeof window !== 'undefined' ? encodeURIComponent(window.location.origin) : ''}`}
+          allow="autoplay; encrypted-media"
+          className="w-full h-full"
+        />
       </div>
 
       {/* Floating Bottom-Left Audio Control Button */}
