@@ -15,9 +15,18 @@ export default function CameraController({
 }) {
   const { camera } = useThree();
   const controlsRef = useRef();
-  const targetLookAt = useRef(new THREE.Vector3(0, 0, -1));
-  const isFlying = useRef(false);
   const landingActive = useRef(isLanding);
+
+  // Flight animation state for smooth non-uniform impulse ("lento -> veloce -> lento / spinta")
+  const flightState = useRef({
+    active: false,
+    startTime: 0,
+    duration: 850, // 850ms: rapid impulse sweep
+    startAzimuth: 0,
+    deltaAngle: 0,
+    startPitch: 0,
+    targetPitch: 0,
+  });
 
   // Initialize camera position when landing from above
   useEffect(() => {
@@ -32,17 +41,41 @@ export default function CameraController({
     }
   }, [isLanding, camera]);
 
-  // When targetSignId changes, animate camera lookAt
+  // When targetSignId changes, initiate dynamic rotation to 12 o'clock
   useEffect(() => {
     if (!targetSignId || landingActive.current) return;
 
-    const sign = ZODIAC_SIGNS.find(s => s.id === targetSignId || s.name.toLowerCase() === targetSignId.toLowerCase());
-    if (sign) {
-      const [x, y, z] = sphericalToCartesian(40, sign.angle + 15, 0, 0);
-      targetLookAt.current.set(x, y, z);
-      isFlying.current = true;
-    }
-  }, [targetSignId]);
+    const sign = ZODIAC_SIGNS.find(
+      s => s.id === targetSignId || s.name.toLowerCase() === targetSignId.toLowerCase()
+    );
+    if (!sign) return;
+
+    // Target azimuth angle for the sign on the ecliptic sphere
+    const targetRad = ((sign.angle + 15) * Math.PI) / 180;
+
+    // Current camera forward view direction in world space
+    const forward = new THREE.Vector3();
+    camera.getWorldDirection(forward);
+
+    // Current horizontal azimuth & vertical pitch
+    const startAzimuth = Math.atan2(forward.z, forward.x);
+    const startPitch = Math.asin(Math.max(-0.99, Math.min(0.99, forward.y)));
+
+    // Calculate shortest angular difference (modulo 2π)
+    let deltaAngle = targetRad - startAzimuth;
+    while (deltaAngle < -Math.PI) deltaAngle += Math.PI * 2;
+    while (deltaAngle > Math.PI) deltaAngle -= Math.PI * 2;
+
+    flightState.current = {
+      active: true,
+      startTime: performance.now(),
+      duration: 850, // Rapid and dynamic
+      startAzimuth,
+      deltaAngle,
+      startPitch,
+      targetPitch: 0, // Align horizon directly at eye level
+    };
+  }, [targetSignId, camera]);
 
   useFrame((_, delta) => {
     if (!controlsRef.current) return;
@@ -54,7 +87,7 @@ export default function CameraController({
       const targetY = 0.01;
       const newY = THREE.MathUtils.lerp(currentY, targetY, Math.min(delta * 2.2, 1));
       
-      // Also smoothly drift slightly into standard Z view position
+      // Drift into center
       camera.position.set(0, newY, 0.01);
       
       // Orient camera from looking straight down to looking forward at the celestial belt
@@ -76,31 +109,48 @@ export default function CameraController({
       return;
     }
 
-    // 2. Apply manual rotation velocity from navigation arrow buttons
+    // 2. Flight to target zodiac sign: non-uniform impulse ("lento -> veloce -> lento con spinta")
+    if (flightState.current.active) {
+      const elapsed = performance.now() - flightState.current.startTime;
+      const progress = Math.min(1, elapsed / flightState.current.duration);
+
+      // Quartic Ease-in-Out curve: gentle start, powerful acceleration thrust in middle, smooth braking
+      const ease = progress < 0.5
+        ? 8 * Math.pow(progress, 4)
+        : 1 - Math.pow(-2 * progress + 2, 4) / 2;
+
+      const currentAzimuth = flightState.current.startAzimuth + flightState.current.deltaAngle * ease;
+      const currentPitch = flightState.current.startPitch + (flightState.current.targetPitch - flightState.current.startPitch) * ease;
+
+      const cosPitch = Math.cos(currentPitch);
+      const sinPitch = Math.sin(currentPitch);
+      const dirX = Math.cos(currentAzimuth) * cosPitch;
+      const dirY = sinPitch;
+      const dirZ = Math.sin(currentAzimuth) * cosPitch;
+
+      // Inside-sphere camera positioned at -dir * 0.01 looking through origin (0,0,0) towards +dir
+      const camRadius = 0.01;
+      camera.position.set(-dirX * camRadius, -dirY * camRadius, -dirZ * camRadius);
+      camera.lookAt(0, 0, 0);
+
+      if (controlsRef.current) {
+        controlsRef.current.target.set(0, 0, 0);
+        controlsRef.current.update();
+      }
+
+      if (progress >= 1) {
+        flightState.current.active = false;
+        if (onTargetReached) onTargetReached();
+      }
+      return;
+    }
+
+    // 3. Apply manual rotation velocity from navigation arrow buttons
     if (manualRotateVelocity !== 0) {
       const angle = manualRotateVelocity * delta * 2.5;
       // Rotate camera around origin Y axis
       camera.position.applyAxisAngle(new THREE.Vector3(0, 1, 0), angle);
       camera.lookAt(0, 0, 0);
-      controlsRef.current.update();
-    }
-
-    // 3. Flight to specific constellation
-    if (isFlying.current) {
-      const currentTarget = controlsRef.current.target;
-      const step = Math.min(delta * 3.0, 1);
-      
-      const dir = targetLookAt.current.clone().normalize().multiplyScalar(0.1);
-      currentTarget.lerp(dir, step);
-      
-      const lookTarget = targetLookAt.current;
-      camera.lookAt(lookTarget);
-
-      if (currentTarget.distanceTo(dir) < 0.005) {
-        isFlying.current = false;
-        if (onTargetReached) onTargetReached();
-      }
-
       controlsRef.current.update();
     }
   });
