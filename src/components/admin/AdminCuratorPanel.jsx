@@ -40,6 +40,19 @@ export default function AdminCuratorPanel({
   const [syncStatus, setSyncStatus] = useState(null); // { type: 'success' | 'error', message: string }
   const [githubToken, setGithubToken] = useState(() => localStorage.getItem("aaa_github_token") || "");
   const [showTokenInput, setShowTokenInput] = useState(false);
+  const [lastAutoSaveTime, setLastAutoSaveTime] = useState(null);
+
+  // Auto-Save & Commit interval every 3 minutes (180,000 ms) when curator is in backend
+  useEffect(() => {
+    if (!isOpen || !isAuthenticated) return;
+
+    const intervalId = setInterval(() => {
+      console.log("[Auto-Commit 3 min] Esecuzione autosalvataggio su GitHub...");
+      handleCommitAndSync(true);
+    }, 3 * 60 * 1000);
+
+    return () => clearInterval(intervalId);
+  }, [isOpen, isAuthenticated, artworks, formData, bioForm, infoForm, editingArt, isCreatingNew, githubToken]);
 
   // Bio Form State
   const [bioForm, setBioForm] = useState({
@@ -456,9 +469,10 @@ export default function AdminCuratorPanel({
   };
 
   // Commit & Sync directly to public/data/atlas.json (local disk or GitHub commit)
-  const handleCommitAndSync = async () => {
+  const handleCommitAndSync = async (isAuto = false) => {
+    if (isSyncing) return;
     setIsSyncing(true);
-    setSyncStatus(null);
+    if (!isAuto) setSyncStatus(null);
 
     // If currently editing or creating an artwork with valid artist/title, merge it first
     let currentArtworks = [...artworks];
@@ -550,10 +564,15 @@ export default function AdminCuratorPanel({
       });
 
       const json = await res.json();
+      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      setLastAutoSaveTime(timeStr);
+
       if (res.ok && json.success) {
         setSyncStatus({
           type: "success",
-          message: json.message || `Atlante sincronizzato e salvato con successo (${artworks.length} opere)!`,
+          message: isAuto
+            ? `Autosalvataggio & Commit eseguito alle ${timeStr} (${currentArtworks.length} opere).`
+            : json.message || `Atlante sincronizzato e salvato con successo (${currentArtworks.length} opere)!`,
         });
       } else {
         setSyncStatus({
@@ -562,10 +581,14 @@ export default function AdminCuratorPanel({
         });
       }
     } catch (err) {
+      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      setLastAutoSaveTime(timeStr);
       // In case API route is unreachable, localStorage is still saved
       setSyncStatus({
         type: "success",
-        message: `Dati salvati nella memoria permanente del browser (${artworks.length} opere).`,
+        message: isAuto
+          ? `Autosalvataggio locale alle ${timeStr} (${currentArtworks.length} opere).`
+          : `Dati salvati nella memoria permanente del browser (${currentArtworks.length} opere).`,
       });
     } finally {
       setIsSyncing(false);
@@ -646,6 +669,12 @@ export default function AdminCuratorPanel({
           <div className="flex items-center gap-2 md:gap-3 flex-wrap justify-end">
             {isAuthenticated && (
               <>
+                {/* Auto-Commit Active Badge */}
+                <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-[10px] font-mono text-emerald-300">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>Autocommit attivo (3 min){lastAutoSaveTime ? ` • ${lastAutoSaveTime}` : ''}</span>
+                </div>
+
                 {/* 0. Live 3D Spatial Editor Mode */}
                 <button
                   type="button"

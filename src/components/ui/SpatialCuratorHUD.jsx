@@ -43,6 +43,12 @@ export default function SpatialCuratorHUD({
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Auto-commit badge */}
+          <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-[10px] font-mono text-emerald-300">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span>Autocommit 3 min</span>
+          </div>
+
           {/* Commit & Sync Button */}
           <button
             type="button"

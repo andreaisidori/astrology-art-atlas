@@ -167,6 +167,20 @@ export default function App() {
     }
   };
 
+  // Auto-Save & Commit 3D spatial modifications every 3 minutes if modified
+  useEffect(() => {
+    if (!isSpatialEditMode) return;
+
+    const intervalId = setInterval(() => {
+      if (modifiedCount > 0 && !isSyncing3D) {
+        console.log('[Auto-Commit 3D 3 min] Salvataggio automatico modifiche spaziali su GitHub...');
+        handleCommitAndSync3D();
+      }
+    }, 3 * 60 * 1000);
+
+    return () => clearInterval(intervalId);
+  }, [isSpatialEditMode, modifiedCount, isSyncing3D, data]);
+
   // Trigger Sky-Door landing dive when entering from landing screen
   const handleEnterFromLanding = () => {
     setIsLandingTransition(true);
