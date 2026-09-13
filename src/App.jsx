@@ -24,7 +24,6 @@ import { computeArtworkPositions } from './utils/layouts';
 
 export default function App() {
   const [data, setData] = useState({ progetto: {}, opere: [] });
-  const [loading, setLoading] = useState(true);
   const [showLanding, setShowLanding] = useState(true); // Landing screen active on load
   const [isLandingTransition, setIsLandingTransition] = useState(false);
   const [viewMode, setViewMode] = useState('3d'); // '3d' | 'archive'
@@ -166,20 +165,6 @@ export default function App() {
     }
   };
 
-  // Auto-Save & Commit 3D spatial modifications every 3 minutes if modified
-  useEffect(() => {
-    if (!isSpatialEditMode) return;
-
-    const intervalId = setInterval(() => {
-      if (modifiedCount > 0 && !isSyncing3D) {
-        console.log('[Auto-Commit 3D 3 min] Salvataggio automatico modifiche spaziali su GitHub...');
-        handleCommitAndSync3D();
-      }
-    }, 3 * 60 * 1000);
-
-    return () => clearInterval(intervalId);
-  }, [isSpatialEditMode, modifiedCount, isSyncing3D, data]);
-
   // Trigger Sky-Door landing dive when entering from landing screen
   const handleEnterFromLanding = () => {
     setIsLandingTransition(true);
@@ -236,8 +221,22 @@ export default function App() {
     const moon = getCurrentMoonPosition();
     setMoonInfo(moon);
 
-    // 2. Load dataset from real-time live API (GitHub source of truth) with static fallback
+    // 2. Load dataset asynchronously (first static atlas.json, then live API)
     const loadAtlasData = async () => {
+      // 1. Immediately fetch static file to ensure instant rendering
+      try {
+        const staticRes = await fetch(`/data/atlas.json?t=${Date.now()}`);
+        if (staticRes.ok) {
+          const staticJson = await staticRes.json();
+          if (staticJson && Array.isArray(staticJson.opere) && staticJson.opere.length > 0) {
+            setData(staticJson);
+          }
+        }
+      } catch (err) {
+        console.warn('Fallback static file load:', err);
+      }
+
+      // 2. Background live API fetch
       try {
         const res = await fetch(`/api/get-atlas?t=${Date.now()}`, {
           cache: 'no-store',
@@ -247,23 +246,10 @@ export default function App() {
           const json = await res.json();
           if (json && json.opere && Array.isArray(json.opere) && json.opere.length > 0) {
             setData(json);
-            setLoading(false);
-            return;
           }
         }
       } catch (e) {
-        console.warn('API fetch fallback to static file:', e);
-      }
-
-      // Static fallback
-      try {
-        const res = await fetch(`/data/atlas.json?t=${Date.now()}`, { cache: 'no-store' });
-        const json = await res.json();
-        setData(json);
-      } catch (err) {
-        console.error('Errore nel caricamento del database:', err);
-      } finally {
-        setLoading(false);
+        console.warn('API fetch live update:', e);
       }
     };
 
@@ -272,7 +258,7 @@ export default function App() {
 
   // Compute 3D positions for all artworks with balanced airy spacing (radius 48)
   const artworkPositions = useMemo(() => {
-    return computeArtworkPositions(data.opere, layoutMode, activeSignId, 48);
+    return computeArtworkPositions(data.opere || [], layoutMode, activeSignId, 48);
   }, [data.opere, layoutMode, activeSignId]);
 
   // Handle Sign selection (fly camera to sign and highlight)
@@ -311,14 +297,6 @@ export default function App() {
   const handleStopZoom = () => {
     setManualZoomVelocity(0);
   };
-
-  if (loading) {
-    return (
-      <div className="w-screen h-screen bg-[#030307] flex items-center justify-center">
-        <div className="w-10 h-10 rounded-full border-2 border-amber-400/40 border-t-amber-400 animate-spin" />
-      </div>
-    );
-  }
 
   return (
     <main className="relative w-screen h-screen overflow-hidden bg-space-950 select-none">
