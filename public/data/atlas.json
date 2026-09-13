@@ -20,16 +20,20 @@
     "descrizione": "Atlante mnemotecnico e archivio dinamico in 3D per l'immaginario artistico contemporaneo.",
     "ispirazione": "Aby Warburg — Bilderatlas Mnemosyne",
     "totale_artisti": 171,
-    "aggiornato_il": "2026-09-13T14:26:35.850Z"
+    "aggiornato_il": "2026-09-13T14:28:57.803Z"
   },
   "opere": [
     {
       "id": "yayoi_kusama_1",
-      "artista": "Yayoi Kusama",
       "segno": "Ariete",
-      "date_biografiche": "22 March 1929",
-      "anno_nascita": 1929,
+      "artista": "Yayoi Kusama",
+      "citazione": "sssssssss ssjsjsjsjjsjsjsjsj sjsjsjsjsjs sjsjsjsj",
+      "commento": "",
+      "link_tema_natale": "https://www.astro.com/astro-databank/Kusama,_Yayoi",
       "titolo": "In attesa di caricamento opera...",
+      "data_nascita": "22 March 1929",
+      "anno_morte": "",
+      "date_biografiche": "22 March 1929",
       "anno": 1929,
       "tecnica": "Occorrenza artistica in archivio",
       "immagine": "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=800&auto=format&fit=crop&q=80",
@@ -39,6 +43,11 @@
         "venere": "Toro",
         "mercurio": "Pesci"
       },
+      "posizione_manuale": {
+        "x": 40,
+        "y": 0,
+        "z": 10
+      },
       "parole_chiave": [
         "principio marziale",
         "rosso",
@@ -47,10 +56,7 @@
       ],
       "nota_simbolica": "Artista archiviato nella categoria Ariete per risonanza tematica e principio simbolico.",
       "colore_dominante": "#e63946",
-      "link_fonte": "",
-      "data_nascita": "22 March 1929",
-      "anno_morte": "",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Kusama,_Yayoi"
+      "link_fonte": ""
     },
     {
       "id": "jannis_kounellis_2",
