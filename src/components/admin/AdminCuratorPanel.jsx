@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { X, Plus, Trash2, Edit3, Save, Download, Copy, Check, Lock, Sparkles, Image, Compass, Calendar, Moon, User, BookOpen, ExternalLink, Mail, Instagram } from "lucide-react";
+import { X, Plus, Trash2, Edit3, Save, Download, Copy, Check, Lock, Sparkles, Image, Compass, Calendar, Moon, User, BookOpen, ExternalLink, Mail, Instagram, CopyPlus, Layers } from "lucide-react";
 import { ZODIAC_SIGNS } from "../../utils/astronomy";
 
 export default function AdminCuratorPanel({
@@ -176,6 +176,7 @@ export default function AdminCuratorPanel({
       nota_simbolica: "",
       colore_dominante: "#e63946",
       link_fonte: "",
+      clonedFromArtist: "",
     });
   };
 
@@ -189,6 +190,43 @@ export default function AdminCuratorPanel({
       tema_natale: art.tema_natale || { sole: art.segno || "Ariete", luna: "", venere: "", mercurio: "" },
       posizione_manuale: art.posizione_manuale || { x: 40, y: 0, z: 10 },
       parole_chiave_str: (art.parole_chiave || []).join(", "),
+      clonedFromArtist: "",
+    });
+  };
+
+  // Clone artwork to quickly add another piece for the same artist
+  const handleCloneArtwork = (artToClone) => {
+    const baseArt = artToClone || editingArt || formData;
+    if (!baseArt) return;
+
+    setEditingArt(null);
+    setIsCreatingNew(true);
+    const newId = `art_${Date.now()}`;
+
+    setFormData({
+      id: newId,
+      segno: baseArt.segno || "Ariete",
+      artista: baseArt.artista || "",
+      titolo: "",
+      date_biografiche: baseArt.date_biografiche || "",
+      anno: baseArt.anno || new Date().getFullYear(),
+      tecnica: baseArt.tecnica || "",
+      immagine: "",
+      tema_natale: baseArt.tema_natale
+        ? { ...baseArt.tema_natale }
+        : { sole: baseArt.segno || "Ariete", luna: "", venere: "", mercurio: "" },
+      posizione_manuale: {
+        x: (baseArt.posizione_manuale?.x || 40) + (Math.random() * 2 - 1),
+        y: (baseArt.posizione_manuale?.y || 0) + (Math.random() * 2 - 1),
+        z: (baseArt.posizione_manuale?.z || 10) + (Math.random() * 2 - 1),
+      },
+      parole_chiave_str: Array.isArray(baseArt.parole_chiave)
+        ? baseArt.parole_chiave.join(", ")
+        : (baseArt.parole_chiave_str || ""),
+      nota_simbolica: baseArt.nota_simbolica || "",
+      colore_dominante: baseArt.colore_dominante || "#e63946",
+      link_fonte: baseArt.link_fonte || "",
+      clonedFromArtist: baseArt.artista || "",
     });
   };
 
@@ -234,7 +272,7 @@ export default function AdminCuratorPanel({
     }
 
     onUpdateArtworks(newArtworksList);
-    setEditingArt(null);
+    setEditingArt(updatedItem);
     setIsCreatingNew(false);
   };
 
@@ -618,6 +656,9 @@ export default function AdminCuratorPanel({
                         />
                         <div className="min-w-0">
                           <p className="text-xs font-bold text-white truncate">{art.artista || "Senza autore"}</p>
+                          {art.titolo && (
+                            <p className="text-[11px] text-cyan-300/80 truncate italic">{art.titolo}</p>
+                          )}
                           {art.date_biografiche && (
                             <p className="text-[10px] text-zinc-400 font-mono truncate">{art.date_biografiche}</p>
                           )}
@@ -640,16 +681,30 @@ export default function AdminCuratorPanel({
                         </div>
                       </div>
 
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDelete(art.id);
-                        }}
-                        className="p-1.5 rounded-lg hover:bg-rose-500/20 text-zinc-500 hover:text-rose-300 transition-all flex-shrink-0"
-                        title="Elimina"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
+                      <div className="flex items-center gap-1 flex-shrink-0">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleCloneArtwork(art);
+                          }}
+                          className="p-1.5 rounded-lg hover:bg-amber-500/20 text-zinc-400 hover:text-amber-300 transition-all"
+                          title="Clona quest'opera per inserire velocemente un'altra opera dello stesso artista"
+                        >
+                          <CopyPlus className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDelete(art.id);
+                          }}
+                          className="p-1.5 rounded-lg hover:bg-rose-500/20 text-zinc-500 hover:text-rose-300 transition-all"
+                          title="Elimina"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                     </div>
                   );
                 })}
@@ -660,27 +715,71 @@ export default function AdminCuratorPanel({
             <div className="lg:col-span-7 flex flex-col overflow-y-auto p-6 space-y-6">
               <div className="flex items-center justify-between border-b border-white/10 pb-4">
                 <div>
-                  <h3 className="text-sm font-bold text-white">
-                    {isCreatingNew ? "Aggiungi Nuovo Artista all’Atlante" : editingArt ? `Modifica Scheda: ${editingArt.artista}` : "Seleziona o Crea Artista"}
+                  <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                    {isCreatingNew ? (
+                      formData.clonedFromArtist ? (
+                        <>
+                          <span className="text-amber-300">Nuova Opera Clonata:</span>
+                          <span>{formData.clonedFromArtist}</span>
+                        </>
+                      ) : (
+                        "Aggiungi Nuovo Artista all’Atlante"
+                      )
+                    ) : editingArt ? (
+                      `Scheda Opera: ${editingArt.artista} ${editingArt.titolo ? `— "${editingArt.titolo}"` : ""}`
+                    ) : (
+                      "Seleziona o Crea Artista"
+                    )}
                   </h3>
                   <p className="text-[11px] font-mono text-zinc-400">
-                    {isCreatingNew || editingArt ? "Compila o aggiorna i dati dell'artista e dell'opera" : "Scegli una voce dall'elenco a sinistra per iniziare a modificare"}
+                    {isCreatingNew
+                      ? formData.clonedFromArtist
+                        ? `Dati artista, biografia e tema natale clonati da ${formData.clonedFromArtist}. Inserisci il nuovo titolo e l'immagine.`
+                        : "Compila i dati dell'artista e della prima opera"
+                      : editingArt
+                      ? "Compila o aggiorna i dati dell'artista e dell'opera"
+                      : "Scegli una voce dall'elenco a sinistra per iniziare a modificare"}
                   </p>
                 </div>
 
-                {editingArt && onFocusArtwork3D && (
-                  <button
-                    onClick={() => onFocusArtwork3D(editingArt)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 hover:bg-indigo-500/30 text-xs font-mono transition-all"
-                  >
-                    <Compass className="w-3.5 h-3.5" />
-                    <span>Visualizza in 3D</span>
-                  </button>
-                )}
+                <div className="flex items-center gap-2">
+                  {editingArt && (
+                    <button
+                      type="button"
+                      onClick={() => handleCloneArtwork(editingArt)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-400/30 hover:bg-amber-500/30 text-xs font-mono transition-all shadow"
+                      title="Clona questo quadro per inserire velocemente un'altra opera di questo artista"
+                    >
+                      <CopyPlus className="w-3.5 h-3.5" />
+                      <span>Clona Opera</span>
+                    </button>
+                  )}
+                  {editingArt && onFocusArtwork3D && (
+                    <button
+                      type="button"
+                      onClick={() => onFocusArtwork3D(editingArt)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 hover:bg-indigo-500/30 text-xs font-mono transition-all"
+                    >
+                      <Compass className="w-3.5 h-3.5" />
+                      <span>Visualizza in 3D</span>
+                    </button>
+                  )}
+                </div>
               </div>
 
               {editingArt || isCreatingNew ? (
                 <form onSubmit={handleSaveForm} className="space-y-4">
+                  {formData.clonedFromArtist && (
+                    <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-400/30 text-amber-200 text-xs flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <CopyPlus className="w-4 h-4 text-amber-400 flex-shrink-0" />
+                        <span>
+                          Inserimento rapido per <strong>{formData.clonedFromArtist}</strong>: i dati biografici, il segno e il tema natale sono già impostati. Inserisci il titolo della nuova opera e la sua immagine.
+                        </span>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Row 1: Segno & Artista */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -722,7 +821,7 @@ export default function AdminCuratorPanel({
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] font-mono text-zinc-400 mb-1">Anno di Riferimento</label>
+                      <label className="block text-[11px] font-mono text-zinc-400 mb-1">Anno Opera</label>
                       <input
                         type="number"
                         value={formData.anno || ""}
@@ -736,12 +835,13 @@ export default function AdminCuratorPanel({
                   {/* Row 3: Titolo Opera & Tecnica */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[11px] font-mono text-zinc-400 mb-1">Titolo Opera</label>
+                      <label className="block text-[11px] font-mono text-zinc-400 mb-1">Titolo Opera *</label>
                       <input
                         type="text"
+                        required
                         value={formData.titolo}
                         onChange={(e) => setFormData({ ...formData, titolo: e.target.value })}
-                        className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-white/15 text-white text-xs"
+                        className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-white/15 text-white text-xs focus:ring-1 focus:ring-cyan-400"
                         placeholder="Es: Concetto Spaziale, Attese"
                       />
                     </div>
@@ -760,14 +860,31 @@ export default function AdminCuratorPanel({
                   {/* Row 4: URL Immagine & Fonte */}
                   <div className="space-y-3">
                     <div>
-                      <label className="block text-[11px] font-mono text-zinc-400 mb-1">URL Immagine Opera</label>
-                      <input
-                        type="url"
-                        value={formData.immagine}
-                        onChange={(e) => setFormData({ ...formData, immagine: e.target.value })}
-                        className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-white/15 text-white text-xs font-mono"
-                        placeholder="https://..."
-                      />
+                      <label className="block text-[11px] font-mono text-zinc-400 mb-1 flex items-center justify-between">
+                        <span>URL Immagine Opera</span>
+                        {formData.immagine && <span className="text-[10px] text-emerald-400 font-mono">Anteprima attiva</span>}
+                      </label>
+                      <div className="flex gap-3 items-center">
+                        {formData.immagine ? (
+                          <img
+                            src={formData.immagine}
+                            alt="Anteprima"
+                            onError={(e) => { e.target.style.display = 'none'; }}
+                            className="w-11 h-11 rounded-xl object-cover border border-white/20 bg-zinc-900 flex-shrink-0 shadow"
+                          />
+                        ) : (
+                          <div className="w-11 h-11 rounded-xl border border-dashed border-white/20 bg-zinc-900 flex items-center justify-center text-zinc-600 flex-shrink-0">
+                            <Image className="w-5 h-5" />
+                          </div>
+                        )}
+                        <input
+                          type="url"
+                          value={formData.immagine}
+                          onChange={(e) => setFormData({ ...formData, immagine: e.target.value })}
+                          className="flex-1 px-3 py-2 rounded-xl bg-zinc-900 border border-white/15 text-white text-xs font-mono"
+                          placeholder="https://..."
+                        />
+                      </div>
                     </div>
                     <div>
                       <label className="block text-[11px] font-mono text-zinc-400 mb-1">Link Fonte / Documentazione</label>
@@ -879,7 +996,13 @@ export default function AdminCuratorPanel({
                       className="flex items-center gap-1.5 px-6 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-semibold text-xs shadow-lg shadow-cyan-500/20 transition-all"
                     >
                       <Save className="w-3.5 h-3.5" />
-                      <span>{isCreatingNew ? "Aggiungi Artista all’Atlante" : "Salva Modifiche"}</span>
+                      <span>
+                        {isCreatingNew
+                          ? formData.clonedFromArtist
+                            ? `Aggiungi Opera per ${formData.clonedFromArtist}`
+                            : "Aggiungi Artista all’Atlante"
+                          : "Salva Modifiche"}
+                      </span>
                     </button>
                   </div>
                 </form>
