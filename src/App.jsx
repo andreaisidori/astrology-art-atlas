@@ -80,6 +80,16 @@ export default function App() {
     }
   };
 
+  // Handle updating artworks catalog
+  const handleUpdateArtworks = (newArtworks) => {
+    setData((prev) => ({ ...prev, opere: newArtworks }));
+    try {
+      localStorage.setItem('aaa_custom_artworks', JSON.stringify(newArtworks));
+    } catch (e) {
+      console.warn('Impossibile salvare opere in localStorage:', e);
+    }
+  };
+
   // Load Atlas JSON and calculate Moon Position on Mount
   useEffect(() => {
     // 1. Calculate real-time moon position
@@ -107,6 +117,19 @@ export default function App() {
           if (savedInfo) {
             json.progetto = json.progetto || {};
             json.progetto.info = JSON.parse(savedInfo);
+          }
+        } catch (e) {
+          // ignore
+        }
+
+        // Merge with locally stored artworks if available
+        try {
+          const savedArtworks = localStorage.getItem('aaa_custom_artworks');
+          if (savedArtworks) {
+            const parsed = JSON.parse(savedArtworks);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              json.opere = parsed;
+            }
           }
         } catch (e) {
           // ignore
@@ -346,7 +369,7 @@ export default function App() {
         isOpen={isAdminOpen}
         onClose={() => setIsAdminOpen(false)}
         artworks={data.opere}
-        onUpdateArtworks={(newArtworks) => setData(d => ({ ...d, opere: newArtworks }))}
+        onUpdateArtworks={handleUpdateArtworks}
         bioData={data.progetto?.curatore}
         onUpdateBio={handleUpdateBio}
         infoData={data.progetto?.info}

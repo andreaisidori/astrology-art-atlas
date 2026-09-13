@@ -34,6 +34,12 @@ export default function AdminCuratorPanel({
   const [copied, setCopied] = useState(false);
   const [searchFilter, setSearchFilter] = useState("");
 
+  // Sync / Commit State
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [syncStatus, setSyncStatus] = useState(null); // { type: 'success' | 'error', message: string }
+  const [githubToken, setGithubToken] = useState(() => localStorage.getItem("aaa_github_token") || "");
+  const [showTokenInput, setShowTokenInput] = useState(false);
+
   // Bio Form State
   const [bioForm, setBioForm] = useState({
     nome: bioData?.nome || "Giacomo Isidori",
@@ -448,6 +454,70 @@ export default function AdminCuratorPanel({
     }
   };
 
+  // Commit & Sync directly to public/data/atlas.json (local disk or GitHub commit)
+  const handleCommitAndSync = async () => {
+    setIsSyncing(true);
+    setSyncStatus(null);
+
+    const exportObject = {
+      progetto: {
+        titolo: infoForm.titolo || "AAA — Astrology Art Atlas",
+        curatore: bioForm,
+        info: infoForm,
+        descrizione: "Atlante mnemotecnico e archivio dinamico in 3D per l'immaginario artistico contemporaneo.",
+        ispirazione: "Aby Warburg — Bilderatlas Mnemosyne",
+        totale_artisti: artworks.length,
+        aggiornato_il: new Date().toISOString(),
+      },
+      opere: artworks,
+    };
+
+    // 1. Always backup to localStorage
+    try {
+      localStorage.setItem("aaa_custom_artworks", JSON.stringify(artworks));
+      localStorage.setItem("aaa_curator_bio", JSON.stringify(bioForm));
+      localStorage.setItem("aaa_project_info", JSON.stringify(infoForm));
+      if (githubToken) {
+        localStorage.setItem("aaa_github_token", githubToken);
+      }
+    } catch (e) {
+      console.warn("LocalStorage backup:", e);
+    }
+
+    // 2. Call API to write file / commit to GitHub
+    try {
+      const res = await fetch("/api/save-atlas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          data: exportObject,
+          githubToken: githubToken.trim() || undefined,
+        }),
+      });
+
+      const json = await res.json();
+      if (res.ok && json.success) {
+        setSyncStatus({
+          type: "success",
+          message: json.message || `Atlante sincronizzato e salvato con successo (${artworks.length} opere)!`,
+        });
+      } else {
+        setSyncStatus({
+          type: "error",
+          message: json.error || "Errore durante il salvataggio su server/GitHub.",
+        });
+      }
+    } catch (err) {
+      // In case API route is unreachable, localStorage is still saved
+      setSyncStatus({
+        type: "success",
+        message: `Dati salvati nella memoria permanente del browser (${artworks.length} opere).`,
+      });
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
   // Export JSON file download
   const handleDownloadJSON = () => {
     const exportObject = {
@@ -519,24 +589,42 @@ export default function AdminCuratorPanel({
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 md:gap-3 flex-wrap justify-end">
             {isAuthenticated && (
               <>
+                {/* 1. Main Commit & Direct Sync Button */}
+                <button
+                  onClick={handleCommitAndSync}
+                  disabled={isSyncing}
+                  className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-semibold text-xs font-mono hover:from-emerald-400 hover:to-teal-400 transition-all shadow-lg shadow-emerald-500/20 hover:scale-[1.02] active:scale-95 disabled:opacity-50 cursor-pointer"
+                  title="Salva e sincronizza istantaneamente tutte le modifiche nell'Atlante perenne"
+                >
+                  {isSyncing ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <UploadCloud className="w-3.5 h-3.5" />
+                  )}
+                  <span>{isSyncing ? "Salvataggio..." : "Salva & Committa"}</span>
+                </button>
+
+                {/* 2. Download JSON Backup */}
+                <button
+                  onClick={handleDownloadJSON}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-xs font-mono transition-all text-white/90"
+                  title="Scarica atlas.json come backup locale"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Scarica</span>
+                </button>
+
+                {/* 3. Copy JSON */}
                 <button
                   onClick={handleCopyJSON}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-xs font-mono transition-all"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-xs font-mono transition-all text-white/90"
                   title="Copia l'intero database negli appunti"
                 >
                   {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                  <span>{copied ? "Copiato!" : "Copia JSON"}</span>
-                </button>
-                <button
-                  onClick={handleDownloadJSON}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-500 text-black font-semibold text-xs font-mono hover:bg-cyan-400 transition-all shadow-lg shadow-cyan-500/20"
-                  title="Scarica atlas.json per salvare i dati su disco"
-                >
-                  <Download className="w-3.5 h-3.5" />
-                  <span>Scarica atlas.json</span>
+                  <span className="hidden sm:inline">{copied ? "Copiato!" : "Copia"}</span>
                 </button>
               </>
             )}
@@ -548,6 +636,28 @@ export default function AdminCuratorPanel({
             </button>
           </div>
         </div>
+
+        {/* Sync Status Banner */}
+        {syncStatus && (
+          <div
+            className={`px-6 py-2.5 text-xs font-mono flex items-center justify-between border-b ${
+              syncStatus.type === "success"
+                ? "bg-emerald-950/70 border-emerald-500/30 text-emerald-300"
+                : "bg-red-950/70 border-red-500/30 text-red-300"
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              {syncStatus.type === "success" ? <Check className="w-4 h-4 text-emerald-400" /> : <X className="w-4 h-4 text-red-400" />}
+              <span>{syncStatus.message}</span>
+            </div>
+            <button
+              onClick={() => setSyncStatus(null)}
+              className="text-white/60 hover:text-white text-xs underline ml-4"
+            >
+              Chiudi
+            </button>
+          </div>
+        )}
 
         {/* Tab Switcher (Visible when Authenticated) */}
         {isAuthenticated && (
