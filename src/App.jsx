@@ -179,7 +179,10 @@ export default function App() {
       ...prev,
       progetto: {
         ...(prev.progetto || {}),
-        curatore: newBio,
+        curatore: {
+          ...(prev.progetto?.curatore || {}),
+          ...newBio,
+        },
       },
     }));
     try {
@@ -195,7 +198,10 @@ export default function App() {
       ...prev,
       progetto: {
         ...(prev.progetto || {}),
-        info: newInfo,
+        info: {
+          ...(prev.progetto?.info || {}),
+          ...newInfo,
+        },
       },
     }));
     try {
@@ -221,22 +227,29 @@ export default function App() {
     const moon = getCurrentMoonPosition();
     setMoonInfo(moon);
 
-    // 2. Load dataset asynchronously (first static atlas.json, then live API)
-    const loadAtlasData = async () => {
-      // 1. Immediately fetch static file to ensure instant rendering
-      try {
-        const staticRes = await fetch(`/data/atlas.json?t=${Date.now()}`);
-        if (staticRes.ok) {
-          const staticJson = await staticRes.json();
-          if (staticJson && Array.isArray(staticJson.opere) && staticJson.opere.length > 0) {
-            setData(staticJson);
-          }
-        }
-      } catch (err) {
-        console.warn('Fallback static file load:', err);
+    // 2. Restore cached local updates instantly
+    try {
+      const cachedBio = localStorage.getItem('aaa_curator_bio');
+      const cachedInfo = localStorage.getItem('aaa_project_info');
+      const cachedArt = localStorage.getItem('aaa_custom_artworks');
+      if (cachedBio || cachedInfo || cachedArt) {
+        setData((prev) => ({
+          ...prev,
+          progetto: {
+            ...(prev.progetto || {}),
+            ...(cachedBio ? { curatore: JSON.parse(cachedBio) } : {}),
+            ...(cachedInfo ? { info: JSON.parse(cachedInfo) } : {}),
+          },
+          ...(cachedArt ? { opere: JSON.parse(cachedArt) } : {}),
+        }));
       }
+    } catch (e) {
+      console.warn('LocalStorage restore:', e);
+    }
 
-      // 2. Background live API fetch
+    // 3. Load dataset asynchronously (first live API from GitHub, with static fallback)
+    const loadAtlasData = async () => {
+      // Live API fetch (GitHub single source of truth)
       try {
         const res = await fetch(`/api/get-atlas?t=${Date.now()}`, {
           cache: 'no-store',
@@ -244,12 +257,26 @@ export default function App() {
         });
         if (res.ok) {
           const json = await res.json();
-          if (json && json.opere && Array.isArray(json.opere) && json.opere.length > 0) {
+          if (json && json.progetto && json.opere && Array.isArray(json.opere) && json.opere.length > 0) {
             setData(json);
+            return;
           }
         }
       } catch (e) {
         console.warn('API fetch live update:', e);
+      }
+
+      // Fallback to static atlas.json
+      try {
+        const staticRes = await fetch(`/data/atlas.json?t=${Date.now()}`);
+        if (staticRes.ok) {
+          const staticJson = await staticRes.json();
+          if (staticJson && staticJson.progetto && staticJson.opere) {
+            setData(staticJson);
+          }
+        }
+      } catch (err) {
+        console.warn('Fallback static file load:', err);
       }
     };
 

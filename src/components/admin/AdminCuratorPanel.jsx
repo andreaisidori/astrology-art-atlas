@@ -424,23 +424,25 @@ export default function AdminCuratorPanel({
   };
 
   // Save Bio Form
-  const handleSaveBio = (e) => {
+  const handleSaveBio = async (e) => {
     e.preventDefault();
     if (onUpdateBio) {
       onUpdateBio(bioForm);
     }
     setBioSaved(true);
     setTimeout(() => setBioSaved(false), 2500);
+    await handleCommitAndSync();
   };
 
   // Save Project Info & Vision Form
-  const handleSaveInfo = (e) => {
+  const handleSaveInfo = async (e) => {
     e.preventDefault();
     if (onUpdateInfo) {
       onUpdateInfo(infoForm);
     }
     setInfoSaved(true);
     setTimeout(() => setInfoSaved(false), 2500);
+    await handleCommitAndSync();
   };
 
   // Delete artwork
@@ -460,6 +462,14 @@ export default function AdminCuratorPanel({
     if (isSyncing) return;
     setIsSyncing(true);
     if (!isAuto) setSyncStatus(null);
+
+    // 1. Always propagate bioForm and infoForm to parent state
+    if (onUpdateBio) {
+      onUpdateBio(bioForm);
+    }
+    if (onUpdateInfo) {
+      onUpdateInfo(infoForm);
+    }
 
     // If currently editing or creating an artwork with valid artist/title, merge it first
     let currentArtworks = [...artworks];
