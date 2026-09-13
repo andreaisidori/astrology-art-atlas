@@ -150,7 +150,7 @@ export default function CelestialSphere({ activeSignId, onSelectSign, sphereRadi
                   }`}
                   style={{ borderColor: isActive ? sign.color : undefined }}
                 >
-                  <span className="font-serif text-sm md:text-base tracking-[0.25em] uppercase text-white font-medium drop-shadow-lg select-none">
+                  <span className="font-mono text-sm md:text-base tracking-[0.2em] uppercase text-white font-medium drop-shadow-lg select-none">
                     {sign.latin}
                   </span>
                 </button>

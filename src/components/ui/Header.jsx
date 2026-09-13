@@ -32,7 +32,7 @@ export default function Header({
 
         <div className="flex flex-col">
           <div className="flex items-center gap-2">
-            <h1 className={`text-sm md:text-base font-bold tracking-wider uppercase transition-colors flex items-center gap-1.5 ${
+            <h1 className={`text-sm md:text-base font-mono font-bold tracking-wider uppercase transition-colors flex items-center gap-1.5 ${
               isNight ? 'text-white' : 'text-zinc-900'
             }`}>
               <span className="text-amber-400 font-extrabold tracking-widest">AAA</span>
@@ -43,7 +43,7 @@ export default function Header({
             <span className={isNight ? 'text-white/40' : 'text-zinc-500'}>a cura di</span>
             <button
               onClick={onOpenBio}
-              className={`transition-all text-left flex items-center gap-0.5 group/bio font-medium ${
+              className={`transition-all text-left flex items-center gap-0.5 group/bio font-medium font-mono ${
                 isNight ? 'text-amber-300/90 hover:text-amber-300' : 'text-amber-700 hover:text-amber-800'
               }`}
               title="Leggi la biografia di Giacomo Isidori"
@@ -73,7 +73,7 @@ export default function Header({
         <button
           onClick={onToggleViewMode}
           title={isNight ? 'Passa alla sezione Archivio (Pensiero Diurno / Bianco)' : 'Torna alla sezione Atlante (Volta Celeste 3D)'}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium border transition-all shadow-md ${
+          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium border transition-all shadow-md ${
             isNight
               ? 'bg-white/10 hover:bg-white/20 border-white/20 text-white backdrop-blur-md'
               : 'bg-zinc-900 text-white hover:bg-zinc-800 border-zinc-800'
