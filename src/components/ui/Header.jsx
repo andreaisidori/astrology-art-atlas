@@ -6,8 +6,6 @@ export default function Header({
   viewMode,
   onToggleViewMode,
   moonInfo,
-  isDomeView,
-  onToggleDomeView,
   onOpenInfo,
   onOpenAdmin,
   onOpenLanding,
@@ -41,16 +39,19 @@ export default function Header({
               <span className="text-[11px] font-normal opacity-60 lowercase font-mono">/ astrology art atlas</span>
             </h1>
           </div>
-          <button
-            onClick={onOpenBio}
-            className={`text-[10px] tracking-wide font-mono transition-all text-left flex items-center gap-1 group/bio ${
-              isNight ? 'text-white/60 hover:text-amber-300' : 'text-zinc-600 hover:text-amber-600'
-            }`}
-            title="Leggi la biografia di Giacomo Isidori"
-          >
-            <span className="group-hover/bio:underline">a cura di Giacomo Isidori</span>
-            <span className="text-[8px] opacity-60">↗</span>
-          </button>
+          <div className="flex items-center gap-1 text-[10px] tracking-wide font-mono transition-colors">
+            <span className={isNight ? 'text-white/40' : 'text-zinc-500'}>a cura di</span>
+            <button
+              onClick={onOpenBio}
+              className={`transition-all text-left flex items-center gap-0.5 group/bio font-medium ${
+                isNight ? 'text-amber-300/90 hover:text-amber-300' : 'text-amber-700 hover:text-amber-800'
+              }`}
+              title="Leggi la biografia di Giacomo Isidori"
+            >
+              <span className="group-hover/bio:underline underline-offset-2">Giacomo Isidori</span>
+              <span className="text-[9px] opacity-60">↗</span>
+            </button>
+          </div>
         </div>
 
         {/* Active Sign Filter Pill */}
@@ -68,26 +69,10 @@ export default function Header({
 
       {/* Right: Controls & Toggles */}
       <div className="flex items-center gap-2 md:gap-3 pointer-events-auto">
-        {/* Dome / Fisheye Simulator Toggle (Only in 3D Mode) */}
-        {isNight && (
-          <button
-            onClick={onToggleDomeView}
-            title={isDomeView ? 'Disattiva anteprima Cupola / Fisheye' : 'Attiva anteprima Cupola / Fisheye'}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
-              isDomeView
-                ? 'bg-amber-500/20 border-amber-400 text-amber-300 shadow-lg shadow-amber-500/10'
-                : 'bg-black/40 border-white/15 text-white/70 hover:text-white hover:border-white/30 backdrop-blur-md'
-            }`}
-          >
-            <Disc className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Cupola {isDomeView ? 'ON' : 'Preview'}</span>
-          </button>
-        )}
-
-        {/* Day / Night Polarity Switch */}
+        {/* Alternanza tra le due sezioni: Archivio (Sole) / Atlante (Luna) */}
         <button
           onClick={onToggleViewMode}
-          title={isNight ? 'Passa all’Archivio Tassonomico Bianco (Giorno)' : 'Torna alla Volta Celeste 3D (Notte)'}
+          title={isNight ? 'Passa alla sezione Archivio (Pensiero Diurno / Bianco)' : 'Torna alla sezione Atlante (Volta Celeste 3D)'}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium border transition-all shadow-md ${
             isNight
               ? 'bg-white/10 hover:bg-white/20 border-white/20 text-white backdrop-blur-md'
@@ -97,12 +82,12 @@ export default function Header({
           {isNight ? (
             <>
               <Sun className="w-3.5 h-3.5 text-amber-300" />
-              <span className="hidden sm:inline">Archivio Bianco</span>
+              <span className="hidden sm:inline">Archivio</span>
             </>
           ) : (
             <>
               <Moon className="w-3.5 h-3.5 text-indigo-300" />
-              <span className="hidden sm:inline">Volta Celeste 3D</span>
+              <span className="hidden sm:inline">Atlante</span>
             </>
           )}
         </button>
@@ -123,7 +108,7 @@ export default function Header({
         {/* Protected Curator Studio Button */}
         <button
           onClick={onOpenAdmin}
-          title="Curator Studio / Gestione Backend (Protetto)"
+          title="Curator Studio / Gestione Backend (Opere o Bio)"
           className={`p-2 rounded-lg border transition-all backdrop-blur-md ${
             isNight
               ? 'bg-white/5 border-white/10 text-cyan-400 hover:text-cyan-300 hover:bg-white/15 hover:border-cyan-400/40'

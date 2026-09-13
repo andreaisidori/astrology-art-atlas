@@ -136,8 +136,6 @@ export default function App() {
         viewMode={viewMode}
         onToggleViewMode={() => setViewMode(v => (v === '3d' ? 'archive' : '3d'))}
         moonInfo={moonInfo}
-        isDomeView={isDomeView}
-        onToggleDomeView={() => setIsDomeView(d => !d)}
         onOpenInfo={() => setIsInfoOpen(true)}
         onOpenAdmin={() => setIsAdminOpen(true)}
         onOpenLanding={() => setShowLanding(true)}
@@ -220,6 +218,25 @@ export default function App() {
             onToggleShowImages={() => setShowImages((prev) => !prev)}
           />
 
+          {/* Bottom-Left Effetto Cupola Semicircle Button */}
+          <div className="fixed bottom-6 left-4 md:left-8 z-30 pointer-events-auto">
+            <button
+              onClick={() => setIsDomeView(d => !d)}
+              title={isDomeView ? 'Disattiva Effetto Cupola' : 'Attiva Effetto Cupola'}
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-medium border transition-all duration-300 shadow-2xl backdrop-blur-xl ${
+                isDomeView
+                  ? 'bg-amber-500/25 border-amber-400 text-amber-300 shadow-amber-500/15 ring-1 ring-amber-400/40'
+                  : 'bg-black/80 hover:bg-black/95 border-white/15 text-white/80 hover:text-white hover:border-white/40'
+              }`}
+            >
+              {/* Semicircle / Dome Icon */}
+              <svg className="w-4 h-4 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 18 A 9 9 0 0 1 21 18 Z" />
+              </svg>
+              <span className="font-mono tracking-wider">Effetto Cupola</span>
+            </button>
+          </div>
+
           {/* Bottom Zodiac Navigation Ribbon */}
           <ZodiacNav
             activeSignId={activeSignId}
@@ -253,33 +270,6 @@ export default function App() {
           handleSelectSign(signId);
         }}
       />
-
-      {/* Bottom-Right Credits & Instagram Contact */}
-      <aside className="fixed bottom-6 right-4 md:right-8 z-30 pointer-events-auto">
-        <a
-          href="https://instagram.com/astro.expression"
-          target="_blank"
-          rel="noopener noreferrer"
-          title="Curatela: Giacomo Isidori • @astro.expression"
-          className={`flex items-center gap-2.5 px-3 py-1.5 rounded-xl border backdrop-blur-xl shadow-2xl transition-all duration-300 group ${
-            viewMode === '3d'
-              ? 'bg-black/80 hover:bg-black/95 border-white/15 hover:border-white/40 text-white'
-              : 'bg-white/90 hover:bg-white border-zinc-300 hover:border-zinc-500 text-zinc-900 shadow-md'
-          }`}
-        >
-          <div className="w-6 h-6 rounded-lg bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform flex-shrink-0">
-            <Instagram className="w-3.5 h-3.5" />
-          </div>
-          <div className="flex flex-col text-left leading-tight">
-            <span className="text-[10px] font-semibold tracking-wide">Giacomo Isidori</span>
-            <span className={`text-[9px] font-mono transition-colors ${
-              viewMode === '3d' ? 'text-zinc-400 group-hover:text-pink-300' : 'text-zinc-500 group-hover:text-pink-600'
-            }`}>
-              @astro.expression
-            </span>
-          </div>
-        </a>
-      </aside>
 
       {/* Info & Statement Modal */}
       <InfoModal
