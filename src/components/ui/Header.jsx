@@ -1,6 +1,5 @@
 import React from 'react';
 import { Sparkles, Sun, Moon, Eye, Disc, Lock } from 'lucide-react';
-import ZodiacGlyph from './ZodiacGlyph';
 
 export default function Header({
   viewMode,
@@ -60,18 +59,6 @@ export default function Header({
             </button>
           </div>
         </div>
-
-        {/* Active Sign Filter Pill */}
-        {activeSignId && (
-          <button
-            onClick={onResetSign}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono bg-blue-500/20 text-blue-300 border border-blue-400/30 hover:bg-blue-500/30 transition-all pointer-events-auto"
-          >
-            <ZodiacGlyph sign={activeSignId} className="w-3 h-3" color="currentColor" />
-            <span>Focus: {activeSignId.toUpperCase()}</span>
-            <span className="text-[10px] opacity-60 ml-1">✕</span>
-          </button>
-        )}
       </div>
 
       {/* Right: Controls & Toggles */}
