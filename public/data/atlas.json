@@ -20,7 +20,7 @@
     "descrizione": "Atlante mnemotecnico e archivio dinamico in 3D per l'immaginario artistico contemporaneo.",
     "ispirazione": "Aby Warburg — Bilderatlas Mnemosyne",
     "totale_artisti": 174,
-    "aggiornato_il": "2026-09-13T14:45:56.835Z"
+    "aggiornato_il": "2026-09-13T15:18:40.670Z"
   },
   "opere": [
     {
@@ -3507,7 +3507,14 @@
       "link_fonte": "",
       "data_nascita": "24 November 1864",
       "anno_morte": "1901",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Toulouse-Lautrec,_Henri_de"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Toulouse-Lautrec,_Henri_de",
+      "posizione_manuale": {
+        "x": -9.11,
+        "y": 13.27,
+        "z": -50.36
+      },
+      "scala": 2,
+      "dimensione": 2
     },
     {
       "id": "luigi_ontani_121",
@@ -3652,7 +3659,12 @@
       "link_fonte": "",
       "data_nascita": "30 November 1964",
       "anno_morte": "",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "posizione_manuale": {
+        "x": -30.04,
+        "y": -3.73,
+        "z": -45.24
+      }
     },
     {
       "id": "bruce_nauman_126",
