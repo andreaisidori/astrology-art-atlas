@@ -459,6 +459,59 @@ export default function AdminCuratorPanel({
     setIsSyncing(true);
     setSyncStatus(null);
 
+    // If currently editing or creating an artwork with valid artist/title, merge it first
+    let currentArtworks = [...artworks];
+    if ((editingArt || isCreatingNew) && (formData.artista || formData.titolo)) {
+      const keywordsArray = (formData.parole_chiave_str || "")
+        .split(",")
+        .map(k => k.trim())
+        .filter(Boolean);
+
+      const bioStr = formatBiographicalDates({
+        data_nascita: formData.data_nascita,
+        anno_morte: formData.anno_morte,
+        date_biografiche: formData.date_biografiche,
+      });
+
+      const activeItem = {
+        id: formData.id || (editingArt?.id) || `art_${Date.now()}`,
+        segno: formData.segno,
+        artista: formData.artista,
+        citazione: formData.citazione || "",
+        commento: (formData.commento || "").trim(),
+        link_tema_natale: (formData.link_tema_natale || "").trim(),
+        titolo: formData.titolo,
+        data_nascita: (formData.data_nascita || "").trim(),
+        anno_morte: (formData.anno_morte || "").trim(),
+        date_biografiche: bioStr,
+        anno: parseInt(formData.anno, 10) || null,
+        tecnica: formData.tecnica,
+        immagine: formData.immagine || "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=800",
+        tema_natale: {
+          sole: formData.tema_natale?.sole || null,
+          luna: formData.tema_natale?.luna || null,
+          venere: formData.tema_natale?.venere || null,
+          mercurio: formData.tema_natale?.mercurio || null,
+        },
+        posizione_manuale: {
+          x: parseFloat(formData.posizione_manuale?.x) || 0,
+          y: parseFloat(formData.posizione_manuale?.y) || 0,
+          z: parseFloat(formData.posizione_manuale?.z) || 0,
+        },
+        parole_chiave: keywordsArray,
+        nota_simbolica: formData.nota_simbolica,
+        colore_dominante: formData.colore_dominante,
+        link_fonte: formData.link_fonte,
+      };
+
+      if (editingArt) {
+        currentArtworks = currentArtworks.map(a => (a.id === editingArt.id ? activeItem : a));
+      } else {
+        currentArtworks = [...currentArtworks, activeItem];
+      }
+      onUpdateArtworks(currentArtworks);
+    }
+
     const exportObject = {
       progetto: {
         titolo: infoForm.titolo || "AAA — Astrology Art Atlas",
@@ -466,15 +519,15 @@ export default function AdminCuratorPanel({
         info: infoForm,
         descrizione: "Atlante mnemotecnico e archivio dinamico in 3D per l'immaginario artistico contemporaneo.",
         ispirazione: "Aby Warburg — Bilderatlas Mnemosyne",
-        totale_artisti: artworks.length,
+        totale_artisti: currentArtworks.length,
         aggiornato_il: new Date().toISOString(),
       },
-      opere: artworks,
+      opere: currentArtworks,
     };
 
     // 1. Always backup to localStorage
     try {
-      localStorage.setItem("aaa_custom_artworks", JSON.stringify(artworks));
+      localStorage.setItem("aaa_custom_artworks", JSON.stringify(currentArtworks));
       localStorage.setItem("aaa_curator_bio", JSON.stringify(bioForm));
       localStorage.setItem("aaa_project_info", JSON.stringify(infoForm));
       if (githubToken) {

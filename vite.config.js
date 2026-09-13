@@ -3,11 +3,30 @@ import react from '@vitejs/plugin-react'
 import fs from 'fs'
 import path from 'path'
 
-// Vite plugin to handle /api/save-atlas in local dev
+// Vite plugin to handle /api/save-atlas and /api/get-atlas in local dev
 function localSaveAtlasPlugin() {
   return {
     name: 'local-save-atlas-plugin',
     configureServer(server) {
+      server.middlewares.use('/api/get-atlas', (req, res) => {
+        try {
+          const filePath = path.join(process.cwd(), 'public', 'data', 'atlas.json')
+          if (fs.existsSync(filePath)) {
+            const fileData = fs.readFileSync(filePath, 'utf-8')
+            res.statusCode = 200
+            res.setHeader('Content-Type', 'application/json')
+            res.setHeader('Cache-Control', 'no-store')
+            res.end(fileData)
+            return
+          }
+          res.statusCode = 404
+          res.end(JSON.stringify({ error: 'Not found' }))
+        } catch (err) {
+          res.statusCode = 500
+          res.end(JSON.stringify({ error: err.message }))
+        }
+      })
+
       server.middlewares.use('/api/save-atlas', (req, res) => {
         if (req.method === 'POST') {
           let body = ''

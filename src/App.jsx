@@ -96,52 +96,38 @@ export default function App() {
     const moon = getCurrentMoonPosition();
     setMoonInfo(moon);
 
-    // 2. Load dataset
-    fetch('/data/atlas.json')
-      .then((res) => res.json())
-      .then((json) => {
-        // Merge with locally stored bio if available
-        try {
-          const savedBio = localStorage.getItem('aaa_curator_bio');
-          if (savedBio) {
-            json.progetto = json.progetto || {};
-            json.progetto.curatore = JSON.parse(savedBio);
+    // 2. Load dataset from real-time live API (GitHub source of truth) with static fallback
+    const loadAtlasData = async () => {
+      try {
+        const res = await fetch(`/api/get-atlas?t=${Date.now()}`, {
+          cache: 'no-store',
+          headers: { 'Cache-Control': 'no-cache, no-store' },
+        });
+        if (res.ok) {
+          const json = await res.json();
+          if (json && json.opere && Array.isArray(json.opere) && json.opere.length > 0) {
+            setData(json);
+            setLoading(false);
+            return;
           }
-        } catch (e) {
-          // ignore
         }
+      } catch (e) {
+        console.warn('API fetch fallback to static file:', e);
+      }
 
-        // Merge with locally stored project info if available
-        try {
-          const savedInfo = localStorage.getItem('aaa_project_info');
-          if (savedInfo) {
-            json.progetto = json.progetto || {};
-            json.progetto.info = JSON.parse(savedInfo);
-          }
-        } catch (e) {
-          // ignore
-        }
-
-        // Merge with locally stored artworks if available
-        try {
-          const savedArtworks = localStorage.getItem('aaa_custom_artworks');
-          if (savedArtworks) {
-            const parsed = JSON.parse(savedArtworks);
-            if (Array.isArray(parsed) && parsed.length > 0) {
-              json.opere = parsed;
-            }
-          }
-        } catch (e) {
-          // ignore
-        }
-
+      // Static fallback
+      try {
+        const res = await fetch(`/data/atlas.json?t=${Date.now()}`, { cache: 'no-store' });
+        const json = await res.json();
         setData(json);
-        setLoading(false);
-      })
-      .catch((err) => {
+      } catch (err) {
         console.error('Errore nel caricamento del database:', err);
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    loadAtlasData();
   }, []);
 
   // Compute 3D positions for all artworks with balanced airy spacing (radius 48)
