@@ -20,7 +20,7 @@
     "descrizione": "Atlante mnemotecnico e archivio dinamico in 3D per l'immaginario artistico contemporaneo.",
     "ispirazione": "Aby Warburg — Bilderatlas Mnemosyne",
     "totale_artisti": 174,
-    "aggiornato_il": "2026-09-13T15:18:40.670Z"
+    "aggiornato_il": "2026-09-13T15:19:46.137Z"
   },
   "opere": [
     {
@@ -4070,7 +4070,12 @@
       "link_fonte": "",
       "data_nascita": "7 January 1830",
       "anno_morte": "1902",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Bierstadt,_Albert"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Bierstadt,_Albert",
+      "posizione_manuale": {
+        "x": 9.72,
+        "y": 12.23,
+        "z": -48.49
+      }
     },
     {
       "id": "giovanni_segantini_140",
