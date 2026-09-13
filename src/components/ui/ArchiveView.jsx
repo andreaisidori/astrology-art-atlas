@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Filter, ArrowUpRight, Grid, List, Sparkles, Quote } from 'lucide-react';
+import { Search, Filter, ArrowUpRight, Grid, List, Sparkles, Quote, ExternalLink } from 'lucide-react';
 import { ZODIAC_SIGNS, formatBiographicalDates } from '../../utils/astronomy';
 import ZodiacGlyph from './ZodiacGlyph';
 
@@ -232,6 +232,19 @@ export default function ArchiveView({
                           <ZodiacGlyph sign={art.tema_natale.mercurio} className="w-2.5 h-2.5" color="#6b21a8" />
                           <span>{art.tema_natale.mercurio.slice(0, 3)}</span>
                         </span>
+                      )}
+                      {art.link_tema_natale && (
+                        <a
+                          href={art.link_tema_natale}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-amber-500/10 hover:bg-amber-500/20 text-amber-900 border border-amber-500/30 text-[9px] font-mono transition-colors ml-auto"
+                          title="Apri scheda tema natale su Astro-Databank"
+                        >
+                          <span>Tema Natale</span>
+                          <ExternalLink className="w-2.5 h-2.5 opacity-70" />
+                        </a>
                       )}
                     </div>
                   )}

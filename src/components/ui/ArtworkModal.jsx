@@ -126,6 +126,21 @@ export default function ArtworkModal({ artwork, onClose, onSelectSign, onSelectK
                     </span>
                   </div>
                 </div>
+
+                {artwork.link_tema_natale && (
+                  <div className="pt-2 border-t border-white/10 flex items-center justify-between">
+                    <a
+                      href={artwork.link_tema_natale}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-[11px] font-mono text-amber-300 hover:text-amber-200 hover:underline transition-colors"
+                    >
+                      <Compass className="w-3.5 h-3.5 text-amber-400" />
+                      <span>Consulta Tema Natale (Astro-Databank)</span>
+                      <ExternalLink className="w-3 h-3 ml-0.5 opacity-80" />
+                    </a>
+                  </div>
+                )}
               </div>
             )}
 

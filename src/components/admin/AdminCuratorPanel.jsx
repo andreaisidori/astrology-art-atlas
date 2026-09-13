@@ -77,6 +77,7 @@ export default function AdminCuratorPanel({
     nota_simbolica: "",
     colore_dominante: "#e63946",
     link_fonte: "",
+    link_tema_natale: "",
     clonedFromArtist: "",
   });
 
@@ -263,6 +264,7 @@ export default function AdminCuratorPanel({
       nota_simbolica: "",
       colore_dominante: "#e63946",
       link_fonte: "",
+      link_tema_natale: "",
       clonedFromArtist: "",
     });
   };
@@ -277,6 +279,7 @@ export default function AdminCuratorPanel({
       ...art,
       citazione: art.citazione || "",
       commento: art.commento || "",
+      link_tema_natale: art.link_tema_natale || "",
       data_nascita: parsedDates.data_nascita,
       anno_morte: parsedDates.anno_morte,
       date_biografiche: formatBiographicalDates({ ...art, ...parsedDates }),
@@ -304,6 +307,7 @@ export default function AdminCuratorPanel({
       artista: baseArt.artista || "",
       citazione: baseArt.citazione || "",
       commento: "",
+      link_tema_natale: baseArt.link_tema_natale || "",
       titolo: "",
       data_nascita: parsedDates.data_nascita,
       anno_morte: parsedDates.anno_morte,
@@ -349,6 +353,7 @@ export default function AdminCuratorPanel({
       artista: formData.artista,
       citazione: formData.citazione || "",
       commento: (formData.commento || "").trim(),
+      link_tema_natale: (formData.link_tema_natale || "").trim(),
       titolo: formData.titolo,
       data_nascita: (formData.data_nascita || "").trim(),
       anno_morte: (formData.anno_morte || "").trim(),
@@ -1167,6 +1172,34 @@ export default function AdminCuratorPanel({
                           {ZODIAC_SIGNS.map(s => <option key={s.id} value={s.name}>{s.name}</option>)}
                         </select>
                       </div>
+                    </div>
+
+                    {/* Link Scheda Tema Natale (Astro.com / Astro-Seek / Astrodienst) */}
+                    <div className="pt-2.5 border-t border-white/10">
+                      <label className="block text-[11px] font-mono text-zinc-400 mb-1 flex items-center justify-between">
+                        <span className="flex items-center gap-1.5 text-zinc-300">
+                          <ExternalLink className="w-3.5 h-3.5 text-amber-400" />
+                          <span>Link Scheda Tema Natale (Astro.com / Astro-Seek / Astrodienst)</span>
+                        </span>
+                        {formData.link_tema_natale && (
+                          <a
+                            href={formData.link_tema_natale}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[10px] text-cyan-400 hover:text-cyan-300 flex items-center gap-1 font-mono hover:underline"
+                          >
+                            <span>Verifica Scheda</span>
+                            <ExternalLink className="w-2.5 h-2.5" />
+                          </a>
+                        )}
+                      </label>
+                      <input
+                        type="url"
+                        value={formData.link_tema_natale || ""}
+                        onChange={(e) => setFormData({ ...formData, link_tema_natale: e.target.value })}
+                        className="w-full px-3 py-2 rounded-xl bg-zinc-950/80 border border-white/15 text-white text-xs font-mono placeholder:text-zinc-600 focus:ring-1 focus:ring-amber-400"
+                        placeholder="Es: https://www.astro.com/astro-databank/Kusama,_Yayoi"
+                      />
                     </div>
                   </div>
 
