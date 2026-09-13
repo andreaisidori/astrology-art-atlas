@@ -42,10 +42,10 @@ export default function CelestialFloor({ radius = 25, yPosition = -12, opacity =
 
   return (
     <group position={[0, yPosition, 0]}>
-      {/* 1. Corona Zodiacale Esterna (Agganciata al cielo / ruota con la volta celeste) */}
+      {/* 1. Corona Zodiacale Esterna (Agganciata al cielo / identica alla landing page) */}
       <mesh
         rotation={[-Math.PI / 2, 0, SKY_ALIGN_ROT_Z]}
-        scale={[-1, 1, 1]}
+        scale={[1, 1, 1]}
         position={[0, 0, 0]}
       >
         <planeGeometry args={[radius * 2, radius * 2]} />
