@@ -13,6 +13,7 @@ export default function CameraController({
   manualZoomVelocity = 0,
   isLanding = false,
   onLandingComplete,
+  enabled = true,
 }) {
   const { camera, gl } = useThree();
   const controlsRef = useRef();
@@ -270,6 +271,7 @@ export default function CameraController({
   return (
     <OrbitControls
       ref={controlsRef}
+      enabled={enabled}
       enablePan={false}
       enableZoom={false}
       rotateSpeed={-0.6} // Responsive drag & swipe

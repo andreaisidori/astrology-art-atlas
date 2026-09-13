@@ -52,12 +52,17 @@ export default function ArtworkNode({
   targetPosition,
   isDimmed,
   isSelected,
+  isEditingSelected = false,
+  isSpatialEditMode = false,
   onSelect,
   magnitude = 1.0,
   showImages = false,
 }) {
   const meshRef = useRef();
   const [hovered, setHovered] = useState(false);
+
+  // Individual artwork scale multiplier (default: 1.0)
+  const individualScale = typeof artwork.scala === 'number' ? artwork.scala : (artwork.dimensione || 1.0);
 
   // Smooth position interpolation vector
   const currentPos = useRef(new THREE.Vector3(...(targetPosition || [0, 0, 0])));
@@ -66,16 +71,20 @@ export default function ArtworkNode({
   useFrame((_, delta) => {
     if (!meshRef.current) return;
     
-    // Smooth lerp to target position
-    currentPos.current.lerp(targetVec, Math.min(delta * 4.5, 1));
+    // In spatial edit mode, we can snap directly to targetPosition if being dragged, or lerp smoothly
+    if (isSpatialEditMode && isEditingSelected) {
+      currentPos.current.copy(targetVec);
+    } else {
+      currentPos.current.lerp(targetVec, Math.min(delta * 4.5, 1));
+    }
     meshRef.current.position.copy(currentPos.current);
 
     // Make the sprite always orient towards the origin (camera viewpoint)
     meshRef.current.lookAt(0, 0, 0);
   });
 
-  const baseScale = magnitude * (hovered ? 1.45 : isSelected ? 1.25 : 1.0);
-  const glowColor = artwork.colore_dominante || '#ffffff';
+  const baseScale = magnitude * individualScale * (hovered ? 1.45 : (isSelected || isEditingSelected) ? 1.25 : 1.0);
+  const glowColor = isEditingSelected ? '#10b981' : (artwork.colore_dominante || '#ffffff');
 
   return (
     <group ref={meshRef} position={targetPosition}>
@@ -96,17 +105,25 @@ export default function ArtworkNode({
           document.body.style.cursor = 'auto';
         }}
       >
-        {/* Glowing Aura Frame in dominant color */}
+        {/* Glowing Aura Frame in dominant color or emerald if selected in edit mode */}
         <mesh position={[0, 0, -0.04]}>
           <planeGeometry args={[2.7, 2.7]} />
           <meshBasicMaterial
             color={glowColor}
             transparent
-            opacity={hovered ? 0.75 : isSelected ? 0.55 : isDimmed ? 0.08 : 0.28}
+            opacity={isEditingSelected ? 0.9 : hovered ? 0.75 : isSelected ? 0.55 : isDimmed ? 0.08 : 0.28}
             depthWrite={false}
             side={THREE.DoubleSide}
           />
         </mesh>
+
+        {/* Spatial Edit Mode Selector Frame */}
+        {isEditingSelected && (
+          <mesh position={[0, 0, -0.02]}>
+            <ringGeometry args={[1.75, 1.95, 32]} />
+            <meshBasicMaterial color="#10b981" transparent opacity={0.9} side={THREE.DoubleSide} />
+          </mesh>
+        )}
 
         {/* Square Content: Either Image Texture OR Ultra-Fast Minimalist Square Space */}
         {showImages ? (

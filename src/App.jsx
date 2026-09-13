@@ -18,7 +18,9 @@ import NavigationArrows from './components/ui/NavigationArrows';
 import ZoomControls from './components/ui/ZoomControls';
 import BackgroundMusic from './components/audio/BackgroundMusic';
 import CameraController from './components/3d/CameraController';
-import { getCurrentMoonPosition } from './utils/astronomy';
+import CuratorSpatialEditor from './components/3d/CuratorSpatialEditor';
+import SpatialCuratorHUD from './components/ui/SpatialCuratorHUD';
+import { getCurrentMoonPosition, ZODIAC_SIGNS } from './utils/astronomy';
 import { computeArtworkPositions } from './utils/layouts';
 
 export default function App() {
@@ -40,6 +42,130 @@ export default function App() {
   const [showImages, setShowImages] = useState(false); // Default to fast lightweight square frames
   const [manualRotateVelocity, setManualRotateVelocity] = useState(0);
   const [manualZoomVelocity, setManualZoomVelocity] = useState(0);
+
+  // 3D Spatial Curatorial Studio State
+  const [isSpatialEditMode, setIsSpatialEditMode] = useState(false);
+  const [selectedEditArtworkId, setSelectedEditArtworkId] = useState(null);
+  const [isDragging3D, setIsDragging3D] = useState(false);
+  const [modifiedCount, setModifiedCount] = useState(0);
+  const [isSyncing3D, setIsSyncing3D] = useState(false);
+  const [syncStatus3D, setSyncStatus3D] = useState(null);
+
+  // Currently selected artwork object for 3D spatial transformation
+  const selectedEditArtwork = useMemo(() => {
+    return (data.opere || []).find((a) => a.id === selectedEditArtworkId) || null;
+  }, [data.opere, selectedEditArtworkId]);
+
+  // Update specific artwork 3D coordinates in real-time during drag
+  const handleUpdateArtworkPosition = (artId, pos) => {
+    setData((prev) => {
+      const newOpere = (prev.opere || []).map((item) => {
+        if (item.id === artId) {
+          return {
+            ...item,
+            posizione_manuale: { x: pos.x, y: pos.y, z: pos.z },
+          };
+        }
+        return item;
+      });
+      return { ...prev, opere: newOpere };
+    });
+    setModifiedCount((c) => c + 1);
+  };
+
+  // Update specific artwork scale/size multiplier
+  const handleUpdateArtworkScale = (artId, scale) => {
+    setData((prev) => {
+      const newOpere = (prev.opere || []).map((item) => {
+        if (item.id === artId) {
+          return {
+            ...item,
+            scala: scale,
+            dimensione: scale,
+          };
+        }
+        return item;
+      });
+      return { ...prev, opere: newOpere };
+    });
+    setModifiedCount((c) => c + 1);
+  };
+
+  // Reset artwork position to calculated astronomical coordinates
+  const handleResetArtworkPosition = (artId) => {
+    setData((prev) => {
+      const newOpere = (prev.opere || []).map((item) => {
+        if (item.id === artId) {
+          const clone = { ...item };
+          delete clone.posizione_manuale;
+          return clone;
+        }
+        return item;
+      });
+      return { ...prev, opere: newOpere };
+    });
+    setModifiedCount((c) => c + 1);
+  };
+
+  // Commit and sync 3D positions and scales to permanent GitHub / API storage
+  const handleCommitAndSync3D = async () => {
+    setIsSyncing3D(true);
+    setSyncStatus3D(null);
+
+    const exportObject = {
+      progetto: {
+        titolo: data.progetto?.info?.titolo || 'AAA — Astrology Art Atlas',
+        curatore: data.progetto?.curatore || {},
+        info: data.progetto?.info || {},
+        descrizione: "Atlante mnemotecnico e archivio dinamico in 3D per l'immaginario artistico contemporaneo.",
+        ispirazione: 'Aby Warburg — Bilderatlas Mnemosyne',
+        totale_artisti: data.opere?.length || 0,
+        aggiornato_il: new Date().toISOString(),
+      },
+      opere: data.opere || [],
+    };
+
+    try {
+      localStorage.setItem('aaa_custom_artworks', JSON.stringify(data.opere || []));
+    } catch (e) {
+      console.warn('LocalStorage backup error:', e);
+    }
+
+    try {
+      const githubToken = localStorage.getItem('aaa_github_token') || '';
+      const res = await fetch('/api/save-atlas', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          data: exportObject,
+          githubToken: githubToken.trim() || undefined,
+        }),
+      });
+
+      const json = await res.json();
+      if (res.ok && json.success) {
+        setSyncStatus3D({
+          type: 'success',
+          message: json.message || `Modifiche 3D salvate e committate con successo (${data.opere.length} opere)!`,
+        });
+        setModifiedCount(0);
+      } else {
+        setSyncStatus3D({
+          type: 'error',
+          message: json.error || 'Errore durante il commit su GitHub.',
+        });
+      }
+    } catch (err) {
+      setSyncStatus3D({
+        type: 'success',
+        message: `Salvataggio locale completato (${data.opere?.length || 0} opere).`,
+      });
+      setModifiedCount(0);
+    } finally {
+      setIsSyncing3D(false);
+      setTimeout(() => setSyncStatus3D(null), 5000);
+    }
+  };
 
   // Trigger Sky-Door landing dive when entering from landing screen
   const handleEnterFromLanding = () => {
@@ -224,10 +350,11 @@ export default function App() {
             />
 
             {/* Interactive 3D Artwork Nodes */}
-            {data.opere.map((artwork) => {
+            {(data.opere || []).map((artwork) => {
               const pos = artworkPositions[artwork.id] || [0, 0, 50];
               const isDimmed = activeSignId && (artwork.segno || '').toLowerCase() !== activeSignId.toLowerCase();
               const isSelected = selectedArtwork?.id === artwork.id;
+              const isEditingSelected = isSpatialEditMode && selectedEditArtworkId === artwork.id;
 
               return (
                 <ArtworkNode
@@ -236,12 +363,30 @@ export default function App() {
                   targetPosition={pos}
                   isDimmed={isDimmed}
                   isSelected={isSelected}
+                  isEditingSelected={isEditingSelected}
+                  isSpatialEditMode={isSpatialEditMode}
                   magnitude={magnitude}
                   showImages={showImages}
-                  onSelect={(art) => setSelectedArtwork(art)}
+                  onSelect={(art) => {
+                    if (isSpatialEditMode) {
+                      setSelectedEditArtworkId(art.id);
+                    } else {
+                      setSelectedArtwork(art);
+                    }
+                  }}
                 />
               );
             })}
+
+            {/* 3D Spatial Curatorial Transform Controls */}
+            {isSpatialEditMode && selectedEditArtwork && (
+              <CuratorSpatialEditor
+                selectedArtwork={selectedEditArtwork}
+                currentPosition={artworkPositions[selectedEditArtwork.id]}
+                onUpdatePosition={handleUpdateArtworkPosition}
+                onDraggingChange={setIsDragging3D}
+              />
+            )}
 
             {/* Camera Orbit, Fly-To & Sky-Landing Controller */}
             <CameraController
@@ -253,6 +398,7 @@ export default function App() {
               manualZoomVelocity={manualZoomVelocity}
               isLanding={isLandingTransition}
               onLandingComplete={() => setIsLandingTransition(false)}
+              enabled={!isDragging3D}
             />
           </Canvas>
 
@@ -312,6 +458,33 @@ export default function App() {
 
           {/* Dome / Fisheye Simulation Overlay */}
           <DomeOverlay enabled={isDomeView} />
+
+          {/* 3D Spatial Curatorial Studio HUD Overlay */}
+          {isSpatialEditMode && (
+            <SpatialCuratorHUD
+              selectedArtwork={selectedEditArtwork}
+              currentCoords={
+                selectedEditArtwork
+                  ? {
+                      x: Math.round((artworkPositions[selectedEditArtwork.id]?.[0] || 0) * 100) / 100,
+                      y: Math.round((artworkPositions[selectedEditArtwork.id]?.[1] || 0) * 100) / 100,
+                      z: Math.round((artworkPositions[selectedEditArtwork.id]?.[2] || 0) * 100) / 100,
+                    }
+                  : null
+              }
+              onDeselect={() => setSelectedEditArtworkId(null)}
+              onScaleChange={handleUpdateArtworkScale}
+              onResetPosition={handleResetArtworkPosition}
+              onExit={() => {
+                setIsSpatialEditMode(false);
+                setSelectedEditArtworkId(null);
+              }}
+              onCommitAndSync={handleCommitAndSync3D}
+              isSyncing={isSyncing3D}
+              modifiedCount={modifiedCount}
+              syncStatus={syncStatus3D}
+            />
+          )}
         </div>
       )}
 
@@ -362,6 +535,11 @@ export default function App() {
         onUpdateBio={handleUpdateBio}
         infoData={data.progetto?.info}
         onUpdateInfo={handleUpdateInfo}
+        onStartSpatialEdit={() => {
+          setIsSpatialEditMode(true);
+          setIsAdminOpen(false);
+          setViewMode('3d');
+        }}
         onFocusArtwork3D={(art) => {
           setSelectedArtwork(art);
           setIsAdminOpen(false);

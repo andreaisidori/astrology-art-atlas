@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { X, Plus, Trash2, Edit3, Save, Download, Copy, Check, Lock, Sparkles, Image, Compass, Calendar, Moon, User, BookOpen, ExternalLink, Mail, Instagram, CopyPlus, Layers, Quote, UploadCloud, Loader2 } from "lucide-react";
+import { X, Plus, Trash2, Edit3, Save, Download, Copy, Check, Lock, Sparkles, Image, Compass, Calendar, Moon, User, BookOpen, ExternalLink, Mail, Instagram, CopyPlus, Layers, Quote, UploadCloud, Loader2, Move } from "lucide-react";
 import { ZODIAC_SIGNS, parseBiographicalDates, formatBiographicalDates } from "../../utils/astronomy";
 
 export default function AdminCuratorPanel({
@@ -8,6 +8,7 @@ export default function AdminCuratorPanel({
   artworks,
   onUpdateArtworks,
   onFocusArtwork3D,
+  onStartSpatialEdit,
   bioData,
   onUpdateBio,
   infoData,
@@ -645,6 +646,20 @@ export default function AdminCuratorPanel({
           <div className="flex items-center gap-2 md:gap-3 flex-wrap justify-end">
             {isAuthenticated && (
               <>
+                {/* 0. Live 3D Spatial Editor Mode */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    onClose?.();
+                    onStartSpatialEdit?.();
+                  }}
+                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-purple-500/20 hover:bg-purple-500/30 border border-purple-400/40 text-purple-200 text-xs font-mono transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95"
+                  title="Apri l'Editor 3D Live per trascinare e ridimensionare le opere nella volta celeste"
+                >
+                  <Move className="w-3.5 h-3.5 text-purple-300" />
+                  <span>Curatela 3D (Editor Live)</span>
+                </button>
+
                 {/* 1. Main Commit & Direct Sync Button */}
                 <button
                   onClick={handleCommitAndSync}

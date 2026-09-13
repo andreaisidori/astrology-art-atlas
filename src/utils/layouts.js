@@ -95,8 +95,7 @@ export function computeArtworkPositions(artworks, mode = 'manual', activeSignId 
 
     // Check if custom manual 3D coordinates exist in JSON
     if (art.posizione_manuale && typeof art.posizione_manuale.x === 'number') {
-      const clampedY = Math.max(-10, Math.min(10, art.posizione_manuale.y));
-      result[art.id] = [art.posizione_manuale.x, clampedY, art.posizione_manuale.z];
+      result[art.id] = [art.posizione_manuale.x, art.posizione_manuale.y, art.posizione_manuale.z];
     } else {
       const idHash = (art.id || '').split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
       const lonOffset = ((idHash % 22) - 11); // spread ±11 degrees in longitude
