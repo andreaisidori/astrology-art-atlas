@@ -11,6 +11,7 @@ export default function Header({
   onOpenInfo,
   onOpenAdmin,
   onOpenLanding,
+  onOpenBio,
   activeSignId,
   onResetSign,
 }) {
@@ -40,11 +41,16 @@ export default function Header({
               <span className="text-[11px] font-normal opacity-60 lowercase font-mono">/ astrology art atlas</span>
             </h1>
           </div>
-          <p className={`text-[10px] tracking-wide font-mono transition-colors ${
-            isNight ? 'text-white/40' : 'text-zinc-500'
-          }`}>
-            Curatela &bull; Giacomo Isidori
-          </p>
+          <button
+            onClick={onOpenBio}
+            className={`text-[10px] tracking-wide font-mono transition-all text-left flex items-center gap-1 group/bio ${
+              isNight ? 'text-white/60 hover:text-amber-300' : 'text-zinc-600 hover:text-amber-600'
+            }`}
+            title="Leggi la biografia di Giacomo Isidori"
+          >
+            <span className="group-hover/bio:underline">a cura di Giacomo Isidori</span>
+            <span className="text-[8px] opacity-60">↗</span>
+          </button>
         </div>
 
         {/* Active Sign Filter Pill */}

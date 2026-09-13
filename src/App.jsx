@@ -9,6 +9,7 @@ import ArtworkModal from './components/ui/ArtworkModal';
 import ArchiveView from './components/ui/ArchiveView';
 import DomeOverlay from './components/ui/DomeOverlay';
 import InfoModal from './components/ui/InfoModal';
+import BioModal from './components/ui/BioModal';
 import AdminCuratorPanel from './components/admin/AdminCuratorPanel';
 import CelestialSphere from './components/3d/CelestialSphere';
 import ArtworkNode from './components/3d/ArtworkNode';
@@ -30,6 +31,7 @@ export default function App() {
   const [selectedArtwork, setSelectedArtwork] = useState(null);
   const [isDomeView, setIsDomeView] = useState(false);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
+  const [isBioOpen, setIsBioOpen] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [moonInfo, setMoonInfo] = useState(null);
   const [magnitude, setMagnitude] = useState(1.0); // Star and artwork scale
@@ -44,6 +46,22 @@ export default function App() {
     }, 1100);
   };
 
+  // Handle updating curator bio
+  const handleUpdateBio = (newBio) => {
+    setData((prev) => ({
+      ...prev,
+      progetto: {
+        ...(prev.progetto || {}),
+        curatore: newBio,
+      },
+    }));
+    try {
+      localStorage.setItem('aaa_curator_bio', JSON.stringify(newBio));
+    } catch (e) {
+      console.warn('Impossibile salvare in localStorage:', e);
+    }
+  };
+
   // Load Atlas JSON and calculate Moon Position on Mount
   useEffect(() => {
     // 1. Calculate real-time moon position
@@ -54,6 +72,16 @@ export default function App() {
     fetch('/data/atlas.json')
       .then((res) => res.json())
       .then((json) => {
+        // Merge with locally stored bio if available
+        try {
+          const savedBio = localStorage.getItem('aaa_curator_bio');
+          if (savedBio) {
+            json.progetto = json.progetto || {};
+            json.progetto.curatore = JSON.parse(savedBio);
+          }
+        } catch (e) {
+          // ignore
+        }
         setData(json);
         setLoading(false);
       })
@@ -113,6 +141,7 @@ export default function App() {
         onOpenInfo={() => setIsInfoOpen(true)}
         onOpenAdmin={() => setIsAdminOpen(true)}
         onOpenLanding={() => setShowLanding(true)}
+        onOpenBio={() => setIsBioOpen(true)}
         activeSignId={activeSignId}
         onResetSign={handleResetSign}
       />
@@ -258,12 +287,22 @@ export default function App() {
         onClose={() => setIsInfoOpen(false)}
       />
 
+      {/* Curator Bio Modal (Giacomo Isidori) */}
+      <BioModal
+        isOpen={isBioOpen}
+        onClose={() => setIsBioOpen(false)}
+        bioData={data.progetto?.curatore}
+        onOpenAdmin={() => setIsAdminOpen(true)}
+      />
+
       {/* Protected Admin / Curator Studio */}
       <AdminCuratorPanel
         isOpen={isAdminOpen}
         onClose={() => setIsAdminOpen(false)}
         artworks={data.opere}
         onUpdateArtworks={(newArtworks) => setData(d => ({ ...d, opere: newArtworks }))}
+        bioData={data.progetto?.curatore}
+        onUpdateBio={handleUpdateBio}
         onFocusArtwork3D={(art) => {
           setSelectedArtwork(art);
           setIsAdminOpen(false);
