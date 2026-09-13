@@ -175,11 +175,8 @@ export default function App() {
 
   if (loading) {
     return (
-      <div className="w-screen h-screen bg-space-950 flex flex-col items-center justify-center text-white gap-4">
-        <div className="w-12 h-12 rounded-full border-2 border-cyan-400 border-t-transparent animate-spin" />
-        <p className="font-mono text-xs tracking-widest uppercase text-white/70">
-          Caricamento Atlante Mnemosyne...
-        </p>
+      <div className="w-screen h-screen bg-[#030307] flex items-center justify-center">
+        <div className="w-10 h-10 rounded-full border-2 border-amber-400/40 border-t-amber-400 animate-spin" />
       </div>
     );
   }
