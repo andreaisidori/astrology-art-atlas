@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, ExternalLink, Calendar, Tag, Sparkles, Compass, Quote } from 'lucide-react';
+import { X, ExternalLink, Calendar, Tag, Sparkles, Compass, Quote, BookOpen } from 'lucide-react';
 import { ZODIAC_SIGNS, formatBiographicalDates } from '../../utils/astronomy';
 import ZodiacGlyph from './ZodiacGlyph';
 
@@ -153,6 +153,19 @@ export default function ArtworkModal({ artwork, onClose, onSelectSign, onSelectK
                 </div>
                 <p className="text-xs text-zinc-300 leading-relaxed font-sans">
                   {artwork.nota_simbolica}
+                </p>
+              </div>
+            )}
+
+            {/* Curatorial Commentary */}
+            {artwork.commento && (
+              <div className="p-3.5 rounded-xl bg-cyan-950/20 border border-cyan-500/20 space-y-1.5">
+                <div className="flex items-center gap-1.5 text-[11px] font-mono text-cyan-300 uppercase tracking-wider">
+                  <BookOpen className="w-3.5 h-3.5 text-cyan-400" />
+                  <span>Commento Critico</span>
+                </div>
+                <p className="text-xs text-zinc-200 leading-relaxed font-sans whitespace-pre-line">
+                  {artwork.commento}
                 </p>
               </div>
             )}

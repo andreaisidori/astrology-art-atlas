@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { X, Plus, Trash2, Edit3, Save, Download, Copy, Check, Lock, Sparkles, Image, Compass, Calendar, Moon, User, BookOpen, ExternalLink, Mail, Instagram, CopyPlus, Layers, Quote } from "lucide-react";
+import { X, Plus, Trash2, Edit3, Save, Download, Copy, Check, Lock, Sparkles, Image, Compass, Calendar, Moon, User, BookOpen, ExternalLink, Mail, Instagram, CopyPlus, Layers, Quote, UploadCloud, Loader2 } from "lucide-react";
 import { ZODIAC_SIGNS, parseBiographicalDates, formatBiographicalDates } from "../../utils/astronomy";
 
 export default function AdminCuratorPanel({
@@ -17,6 +17,11 @@ export default function AdminCuratorPanel({
   const [sliderProgress, setSliderProgress] = useState(0);
   const sliderTrackRef = useRef(null);
   const isDraggingSlider = useRef(false);
+
+  // File Upload Ref & State for Image Optimization
+  const fileInputRef = useRef(null);
+  const [imageUploadStatus, setImageUploadStatus] = useState("");
+  const [isOptimizingImage, setIsOptimizingImage] = useState(false);
 
   // Tab: "artworks" | "bio"
   const [activeTab, setActiveTab] = useState("artworks");
@@ -52,11 +57,13 @@ export default function AdminCuratorPanel({
   }, [bioData]);
 
   // Artwork Form State
+  // Artwork Form State
   const [formData, setFormData] = useState({
     id: "",
     segno: "Ariete",
     artista: "",
     citazione: "",
+    commento: "",
     titolo: "",
     data_nascita: "",
     anno_morte: "",
@@ -72,6 +79,77 @@ export default function AdminCuratorPanel({
     link_fonte: "",
     clonedFromArtist: "",
   });
+
+  // Client-Side Image File Upload & Automatic WebGL Canvas Compression
+  const handleImageFileUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      alert("Seleziona un file immagine valido (PNG, JPG, WebP, ecc.)");
+      return;
+    }
+
+    setIsOptimizingImage(true);
+    setImageUploadStatus("Ottimizzazione dell'immagine in corso...");
+
+    const originalSizeKb = Math.round(file.size / 1024);
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+      const img = new window.Image();
+      img.onload = () => {
+        // Max dimension for crystal clear display without lagging WebGL 3D rendering
+        const MAX_DIMENSION = 1400;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > MAX_DIMENSION) {
+            height = Math.round((height * MAX_DIMENSION) / width);
+            width = MAX_DIMENSION;
+          }
+        } else {
+          if (height > MAX_DIMENSION) {
+            width = Math.round((width * MAX_DIMENSION) / height);
+            height = MAX_DIMENSION;
+          }
+        }
+
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = "high";
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Compress to high quality JPEG at 0.84 quality
+        const optimizedDataUrl = canvas.toDataURL("image/jpeg", 0.84);
+        const optimizedSizeKb = Math.round((optimizedDataUrl.length * 3) / 4 / 1024);
+
+        setFormData(prev => ({ ...prev, immagine: optimizedDataUrl }));
+        setIsOptimizingImage(false);
+        setImageUploadStatus(`✓ Ottimizzata con successo: ${originalSizeKb} KB → ${optimizedSizeKb} KB (${width}×${height}px)`);
+
+        if (fileInputRef.current) fileInputRef.current.value = "";
+      };
+
+      img.onerror = () => {
+        setIsOptimizingImage(false);
+        setImageUploadStatus("Errore durante la lettura dell'immagine");
+      };
+
+      img.src = event.target.result;
+    };
+
+    reader.onerror = () => {
+      setIsOptimizingImage(false);
+      setImageUploadStatus("Errore durante il caricamento del file");
+    };
+
+    reader.readAsDataURL(file);
+  };
 
   // Authentication check - Only triggered by physical slider swipe completion
   const verifyPasswordOnSwipe = () => {
@@ -164,12 +242,14 @@ export default function AdminCuratorPanel({
   const handleStartNew = () => {
     setEditingArt(null);
     setIsCreatingNew(true);
+    setImageUploadStatus("");
     const newId = `art_${Date.now()}`;
     setFormData({
       id: newId,
       segno: "Ariete",
       artista: "",
       citazione: "",
+      commento: "",
       titolo: "",
       data_nascita: "",
       anno_morte: "",
@@ -191,10 +271,12 @@ export default function AdminCuratorPanel({
   const handleStartEdit = (art) => {
     setIsCreatingNew(false);
     setEditingArt(art);
+    setImageUploadStatus("");
     const parsedDates = parseBiographicalDates(art.date_biografiche, art.data_nascita, art.anno_morte);
     setFormData({
       ...art,
       citazione: art.citazione || "",
+      commento: art.commento || "",
       data_nascita: parsedDates.data_nascita,
       anno_morte: parsedDates.anno_morte,
       date_biografiche: formatBiographicalDates({ ...art, ...parsedDates }),
@@ -212,6 +294,7 @@ export default function AdminCuratorPanel({
 
     setEditingArt(null);
     setIsCreatingNew(true);
+    setImageUploadStatus("");
     const newId = `art_${Date.now()}`;
     const parsedDates = parseBiographicalDates(baseArt.date_biografiche, baseArt.data_nascita, baseArt.anno_morte);
 
@@ -220,6 +303,7 @@ export default function AdminCuratorPanel({
       segno: baseArt.segno || "Ariete",
       artista: baseArt.artista || "",
       citazione: baseArt.citazione || "",
+      commento: "",
       titolo: "",
       data_nascita: parsedDates.data_nascita,
       anno_morte: parsedDates.anno_morte,
@@ -264,6 +348,7 @@ export default function AdminCuratorPanel({
       segno: formData.segno,
       artista: formData.artista,
       citazione: formData.citazione || "",
+      commento: (formData.commento || "").trim(),
       titolo: formData.titolo,
       data_nascita: (formData.data_nascita || "").trim(),
       anno_morte: (formData.anno_morte || "").trim(),
@@ -914,37 +999,95 @@ export default function AdminCuratorPanel({
                     </div>
                   </div>
 
-                  {/* Row 4: URL Immagine & Fonte */}
-                  <div className="space-y-3">
-                    <div>
-                      <label className="block text-[11px] font-mono text-zinc-400 mb-1 flex items-center justify-between">
-                        <span>URL Immagine Opera</span>
-                        {formData.immagine && <span className="text-[10px] text-emerald-400 font-mono">Anteprima attiva</span>}
+                  {/* Row 4: Caricamento & Ottimizzazione Immagine */}
+                  <div className="space-y-3 p-4 rounded-2xl bg-zinc-900/60 border border-white/10">
+                    <div className="flex items-center justify-between">
+                      <label className="text-[11px] font-mono text-zinc-300 font-semibold flex items-center gap-1.5">
+                        <UploadCloud className="w-4 h-4 text-cyan-400" />
+                        <span>Immagine dell'Opera (Upload & Ottimizzazione WebGL 3D)</span>
                       </label>
-                      <div className="flex gap-3 items-center">
-                        {formData.immagine ? (
+                      {formData.immagine && (
+                        <span className="text-[10px] text-emerald-400 font-mono flex items-center gap-1">
+                          <Check className="w-3 h-3" /> Immagine pronta
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+                      {formData.immagine ? (
+                        <div className="relative group">
                           <img
                             src={formData.immagine}
                             alt="Anteprima"
                             onError={(e) => { e.target.style.display = 'none'; }}
-                            className="w-11 h-11 rounded-xl object-cover border border-white/20 bg-zinc-900 flex-shrink-0 shadow"
+                            className="w-16 h-16 rounded-xl object-cover border border-cyan-400/30 bg-zinc-900 flex-shrink-0 shadow-md"
                           />
-                        ) : (
-                          <div className="w-11 h-11 rounded-xl border border-dashed border-white/20 bg-zinc-900 flex items-center justify-center text-zinc-600 flex-shrink-0">
-                            <Image className="w-5 h-5" />
+                        </div>
+                      ) : (
+                        <div className="w-16 h-16 rounded-xl border border-dashed border-white/20 bg-zinc-900 flex flex-col items-center justify-center text-zinc-500 flex-shrink-0">
+                          <Image className="w-6 h-6 opacity-60" />
+                        </div>
+                      )}
+
+                      <div className="flex-1 w-full space-y-2">
+                        {/* Hidden file input */}
+                        <input
+                          type="file"
+                          ref={fileInputRef}
+                          accept="image/*"
+                          onChange={handleImageFileUpload}
+                          className="hidden"
+                        />
+
+                        <div className="flex flex-wrap items-center gap-2">
+                          <button
+                            type="button"
+                            disabled={isOptimizingImage}
+                            onClick={() => fileInputRef.current?.click()}
+                            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-400/40 text-cyan-200 text-xs font-mono transition-all disabled:opacity-50"
+                          >
+                            {isOptimizingImage ? (
+                              <Loader2 className="w-3.5 h-3.5 animate-spin text-cyan-300" />
+                            ) : (
+                              <UploadCloud className="w-3.5 h-3.5 text-cyan-400" />
+                            )}
+                            <span>{isOptimizingImage ? "Ottimizzazione in corso..." : "Carica file da Computer"}</span>
+                          </button>
+
+                          {formData.immagine && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setFormData(prev => ({ ...prev, immagine: "" }));
+                                setImageUploadStatus("");
+                              }}
+                              className="px-2.5 py-2 rounded-xl bg-white/5 hover:bg-rose-500/20 text-zinc-400 hover:text-rose-300 text-xs font-mono transition-all"
+                            >
+                              Rimuovi
+                            </button>
+                          )}
+                        </div>
+
+                        {imageUploadStatus && (
+                          <div className={`text-[11px] font-mono leading-tight ${imageUploadStatus.startsWith("✓") ? "text-emerald-400" : "text-amber-300"}`}>
+                            {imageUploadStatus}
                           </div>
                         )}
-                        <input
-                          type="url"
-                          value={formData.immagine}
-                          onChange={(e) => setFormData({ ...formData, immagine: e.target.value })}
-                          className="flex-1 px-3 py-2 rounded-xl bg-zinc-900 border border-white/15 text-white text-xs font-mono"
-                          placeholder="https://..."
-                        />
+
+                        <div>
+                          <input
+                            type="url"
+                            value={formData.immagine}
+                            onChange={(e) => setFormData({ ...formData, immagine: e.target.value })}
+                            className="w-full px-3 py-1.5 rounded-lg bg-zinc-950/80 border border-white/10 text-white text-xs font-mono placeholder:text-zinc-600"
+                            placeholder="Oppure incolla qui un link URL esterno (https://...)"
+                          />
+                        </div>
                       </div>
                     </div>
+
                     <div>
-                      <label className="block text-[11px] font-mono text-zinc-400 mb-1">Link Fonte / Documentazione</label>
+                      <label className="block text-[11px] font-mono text-zinc-400 mb-1">Link Fonte / Documentazione Esterna</label>
                       <input
                         type="url"
                         value={formData.link_fonte}
@@ -953,6 +1096,24 @@ export default function AdminCuratorPanel({
                         placeholder="https://..."
                       />
                     </div>
+                  </div>
+
+                  {/* Commento Critico dell'Opera */}
+                  <div>
+                    <label className="block text-[11px] font-mono text-zinc-400 mb-1 flex items-center justify-between">
+                      <span className="flex items-center gap-1.5 text-cyan-300 font-semibold">
+                        <BookOpen className="w-3.5 h-3.5" />
+                        <span>Commento Critico dell'Opera</span>
+                      </span>
+                      <span className="text-[10px] text-zinc-500 font-mono">Opzionale</span>
+                    </label>
+                    <textarea
+                      rows={3}
+                      value={formData.commento || ""}
+                      onChange={(e) => setFormData({ ...formData, commento: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-white/15 text-white text-xs leading-relaxed focus:ring-1 focus:ring-cyan-400 placeholder:text-zinc-600"
+                      placeholder="Inserisci qui un commento critico, l'analisi dell'opera, il contesto storico o l'interpretazione visiva..."
+                    />
                   </div>
 
                   {/* Row 5: Tema Natale */}

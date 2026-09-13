@@ -30,9 +30,10 @@ export default function ArchiveView({
           const matchTitle = (art.titolo || '').toLowerCase().includes(q);
           const matchKeywords = (art.parole_chiave || []).some(k => k.toLowerCase().includes(q));
           const matchNote = (art.nota_simbolica || '').toLowerCase().includes(q);
+          const matchCommento = (art.commento || '').toLowerCase().includes(q);
           const matchQuote = (art.citazione || '').toLowerCase().includes(q);
           const matchDates = (art.data_nascita || '').toLowerCase().includes(q) || (art.anno_morte || '').toLowerCase().includes(q) || (art.date_biografiche || '').toLowerCase().includes(q);
-          if (!matchArtist && !matchTitle && !matchKeywords && !matchNote && !matchQuote && !matchDates) return false;
+          if (!matchArtist && !matchTitle && !matchKeywords && !matchNote && !matchCommento && !matchQuote && !matchDates) return false;
         }
 
         return true;
@@ -240,6 +241,14 @@ export default function ArchiveView({
                     <p className="text-xs text-zinc-500 mt-2 line-clamp-2 leading-relaxed">
                       {art.nota_simbolica}
                     </p>
+                  )}
+
+                  {/* Curatorial Commentary preview */}
+                  {art.commento && (
+                    <div className="mt-2 text-[11px] text-cyan-900 bg-cyan-50/80 border border-cyan-200/60 rounded-lg p-2 leading-relaxed line-clamp-2">
+                      <span className="font-semibold text-cyan-950 font-mono text-[9px] uppercase tracking-wider block mb-0.5">Commento Critico:</span>
+                      {art.commento}
+                    </div>
                   )}
                 </div>
 
