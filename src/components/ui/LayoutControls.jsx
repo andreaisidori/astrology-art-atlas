@@ -59,7 +59,7 @@ export default function LayoutControls({
                   <Square className="w-4 h-4 text-white/60 flex-shrink-0" />
                 )}
                 <span className="text-[11px] font-mono font-medium text-white tracking-wide">
-                  {showImages ? 'Opere Visibili' : 'Sagome'}
+                  {showImages ? 'Opere' : 'Sagome'}
                 </span>
               </div>
 
