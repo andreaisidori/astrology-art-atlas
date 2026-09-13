@@ -20,7 +20,7 @@
     "descrizione": "Atlante mnemotecnico e archivio dinamico in 3D per l'immaginario artistico contemporaneo.",
     "ispirazione": "Aby Warburg — Bilderatlas Mnemosyne",
     "totale_artisti": 174,
-    "aggiornato_il": "2026-09-13T15:21:48.513Z"
+    "aggiornato_il": "2026-09-13T15:29:56.456Z"
   },
   "opere": [
     {
@@ -4162,7 +4162,12 @@
       "link_fonte": "",
       "data_nascita": "21 January 1955",
       "anno_morte": "",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Koons,_Jeff"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Koons,_Jeff",
+      "posizione_manuale": {
+        "x": 16.94,
+        "y": -0.18,
+        "z": -35.67
+      }
     },
     {
       "id": "_douard_manet_143",
