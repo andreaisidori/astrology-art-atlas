@@ -13,29 +13,29 @@ export default function LandingScreen({ onEnter }) {
   return (
     <div
       onClick={handleStartDive}
-      className={`fixed inset-0 z-50 flex flex-col items-center justify-center p-6 select-none overflow-hidden transition-all duration-1000 [perspective:1200px] cursor-pointer ${
+      className={`fixed inset-0 z-50 flex flex-col items-center justify-center p-6 select-none overflow-hidden transition-all duration-750 ease-in [perspective:1000px] cursor-pointer ${
         isDiving ? 'bg-transparent pointer-events-none' : 'bg-[#030307]'
       }`}
     >
       {/* Subtle Background Radial Aura */}
       <div
-        className={`absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(229,184,105,0.1)_0%,rgba(10,10,25,0.8)_50%,rgba(3,3,7,1)_95%)] pointer-events-none transition-opacity duration-1000 ${
+        className={`absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(229,184,105,0.1)_0%,rgba(10,10,25,0.8)_50%,rgba(3,3,7,1)_95%)] pointer-events-none transition-opacity duration-600 ${
           isDiving ? 'opacity-0' : 'opacity-100'
         }`}
       />
 
-      {/* Center: Astrolabe Logo - "Porta Celeste che cade in avanti ingrandendosi e diventa pavimento" */}
+      {/* Center: Astrolabe Logo - "Dives and flattens onto the floor" */}
       <main
-        className={`relative z-10 flex flex-col items-center justify-center group transition-all duration-1200 ease-out ${
+        className={`relative z-10 flex flex-col items-center justify-center group transition-all duration-750 ease-in ${
           isDiving
-            ? '[transform:rotateX(78deg)_translateY(36%)_scale(3.6)] opacity-35'
+            ? '[transform:rotateX(88deg)_translateY(75vh)_scale(3.2)] opacity-0'
             : '[transform:rotateX(0deg)_translateY(0)_scale(1)] opacity-100 hover:scale-105'
         }`}
-        style={{ transformOrigin: 'center bottom', transformStyle: 'preserve-3d' }}
+        style={{ transformOrigin: 'center 75%', transformStyle: 'preserve-3d' }}
       >
         {/* Luminous Pulsing Glow Backdrop */}
         <div
-          className={`absolute w-72 h-72 sm:w-96 sm:h-96 rounded-full bg-amber-500/10 filter blur-3xl transition-all duration-1000 ${
+          className={`absolute w-72 h-72 sm:w-96 sm:h-96 rounded-full bg-amber-500/10 filter blur-3xl transition-all duration-600 ${
             isDiving ? 'opacity-0 scale-150' : 'group-hover:bg-amber-400/20 animate-pulse'
           }`}
         />
@@ -65,7 +65,7 @@ export default function LandingScreen({ onEnter }) {
 
         {/* Pure Astrology Art Atlas Typography */}
         <div
-          className={`mt-8 text-center space-y-1.5 transition-all duration-700 ${
+          className={`mt-8 text-center space-y-1.5 transition-all duration-300 ${
             isDiving ? 'opacity-0 -translate-y-6' : 'opacity-100 translate-y-0'
           }`}
         >

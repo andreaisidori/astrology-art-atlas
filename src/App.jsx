@@ -43,7 +43,7 @@ export default function App() {
     setIsLandingTransition(true);
     setTimeout(() => {
       setShowLanding(false);
-    }, 1100);
+    }, 780);
   };
 
   // Handle updating curator bio
@@ -161,6 +161,7 @@ export default function App() {
               activeSignId={activeSignId}
               onSelectSign={handleSelectSign}
               sphereRadius={48}
+              isLanding={isLandingTransition}
             />
 
             {/* Constellation Connecting Lines */}

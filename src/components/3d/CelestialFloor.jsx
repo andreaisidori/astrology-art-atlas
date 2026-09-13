@@ -2,15 +2,31 @@ import React, { useRef } from "react";
 import { useFrame, useLoader } from "@react-three/fiber";
 import * as THREE from "three";
 
-export default function CelestialFloor({ radius = 25, yPosition = -12, opacity = 0.42 }) {
+export default function CelestialFloor({ radius = 25, yPosition = -12, opacity = 0.42, isLanding = false }) {
   const monogramRef = useRef();
+  const ringMatRef = useRef();
+  const centerMatRef = useRef();
+  const glowMatRef = useRef();
+  const currentOpacity = useRef(isLanding ? 0.05 : opacity);
+
   const ringTexture = useLoader(THREE.TextureLoader, "/images/aaa-logo-ring.png");
   const centerTexture = useLoader(THREE.TextureLoader, "/images/aaa-logo-center.png");
 
   // Calibrazione: la corona zodiacale a terra è agganciata 1:1 alla volta celeste in coordinate mondo
   const SKY_ALIGN_ROT_Z = (-15 * Math.PI) / 180;
 
-  useFrame(({ camera }) => {
+  useFrame(({ camera }, delta) => {
+    // Smoothly blend in floor during landing
+    if (isLanding) {
+      currentOpacity.current = THREE.MathUtils.lerp(currentOpacity.current, opacity, Math.min(delta * 4.5, 1));
+    } else {
+      currentOpacity.current = opacity;
+    }
+
+    if (ringMatRef.current) ringMatRef.current.opacity = currentOpacity.current;
+    if (centerMatRef.current) centerMatRef.current.opacity = currentOpacity.current * 1.15;
+    if (glowMatRef.current) glowMatRef.current.opacity = currentOpacity.current * 0.22;
+
     if (monogramRef.current) {
       // 1. Direzione orizzontale di sguardo dell'osservatore (camera)
       const forward = new THREE.Vector3();
@@ -34,9 +50,10 @@ export default function CelestialFloor({ radius = 25, yPosition = -12, opacity =
       >
         <planeGeometry args={[radius * 2, radius * 2]} />
         <meshBasicMaterial
+          ref={ringMatRef}
           map={ringTexture}
           transparent
-          opacity={opacity}
+          opacity={currentOpacity.current}
           depthWrite={false}
           side={THREE.DoubleSide}
           toneMapped={false}
@@ -51,9 +68,10 @@ export default function CelestialFloor({ radius = 25, yPosition = -12, opacity =
       >
         <planeGeometry args={[radius * 2, radius * 2]} />
         <meshBasicMaterial
+          ref={centerMatRef}
           map={centerTexture}
           transparent
-          opacity={opacity * 1.15}
+          opacity={currentOpacity.current * 1.15}
           depthWrite={false}
           side={THREE.DoubleSide}
           toneMapped={false}
@@ -64,9 +82,10 @@ export default function CelestialFloor({ radius = 25, yPosition = -12, opacity =
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.05, 0]}>
         <ringGeometry args={[radius * 0.4, radius * 1.08, 64]} />
         <meshBasicMaterial
+          ref={glowMatRef}
           color="#e5b869"
           transparent
-          opacity={opacity * 0.22}
+          opacity={currentOpacity.current * 0.22}
           depthWrite={false}
           side={THREE.DoubleSide}
         />

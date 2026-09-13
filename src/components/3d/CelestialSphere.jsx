@@ -5,7 +5,7 @@ import { Html } from '@react-three/drei';
 import ZodiacGlyph from '../ui/ZodiacGlyph';
 import CelestialFloor from './CelestialFloor';
 
-export default function CelestialSphere({ activeSignId, onSelectSign, sphereRadius = 48 }) {
+export default function CelestialSphere({ activeSignId, onSelectSign, sphereRadius = 48, isLanding = false }) {
   // 1. Generate lightweight, delicate background star points (800 stars)
   const { starPositions, starColors } = useMemo(() => {
     const count = 800;
@@ -160,7 +160,7 @@ export default function CelestialSphere({ activeSignId, onSelectSign, sphereRadi
         );
       })}
       {/* 3. Celestial Astrolabe Floor (Pavimento / Tappeto Zodiacale Dorato Rotante) */}
-      <CelestialFloor radius={25} yPosition={-12} opacity={0.4} />
+      <CelestialFloor radius={25} yPosition={-12} opacity={0.4} isLanding={isLanding} />
     </group>
   );
 }

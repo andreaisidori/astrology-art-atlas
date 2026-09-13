@@ -28,14 +28,28 @@ export default function CameraController({
     targetPitch: 0,
   });
 
+  // Landing animation state
+  const landingState = useRef({
+    active: false,
+    startTime: 0,
+    duration: 750,
+    startY: 35,
+  });
+
   // Initialize camera position when landing from above
   useEffect(() => {
     if (isLanding) {
-      camera.position.set(0, 45, 0.05);
-      camera.lookAt(0, 0, 0);
+      camera.position.set(0, 35, 0.05);
+      camera.lookAt(0, -12, 0);
+      landingState.current = {
+        active: true,
+        startTime: performance.now(),
+        duration: 750,
+        startY: 35,
+      };
       landingActive.current = true;
       if (controlsRef.current) {
-        controlsRef.current.target.set(0, 0, 0);
+        controlsRef.current.target.set(0, 0, -1);
         controlsRef.current.update();
       }
     }
@@ -81,19 +95,17 @@ export default function CameraController({
     if (!controlsRef.current) return;
 
     // 1. Sky Landing Descent ("Atterraggio dall'alto come da una porta nel cielo")
-    if (landingActive.current) {
-      // Smoothly descend Y from 45 -> 0
-      const currentY = camera.position.y;
-      const targetY = 0.01;
-      const newY = THREE.MathUtils.lerp(currentY, targetY, Math.min(delta * 2.2, 1));
-      
-      // Drift into center
-      camera.position.set(0, newY, 0.01);
-      
-      // Orient camera from looking straight down to looking forward at the celestial belt
-      const progress = 1 - (newY / 45); // 0 at top -> 1 at bottom
-      const lookY = THREE.MathUtils.lerp(-10, 0, progress);
-      const lookZ = THREE.MathUtils.lerp(0.01, -30, Math.min(progress * 1.4, 1));
+    if (landingState.current.active) {
+      const elapsed = performance.now() - landingState.current.startTime;
+      const progress = Math.min(1, elapsed / landingState.current.duration);
+
+      // Cubic ease-out: starts with swift downward motion and settles smoothly into the center
+      const ease = 1 - Math.pow(1 - progress, 3);
+      const currentY = THREE.MathUtils.lerp(landingState.current.startY, 0.01, ease);
+      camera.position.set(0, currentY, 0.01);
+
+      const lookY = THREE.MathUtils.lerp(-12, 0, ease);
+      const lookZ = THREE.MathUtils.lerp(-1, -30, ease);
       camera.lookAt(0, lookY, lookZ);
 
       if (controlsRef.current) {
@@ -101,8 +113,9 @@ export default function CameraController({
         controlsRef.current.update();
       }
 
-      if (newY < 0.15) {
+      if (progress >= 1) {
         camera.position.set(0, 0, 0.01);
+        landingState.current.active = false;
         landingActive.current = false;
         if (onLandingComplete) onLandingComplete();
       }
