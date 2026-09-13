@@ -18,7 +18,7 @@ export default function LayoutControls({
   ];
 
   return (
-    <div className="fixed top-20 right-4 md:right-8 z-20 pointer-events-auto font-mono select-none flex flex-col items-end">
+    <div className="fixed top-20 right-4 md:right-8 z-40 pointer-events-auto font-mono select-none flex flex-col items-end">
       {/* If collapsed: only the settings logo button */}
       {isCollapsed ? (
         <button

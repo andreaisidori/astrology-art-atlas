@@ -159,7 +159,7 @@ export default function ArtworkNode({
 
         {/* Minimalist Hover Tooltip */}
         {hovered && (
-          <Html center distanceFactor={45} position={[0, -2.2, 0]}>
+          <Html center distanceFactor={45} position={[0, -2.2, 0]} zIndexRange={[10, 0]}>
             <div className="pointer-events-none whitespace-nowrap px-3.5 py-1.5 rounded-xl bg-black/95 backdrop-blur-md border border-white/20 text-center shadow-2xl">
               <p className="text-[11px] font-semibold text-white tracking-wide">{artwork.artista}</p>
               {artwork.date_biografiche && (

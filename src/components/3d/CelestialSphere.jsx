@@ -116,7 +116,7 @@ export default function CelestialSphere({ activeSignId, onSelectSign, sphereRadi
           <group key={sign.id}>
             {/* 1. IN ALTO: Grande Glifo Vettoriale Bianco Puro Ingrandito */}
             <group position={[x, 14.5, z]}>
-              <Html center distanceFactor={45}>
+              <Html center distanceFactor={45} zIndexRange={[10, 0]}>
                 <button
                   onClick={() => onSelectSign(sign.id)}
                   title={`${sign.latin} (${sign.name}) — Focus sulla costellazione`}
@@ -139,7 +139,7 @@ export default function CelestialSphere({ activeSignId, onSelectSign, sphereRadi
 
             {/* 2. IN BASSO: Nome Latino Ingrandito, Pulito e Arioso */}
             <group position={[x, -14, z]}>
-              <Html center distanceFactor={45}>
+              <Html center distanceFactor={45} zIndexRange={[10, 0]}>
                 <button
                   onClick={() => onSelectSign(sign.id)}
                   title={`${sign.latin} — Focus sulla costellazione`}
