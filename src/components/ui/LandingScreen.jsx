@@ -48,8 +48,11 @@ export default function LandingScreen({ onEnter }) {
         </div>
 
         {/* Pure Astrology Art Atlas Typography */}
-        <div className="mt-8 text-center space-y-1">
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-light font-serif tracking-[0.25em] text-white/90 uppercase">
+        <div className="mt-8 text-center space-y-1.5">
+          <div className="text-2xl sm:text-3xl md:text-4xl font-serif font-semibold tracking-[0.35em] text-[#e5b869] drop-shadow-[0_0_18px_rgba(229,184,105,0.6)]">
+            AAA
+          </div>
+          <h1 className="text-base sm:text-lg md:text-xl font-light font-serif tracking-[0.25em] text-white/90 uppercase">
             Astrology Art Atlas
           </h1>
         </div>
