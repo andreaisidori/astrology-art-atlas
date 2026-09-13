@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Search, Filter, ArrowUpRight, Grid, List, Sparkles, Quote } from 'lucide-react';
-import { ZODIAC_SIGNS } from '../../utils/astronomy';
+import { ZODIAC_SIGNS, formatBiographicalDates } from '../../utils/astronomy';
 import ZodiacGlyph from './ZodiacGlyph';
 
 export default function ArchiveView({
@@ -31,7 +31,8 @@ export default function ArchiveView({
           const matchKeywords = (art.parole_chiave || []).some(k => k.toLowerCase().includes(q));
           const matchNote = (art.nota_simbolica || '').toLowerCase().includes(q);
           const matchQuote = (art.citazione || '').toLowerCase().includes(q);
-          if (!matchArtist && !matchTitle && !matchKeywords && !matchNote && !matchQuote) return false;
+          const matchDates = (art.data_nascita || '').toLowerCase().includes(q) || (art.anno_morte || '').toLowerCase().includes(q) || (art.date_biografiche || '').toLowerCase().includes(q);
+          if (!matchArtist && !matchTitle && !matchKeywords && !matchNote && !matchQuote && !matchDates) return false;
         }
 
         return true;
@@ -186,9 +187,9 @@ export default function ArchiveView({
                       {art.titolo}
                     </p>
                   )}
-                  {art.date_biografiche && (
+                  {formatBiographicalDates(art) && (
                     <p className="text-[11px] font-mono text-zinc-400 mt-0.5">
-                      {art.date_biografiche}
+                      {formatBiographicalDates(art)}
                     </p>
                   )}
 

@@ -83,3 +83,44 @@ export function sphericalToCartesian(radius, eclipticLongitudeDeg, eclipticLatit
 
   return [x, y, z];
 }
+
+/**
+ * Parses a biographical string into separate birth and death parts
+ */
+export function parseBiographicalDates(dateStr, existingBirth, existingDeath) {
+  if (existingBirth !== undefined && existingBirth !== null && existingBirth !== '') {
+    return {
+      data_nascita: existingBirth || '',
+      anno_morte: existingDeath || '',
+    };
+  }
+  if (!dateStr || typeof dateStr !== 'string') {
+    return { data_nascita: '', anno_morte: existingDeath || '' };
+  }
+  const clean = dateStr.trim();
+  const parts = clean.split(/[–—\-]/);
+  if (parts.length >= 2) {
+    return {
+      data_nascita: parts[0].trim(),
+      anno_morte: existingDeath || parts.slice(1).join('–').trim(),
+    };
+  }
+  return {
+    data_nascita: clean,
+    anno_morte: existingDeath || '',
+  };
+}
+
+/**
+ * Formats separate birth and death date fields into standard biographical string
+ */
+export function formatBiographicalDates(art) {
+  if (!art) return '';
+  const birth = (art.data_nascita || '').trim();
+  const death = (art.anno_morte || '').trim();
+  if (birth && death) return `${birth}–${death}`;
+  if (birth) return birth;
+  if (death) return `†${death}`;
+  return art.date_biografiche || '';
+}
+

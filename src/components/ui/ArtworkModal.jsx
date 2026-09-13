@@ -1,6 +1,6 @@
 import React from 'react';
 import { X, ExternalLink, Calendar, Tag, Sparkles, Compass, Quote } from 'lucide-react';
-import { ZODIAC_SIGNS } from '../../utils/astronomy';
+import { ZODIAC_SIGNS, formatBiographicalDates } from '../../utils/astronomy';
 import ZodiacGlyph from './ZodiacGlyph';
 
 export default function ArtworkModal({ artwork, onClose, onSelectSign, onSelectKeyword }) {
@@ -75,8 +75,8 @@ export default function ArtworkModal({ artwork, onClose, onSelectSign, onSelectK
             {/* Title & Artist */}
             <div>
               <h2 className="text-xl font-bold tracking-tight text-white">{artwork.artista}</h2>
-              {artwork.date_biografiche && (
-                <p className="text-xs text-zinc-400 font-mono mt-0.5">({artwork.date_biografiche})</p>
+              {formatBiographicalDates(artwork) && (
+                <p className="text-xs text-zinc-400 font-mono mt-0.5">({formatBiographicalDates(artwork)})</p>
               )}
               <p className="text-sm text-zinc-300 italic font-serif mt-1">{artwork.titolo}</p>
             </div>

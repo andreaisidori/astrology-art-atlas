@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { X, Plus, Trash2, Edit3, Save, Download, Copy, Check, Lock, Sparkles, Image, Compass, Calendar, Moon, User, BookOpen, ExternalLink, Mail, Instagram, CopyPlus, Layers, Quote } from "lucide-react";
-import { ZODIAC_SIGNS } from "../../utils/astronomy";
+import { ZODIAC_SIGNS, parseBiographicalDates, formatBiographicalDates } from "../../utils/astronomy";
 
 export default function AdminCuratorPanel({
   isOpen,
@@ -58,6 +58,8 @@ export default function AdminCuratorPanel({
     artista: "",
     citazione: "",
     titolo: "",
+    data_nascita: "",
+    anno_morte: "",
     date_biografiche: "",
     anno: new Date().getFullYear(),
     tecnica: "",
@@ -169,6 +171,8 @@ export default function AdminCuratorPanel({
       artista: "",
       citazione: "",
       titolo: "",
+      data_nascita: "",
+      anno_morte: "",
       date_biografiche: "",
       anno: 2024,
       tecnica: "",
@@ -187,10 +191,13 @@ export default function AdminCuratorPanel({
   const handleStartEdit = (art) => {
     setIsCreatingNew(false);
     setEditingArt(art);
+    const parsedDates = parseBiographicalDates(art.date_biografiche, art.data_nascita, art.anno_morte);
     setFormData({
       ...art,
       citazione: art.citazione || "",
-      date_biografiche: art.date_biografiche || "",
+      data_nascita: parsedDates.data_nascita,
+      anno_morte: parsedDates.anno_morte,
+      date_biografiche: formatBiographicalDates({ ...art, ...parsedDates }),
       tema_natale: art.tema_natale || { sole: art.segno || "Ariete", luna: "", venere: "", mercurio: "" },
       posizione_manuale: art.posizione_manuale || { x: 40, y: 0, z: 10 },
       parole_chiave_str: (art.parole_chiave || []).join(", "),
@@ -206,6 +213,7 @@ export default function AdminCuratorPanel({
     setEditingArt(null);
     setIsCreatingNew(true);
     const newId = `art_${Date.now()}`;
+    const parsedDates = parseBiographicalDates(baseArt.date_biografiche, baseArt.data_nascita, baseArt.anno_morte);
 
     setFormData({
       id: newId,
@@ -213,7 +221,9 @@ export default function AdminCuratorPanel({
       artista: baseArt.artista || "",
       citazione: baseArt.citazione || "",
       titolo: "",
-      date_biografiche: baseArt.date_biografiche || "",
+      data_nascita: parsedDates.data_nascita,
+      anno_morte: parsedDates.anno_morte,
+      date_biografiche: formatBiographicalDates({ ...baseArt, ...parsedDates }),
       anno: baseArt.anno || new Date().getFullYear(),
       tecnica: baseArt.tecnica || "",
       immagine: "",
@@ -243,13 +253,21 @@ export default function AdminCuratorPanel({
       .map(k => k.trim())
       .filter(Boolean);
 
+    const bioStr = formatBiographicalDates({
+      data_nascita: formData.data_nascita,
+      anno_morte: formData.anno_morte,
+      date_biografiche: formData.date_biografiche,
+    });
+
     const updatedItem = {
       id: formData.id || `art_${Date.now()}`,
       segno: formData.segno,
       artista: formData.artista,
       citazione: formData.citazione || "",
       titolo: formData.titolo,
-      date_biografiche: formData.date_biografiche,
+      data_nascita: (formData.data_nascita || "").trim(),
+      anno_morte: (formData.anno_morte || "").trim(),
+      date_biografiche: bioStr,
       anno: parseInt(formData.anno, 10) || null,
       tecnica: formData.tecnica,
       immagine: formData.immagine || "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=800",
@@ -665,8 +683,10 @@ export default function AdminCuratorPanel({
                           {art.titolo && (
                             <p className="text-[11px] text-cyan-300/80 truncate italic">{art.titolo}</p>
                           )}
-                          {art.date_biografiche && (
-                            <p className="text-[10px] text-zinc-400 font-mono truncate">{art.date_biografiche}</p>
+                          {(art.data_nascita || art.anno_morte || art.date_biografiche) && (
+                            <p className="text-[10px] text-zinc-400 font-mono truncate">
+                              {formatBiographicalDates(art)}
+                            </p>
                           )}
                           <div className="flex items-center gap-1.5 mt-0.5">
                             <span
@@ -814,16 +834,29 @@ export default function AdminCuratorPanel({
                     </div>
                   </div>
 
-                  {/* Row 2: Date Biografiche & Anno Nascita */}
+                  {/* Row 2: Data di Nascita, Anno di Morte & Anno Opera */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="md:col-span-2">
-                      <label className="block text-[11px] font-mono text-zinc-400 mb-1">Date Biografiche</label>
+                    <div>
+                      <label className="block text-[11px] font-mono text-zinc-400 mb-1">Data di Nascita</label>
                       <input
                         type="text"
-                        value={formData.date_biografiche}
-                        onChange={(e) => setFormData({ ...formData, date_biografiche: e.target.value })}
+                        value={formData.data_nascita || ""}
+                        onChange={(e) => setFormData({ ...formData, data_nascita: e.target.value })}
                         className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-white/15 text-white text-xs"
-                        placeholder="Es: 19 February 1899–1968"
+                        placeholder="Es: 19 Febbraio 1899"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-mono text-zinc-400 mb-1 flex items-center justify-between">
+                        <span>Anno di Morte</span>
+                        <span className="text-[9px] text-zinc-500 font-mono">Opzionale</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.anno_morte || ""}
+                        onChange={(e) => setFormData({ ...formData, anno_morte: e.target.value })}
+                        className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-white/15 text-white text-xs font-mono"
+                        placeholder="Es: 1968"
                       />
                     </div>
                     <div>
