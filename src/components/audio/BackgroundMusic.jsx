@@ -5,11 +5,16 @@ const YOUTUBE_VIDEO_ID = 'm86mBRKZHY0';
 
 export default function BackgroundMusic({ isHome = true }) {
   const [isMuted, setIsMuted] = useState(false);
-  const [hasStarted, setHasStarted] = useState(false);
+  const isMutedRef = useRef(false);
   const iframeRef = useRef(null);
   const audioCtxRef = useRef(null);
   const synthNodesRef = useRef(null);
   const synthGainRef = useRef(null);
+
+  // Keep isMutedRef in sync
+  useEffect(() => {
+    isMutedRef.current = isMuted;
+  }, [isMuted]);
 
   // Send command to YouTube Iframe via postMessage
   const sendIframeCommand = (func, args = '') => {
@@ -40,7 +45,7 @@ export default function BackgroundMusic({ isHome = true }) {
       const ctx = audioCtxRef.current;
       const masterGain = ctx.createGain();
       masterGain.gain.setValueAtTime(0.001, ctx.currentTime);
-      masterGain.gain.exponentialRampToValueAtTime(0.22, ctx.currentTime + 3);
+      masterGain.gain.exponentialRampToValueAtTime(0.20, ctx.currentTime + 2);
       masterGain.connect(ctx.destination);
       synthGainRef.current = masterGain;
 
@@ -62,7 +67,7 @@ export default function BackgroundMusic({ isHome = true }) {
         lfo.connect(osc.frequency);
         lfo.start();
 
-        const vol = (0.18 / freqs.length) * (1 - i * 0.1);
+        const vol = (0.16 / freqs.length) * (1 - i * 0.1);
         oscGain.gain.setValueAtTime(vol, ctx.currentTime);
 
         if (panner) {
@@ -85,57 +90,98 @@ export default function BackgroundMusic({ isHome = true }) {
   };
 
   const startAudio = () => {
-    // 1. Try YouTube unMute and playVideo
+    if (isMutedRef.current) return;
+
+    // 1. Unmute and play YouTube
     sendIframeCommand('unMute');
     sendIframeCommand('setVolume', [80]);
     sendIframeCommand('playVideo');
 
-    // 2. Also prepare Web Audio backup in case YouTube is blocked
+    // 2. Initialize Web Audio harmonic synth
     initCelestialSynth();
-    setHasStarted(true);
   };
 
   useEffect(() => {
-    // Attempt playback immediately and on any user interaction (to bypass browser autoplay lock)
-    const handleInteraction = () => {
-      startAudio();
+    let hasUnlocked = false;
+
+    // One-time unlock listener to satisfy browser autoplay policy on initial entry
+    const unlockOnce = () => {
+      if (hasUnlocked) return;
+      hasUnlocked = true;
+
+      // Immediately remove all unlock listeners so they NEVER trigger again on subsequent clicks!
+      window.removeEventListener('click', unlockOnce);
+      window.removeEventListener('touchstart', unlockOnce);
+      window.removeEventListener('pointerdown', unlockOnce);
+      window.removeEventListener('keydown', unlockOnce);
+
+      if (!isMutedRef.current) {
+        startAudio();
+      }
     };
 
-    window.addEventListener('click', handleInteraction, { passive: true });
-    window.addEventListener('touchstart', handleInteraction, { passive: true });
-    window.addEventListener('pointerdown', handleInteraction, { passive: true });
-    window.addEventListener('keydown', handleInteraction, { passive: true });
+    window.addEventListener('click', unlockOnce, { once: true, passive: true });
+    window.addEventListener('touchstart', unlockOnce, { once: true, passive: true });
+    window.addEventListener('pointerdown', unlockOnce, { once: true, passive: true });
+    window.addEventListener('keydown', unlockOnce, { once: true, passive: true });
 
-    // Try starting immediately
+    // Initial silent kick
     const timer = setTimeout(() => {
-      startAudio();
-    }, 500);
+      if (!isMutedRef.current) {
+        sendIframeCommand('playVideo');
+      }
+    }, 600);
 
     return () => {
       clearTimeout(timer);
-      window.removeEventListener('click', handleInteraction);
-      window.removeEventListener('touchstart', handleInteraction);
-      window.removeEventListener('pointerdown', handleInteraction);
-      window.removeEventListener('keydown', handleInteraction);
+      window.removeEventListener('click', unlockOnce);
+      window.removeEventListener('touchstart', unlockOnce);
+      window.removeEventListener('pointerdown', unlockOnce);
+      window.removeEventListener('keydown', unlockOnce);
     };
   }, []);
 
-  const toggleMute = () => {
+  const toggleMute = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+
     if (isMuted) {
-      // UNMUTE
-      sendIframeCommand('unMute');
-      sendIframeCommand('playVideo');
-      if (synthGainRef.current && audioCtxRef.current) {
-        synthGainRef.current.gain.setValueAtTime(0.22, audioCtxRef.current.currentTime);
-      }
+      // --- UNMUTE ---
       setIsMuted(false);
-    } else {
-      // MUTE
-      sendIframeCommand('mute');
-      if (synthGainRef.current && audioCtxRef.current) {
-        synthGainRef.current.gain.setValueAtTime(0.0001, audioCtxRef.current.currentTime);
+      isMutedRef.current = false;
+
+      // 1. Resume YouTube
+      sendIframeCommand('unMute');
+      sendIframeCommand('setVolume', [80]);
+      sendIframeCommand('playVideo');
+
+      // 2. Resume Web Audio
+      if (audioCtxRef.current) {
+        if (audioCtxRef.current.state === 'suspended') {
+          audioCtxRef.current.resume();
+        }
+        if (synthGainRef.current) {
+          synthGainRef.current.gain.cancelScheduledValues(audioCtxRef.current.currentTime);
+          synthGainRef.current.gain.setValueAtTime(0.20, audioCtxRef.current.currentTime);
+        }
+      } else {
+        initCelestialSynth();
       }
+    } else {
+      // --- MUTE ---
       setIsMuted(true);
+      isMutedRef.current = true;
+
+      // 1. Mute & Pause YouTube
+      sendIframeCommand('mute');
+      sendIframeCommand('pauseVideo');
+
+      // 2. Mute & Suspend Web Audio
+      if (audioCtxRef.current && synthGainRef.current) {
+        synthGainRef.current.gain.cancelScheduledValues(audioCtxRef.current.currentTime);
+        synthGainRef.current.gain.setValueAtTime(0, audioCtxRef.current.currentTime);
+        audioCtxRef.current.suspend();
+      }
     }
   };
 
@@ -162,6 +208,7 @@ export default function BackgroundMusic({ isHome = true }) {
         <button
           type="button"
           onClick={toggleMute}
+          onPointerDown={(e) => e.stopPropagation()}
           title={isMuted ? 'Attiva Musica (Unmute)' : 'Silenziatore Audio (Mute)'}
           aria-label={isMuted ? 'Attiva audio' : 'Silenzia audio'}
           style={{ touchAction: 'manipulation' }}
