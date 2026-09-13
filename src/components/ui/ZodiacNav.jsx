@@ -6,21 +6,6 @@ export default function ZodiacNav({ activeSignId, onSelectSign, onResetSign }) {
   return (
     <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-30 max-w-[98vw] xl:max-w-7xl pointer-events-auto">
       <div className="flex items-center justify-center gap-1 sm:gap-1.5 md:gap-2 p-1.5 sm:p-2 rounded-2xl bg-black/85 backdrop-blur-2xl border border-white/20 shadow-[0_10px_35px_rgba(0,0,0,0.8)] flex-nowrap">
-        {/* Reset / All Signs Button */}
-        <button
-          onClick={onResetSign}
-          title="Mostra intera volta celeste"
-          className={`px-3 sm:px-4 py-2 rounded-xl text-[11px] sm:text-xs font-mono tracking-wider uppercase transition-all whitespace-nowrap flex-shrink-0 ${
-            !activeSignId
-              ? 'bg-white text-black font-bold shadow-lg scale-105'
-              : 'text-white/70 hover:text-white hover:bg-white/10'
-          }`}
-        >
-          Cielo Intero
-        </button>
-
-        <div className="w-[1px] h-6 bg-white/20 mx-1 flex-shrink-0" />
-
         {/* 12 Zodiac Glyphs */}
         {ZODIAC_SIGNS.map((sign) => {
           const isActive = activeSignId === sign.id;
