@@ -1,38 +1,16 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 
 export default function LandingScreen({ onEnter }) {
   const [isDiving, setIsDiving] = useState(false);
-  const [showTooltip, setShowTooltip] = useState(false);
-  const hoverTimerRef = useRef(null);
 
   const handleStartDive = () => {
     if (isDiving) return;
     setIsDiving(true);
-    setShowTooltip(false);
-    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
     // Give time for celestial warp zoom effect before triggering camera descent
     setTimeout(() => {
       onEnter();
     }, 400);
   };
-
-  const handleMouseEnter = () => {
-    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
-    hoverTimerRef.current = setTimeout(() => {
-      setShowTooltip(true);
-    }, 850); // After a brief moment of hover inactivity on the logo
-  };
-
-  const handleMouseLeave = () => {
-    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
-    setShowTooltip(false);
-  };
-
-  useEffect(() => {
-    return () => {
-      if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
-    };
-  }, []);
 
   return (
     <div
@@ -51,8 +29,7 @@ export default function LandingScreen({ onEnter }) {
 
         {/* Circular Astrolabe Interactive Unit */}
         <div
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
+          title="discover"
           className="relative w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 flex items-center justify-center"
         >
           {/* 1. Rotating Outer Zodiac Ring (Rotazione Lenta Continua) */}
@@ -62,7 +39,7 @@ export default function LandingScreen({ onEnter }) {
             className="absolute inset-0 w-full h-full object-contain animate-[spin_80s_linear_infinite] drop-shadow-[0_0_20px_rgba(229,184,105,0.45)]"
           />
 
-          {/* 2. Fixed Center AAA Monogram (Immutato, allargato al 68%, perfettamente centrato) */}
+          {/* 2. Fixed Center AAA Monogram */}
           <img
             src="/images/aaa-logo-center.png"
             alt="AAA Center Monogram"
@@ -71,21 +48,6 @@ export default function LandingScreen({ onEnter }) {
 
           {/* Hover Portal Ring Hint */}
           <div className="absolute inset-0 rounded-full border border-amber-400/0 group-hover:border-amber-400/30 group-hover:scale-105 transition-all duration-700" />
-
-          {/* Subtle Golden "discover" Tooltip on Hover Inactivity */}
-          <div
-            className={`absolute -bottom-2 sm:-bottom-3 left-1/2 -translate-x-1/2 z-20 pointer-events-none transition-all duration-500 transform ${
-              showTooltip && !isDiving
-                ? 'opacity-100 translate-y-0 scale-100'
-                : 'opacity-0 translate-y-2 scale-95'
-            }`}
-          >
-            <div className="px-3 py-1 rounded-full bg-black/85 border border-[#e5b869]/40 backdrop-blur-md shadow-[0_0_18px_rgba(229,184,105,0.35)] flex items-center justify-center">
-              <span className="text-[11px] sm:text-xs font-serif tracking-[0.25em] text-[#f3cb72] lowercase font-light">
-                discover
-              </span>
-            </div>
-          </div>
         </div>
 
         {/* Pure Astrology Art Atlas Typography */}
