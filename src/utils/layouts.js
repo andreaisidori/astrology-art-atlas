@@ -32,7 +32,27 @@ export function computeArtworkPositions(artworks, mode = 'manual', activeSignId 
     return result;
   }
 
-  // 2. CHROMATIC MODE: Arranged in a horizontal color spectrum ring
+  // 2. ARTIST MODE: Alphabetical order by Artist Name along celestial ring
+  if (mode === 'artist') {
+    const sorted = [...artworks].sort((a, b) => (a.artista || '').localeCompare(b.artista || ''));
+    const total = sorted.length;
+
+    sorted.forEach((art, index) => {
+      const progress = index / Math.max(total, 1);
+      const angle = progress * Math.PI * 2;
+      const height = Math.sin(angle * 3) * 6; // Gentle wave along the ring
+      const r = sphereRadius * 0.95;
+
+      const x = r * Math.cos(angle);
+      const y = height;
+      const z = r * Math.sin(angle);
+
+      result[art.id] = [x, y, z];
+    });
+    return result;
+  }
+
+  // 3. CHROMATIC MODE: Arranged in a horizontal color spectrum ring
   if (mode === 'chromatic') {
     const getHue = (hex) => {
       if (!hex) return 0;
