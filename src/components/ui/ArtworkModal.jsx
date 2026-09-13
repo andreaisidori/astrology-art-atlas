@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, ExternalLink, Calendar, Tag, Sparkles, Compass } from 'lucide-react';
+import { X, ExternalLink, Calendar, Tag, Sparkles, Compass, Quote } from 'lucide-react';
 import { ZODIAC_SIGNS } from '../../utils/astronomy';
 import ZodiacGlyph from './ZodiacGlyph';
 
@@ -80,6 +80,14 @@ export default function ArtworkModal({ artwork, onClose, onSelectSign, onSelectK
               )}
               <p className="text-sm text-zinc-300 italic font-serif mt-1">{artwork.titolo}</p>
             </div>
+
+            {/* Artist Quote */}
+            {artwork.citazione && (
+              <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-400/30 text-amber-100 italic font-serif text-xs leading-relaxed relative">
+                <Quote className="w-3.5 h-3.5 text-amber-400 mb-1 opacity-80 inline mr-1 -mt-1" />
+                <span>{artwork.citazione}</span>
+              </div>
+            )}
 
             {/* Natal Chart Anagrafica (Sole, Luna, Venere, Mercurio) */}
             {artwork.tema_natale && (

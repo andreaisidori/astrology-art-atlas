@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Filter, ArrowUpRight, Grid, List, Sparkles } from 'lucide-react';
+import { Search, Filter, ArrowUpRight, Grid, List, Sparkles, Quote } from 'lucide-react';
 import { ZODIAC_SIGNS } from '../../utils/astronomy';
 import ZodiacGlyph from './ZodiacGlyph';
 
@@ -30,7 +30,8 @@ export default function ArchiveView({
           const matchTitle = (art.titolo || '').toLowerCase().includes(q);
           const matchKeywords = (art.parole_chiave || []).some(k => k.toLowerCase().includes(q));
           const matchNote = (art.nota_simbolica || '').toLowerCase().includes(q);
-          if (!matchArtist && !matchTitle && !matchKeywords && !matchNote) return false;
+          const matchQuote = (art.citazione || '').toLowerCase().includes(q);
+          if (!matchArtist && !matchTitle && !matchKeywords && !matchNote && !matchQuote) return false;
         }
 
         return true;
@@ -180,10 +181,23 @@ export default function ArchiveView({
                   <h3 className="font-bold text-base text-zinc-950 tracking-tight group-hover:text-blue-600 transition-colors">
                     {art.artista}
                   </h3>
+                  {art.titolo && (
+                    <p className="text-xs text-zinc-600 italic font-serif mt-0.5">
+                      {art.titolo}
+                    </p>
+                  )}
                   {art.date_biografiche && (
                     <p className="text-[11px] font-mono text-zinc-400 mt-0.5">
                       {art.date_biografiche}
                     </p>
+                  )}
+
+                  {/* Artist Quote */}
+                  {art.citazione && (
+                    <div className="my-2.5 p-2.5 rounded-xl bg-amber-50/80 border border-amber-200/70 text-zinc-800 italic font-serif text-xs leading-relaxed relative">
+                      <Quote className="w-3 h-3 text-amber-500 mb-1 opacity-75 inline mr-1 -mt-1" />
+                      <span>{art.citazione}</span>
+                    </div>
                   )}
 
                   {/* Natal Planets Mini Strip */}

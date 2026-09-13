@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { X, Plus, Trash2, Edit3, Save, Download, Copy, Check, Lock, Sparkles, Image, Compass, Calendar, Moon, User, BookOpen, ExternalLink, Mail, Instagram, CopyPlus, Layers } from "lucide-react";
+import { X, Plus, Trash2, Edit3, Save, Download, Copy, Check, Lock, Sparkles, Image, Compass, Calendar, Moon, User, BookOpen, ExternalLink, Mail, Instagram, CopyPlus, Layers, Quote } from "lucide-react";
 import { ZODIAC_SIGNS } from "../../utils/astronomy";
 
 export default function AdminCuratorPanel({
@@ -56,6 +56,7 @@ export default function AdminCuratorPanel({
     id: "",
     segno: "Ariete",
     artista: "",
+    citazione: "",
     titolo: "",
     date_biografiche: "",
     anno: new Date().getFullYear(),
@@ -67,6 +68,7 @@ export default function AdminCuratorPanel({
     nota_simbolica: "",
     colore_dominante: "#e63946",
     link_fonte: "",
+    clonedFromArtist: "",
   });
 
   // Authentication check - Only triggered by physical slider swipe completion
@@ -165,6 +167,7 @@ export default function AdminCuratorPanel({
       id: newId,
       segno: "Ariete",
       artista: "",
+      citazione: "",
       titolo: "",
       date_biografiche: "",
       anno: 2024,
@@ -186,6 +189,7 @@ export default function AdminCuratorPanel({
     setEditingArt(art);
     setFormData({
       ...art,
+      citazione: art.citazione || "",
       date_biografiche: art.date_biografiche || "",
       tema_natale: art.tema_natale || { sole: art.segno || "Ariete", luna: "", venere: "", mercurio: "" },
       posizione_manuale: art.posizione_manuale || { x: 40, y: 0, z: 10 },
@@ -207,6 +211,7 @@ export default function AdminCuratorPanel({
       id: newId,
       segno: baseArt.segno || "Ariete",
       artista: baseArt.artista || "",
+      citazione: baseArt.citazione || "",
       titolo: "",
       date_biografiche: baseArt.date_biografiche || "",
       anno: baseArt.anno || new Date().getFullYear(),
@@ -242,6 +247,7 @@ export default function AdminCuratorPanel({
       id: formData.id || `art_${Date.now()}`,
       segno: formData.segno,
       artista: formData.artista,
+      citazione: formData.citazione || "",
       titolo: formData.titolo,
       date_biografiche: formData.date_biografiche,
       anno: parseInt(formData.anno, 10) || null,
@@ -830,6 +836,24 @@ export default function AdminCuratorPanel({
                         placeholder="1958"
                       />
                     </div>
+                  </div>
+
+                  {/* Citazione dell'Artista (Opzionale) */}
+                  <div>
+                    <label className="block text-[11px] font-mono text-zinc-400 mb-1 flex items-center justify-between">
+                      <span className="flex items-center gap-1.5 text-amber-300">
+                        <Quote className="w-3.5 h-3.5" />
+                        <span>Citazione dell'Artista (mostrata nella scheda Archivio)</span>
+                      </span>
+                      <span className="text-[10px] text-zinc-500 font-mono">Opzionale</span>
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={formData.citazione || ""}
+                      onChange={(e) => setFormData({ ...formData, citazione: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-white/15 text-white text-xs leading-relaxed italic font-serif focus:ring-1 focus:ring-amber-400 placeholder:font-sans placeholder:not-italic"
+                      placeholder='Es: "L’arte non riproduce ciò che è visibile, ma rende visibile ciò che non sempre lo è."'
+                    />
                   </div>
 
                   {/* Row 3: Titolo Opera & Tecnica */}
