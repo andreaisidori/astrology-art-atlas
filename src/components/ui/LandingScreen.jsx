@@ -13,20 +13,20 @@ export default function LandingScreen({ onEnter }) {
   return (
     <div
       onClick={handleStartDive}
-      className={`fixed inset-0 z-50 flex flex-col items-center justify-center p-6 select-none overflow-hidden transition-all duration-750 ease-in [perspective:1000px] cursor-pointer ${
+      className={`fixed inset-0 z-50 flex flex-col items-center justify-center p-6 select-none overflow-hidden transition-all duration-[1100ms] ease-[cubic-bezier(0.22,1,0.36,1)] [perspective:1000px] cursor-pointer ${
         isDiving ? 'bg-transparent pointer-events-none' : 'bg-[#030307]'
       }`}
     >
       {/* Subtle Background Radial Aura */}
       <div
-        className={`absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(229,184,105,0.1)_0%,rgba(10,10,25,0.8)_50%,rgba(3,3,7,1)_95%)] pointer-events-none transition-opacity duration-600 ${
+        className={`absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(229,184,105,0.1)_0%,rgba(10,10,25,0.8)_50%,rgba(3,3,7,1)_95%)] pointer-events-none transition-opacity duration-700 ease-out ${
           isDiving ? 'opacity-0' : 'opacity-100'
         }`}
       />
 
       {/* Center: Astrolabe Logo - "Dives and flattens onto the floor" */}
       <main
-        className={`relative z-10 flex flex-col items-center justify-center group transition-all duration-750 ease-in ${
+        className={`relative z-10 flex flex-col items-center justify-center group transition-all duration-[1100ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
           isDiving
             ? '[transform:rotateX(88deg)_translateY(75vh)_scale(3.2)] opacity-0'
             : '[transform:rotateX(0deg)_translateY(0)_scale(1)] opacity-100 hover:scale-105'
@@ -35,7 +35,7 @@ export default function LandingScreen({ onEnter }) {
       >
         {/* Luminous Pulsing Glow Backdrop */}
         <div
-          className={`absolute w-72 h-72 sm:w-96 sm:h-96 rounded-full bg-amber-500/10 filter blur-3xl transition-all duration-600 ${
+          className={`absolute w-72 h-72 sm:w-96 sm:h-96 rounded-full bg-amber-500/10 filter blur-3xl transition-all duration-700 ${
             isDiving ? 'opacity-0 scale-150' : 'group-hover:bg-amber-400/20 animate-pulse'
           }`}
         />

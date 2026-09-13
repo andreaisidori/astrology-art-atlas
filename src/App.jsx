@@ -43,7 +43,7 @@ export default function App() {
     setIsLandingTransition(true);
     setTimeout(() => {
       setShowLanding(false);
-    }, 780);
+    }, 1150);
   };
 
   // Handle updating curator bio

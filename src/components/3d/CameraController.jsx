@@ -32,25 +32,24 @@ export default function CameraController({
   const landingState = useRef({
     active: false,
     startTime: 0,
-    duration: 750,
-    startY: 35,
+    duration: 1100, // Slightly slower, fluid and majestic
+    startY: 32,
   });
 
   // Initialize camera position when landing from above
   useEffect(() => {
     if (isLanding) {
-      camera.position.set(0, 35, 0.05);
+      camera.position.set(0, 32, 0.05);
       camera.lookAt(0, -12, 0);
       landingState.current = {
         active: true,
         startTime: performance.now(),
-        duration: 750,
-        startY: 35,
+        duration: 1100,
+        startY: 32,
       };
       landingActive.current = true;
       if (controlsRef.current) {
-        controlsRef.current.target.set(0, 0, -1);
-        controlsRef.current.update();
+        controlsRef.current.enabled = false;
       }
     }
   }, [isLanding, camera]);
@@ -92,35 +91,36 @@ export default function CameraController({
   }, [targetSignId, camera]);
 
   useFrame((_, delta) => {
-    if (!controlsRef.current) return;
-
-    // 1. Sky Landing Descent ("Atterraggio dall'alto come da una porta nel cielo")
+    // 1. Sky Landing Descent ("Atterraggio fluido e continuo sul tappeto celeste")
     if (landingState.current.active) {
       const elapsed = performance.now() - landingState.current.startTime;
       const progress = Math.min(1, elapsed / landingState.current.duration);
 
-      // Cubic ease-out: starts with swift downward motion and settles smoothly into the center
-      const ease = 1 - Math.pow(1 - progress, 3);
-      const currentY = THREE.MathUtils.lerp(landingState.current.startY, 0.01, ease);
+      // Quartic ease-out: starts gently, glides downwards, and slows smoothly to a complete stop
+      const ease = 1 - Math.pow(1 - progress, 4);
+      const currentY = THREE.MathUtils.lerp(landingState.current.startY, 0.001, ease);
       camera.position.set(0, currentY, 0.01);
 
       const lookY = THREE.MathUtils.lerp(-12, 0, ease);
-      const lookZ = THREE.MathUtils.lerp(-1, -30, ease);
+      const lookZ = THREE.MathUtils.lerp(-0.01, -40, ease);
       camera.lookAt(0, lookY, lookZ);
-
-      if (controlsRef.current) {
-        controlsRef.current.target.set(0, 0, -1);
-        controlsRef.current.update();
-      }
 
       if (progress >= 1) {
         camera.position.set(0, 0, 0.01);
+        camera.lookAt(0, 0, -40);
         landingState.current.active = false;
         landingActive.current = false;
+        if (controlsRef.current) {
+          controlsRef.current.target.set(0, 0, 0);
+          controlsRef.current.update();
+          controlsRef.current.enabled = true;
+        }
         if (onLandingComplete) onLandingComplete();
       }
       return;
     }
+
+    if (!controlsRef.current) return;
 
     // 2. Flight to target zodiac sign: non-uniform impulse ("lento -> veloce -> lento con spinta")
     if (flightState.current.active) {
