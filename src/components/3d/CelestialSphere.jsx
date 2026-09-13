@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { ZODIAC_SIGNS, sphericalToCartesian } from '../../utils/astronomy';
 import { Html } from '@react-three/drei';
 import ZodiacGlyph from '../ui/ZodiacGlyph';
+import CelestialFloor from './CelestialFloor';
 
 export default function CelestialSphere({ activeSignId, onSelectSign, sphereRadius = 48 }) {
   // 1. Generate lightweight, delicate background star points (800 stars)
@@ -158,6 +159,8 @@ export default function CelestialSphere({ activeSignId, onSelectSign, sphereRadi
           </group>
         );
       })}
+      {/* 3. Celestial Astrolabe Floor (Pavimento / Tappeto Zodiacale Dorato Rotante) */}
+      <CelestialFloor radius={25} yPosition={-12} opacity={0.4} />
     </group>
   );
 }

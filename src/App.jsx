@@ -38,8 +38,10 @@ export default function App() {
 
   // Trigger Sky-Door landing dive when entering from landing screen
   const handleEnterFromLanding = () => {
-    setShowLanding(false);
     setIsLandingTransition(true);
+    setTimeout(() => {
+      setShowLanding(false);
+    }, 1100);
   };
 
   // Load Atlas JSON and calculate Moon Position on Mount

@@ -6,26 +6,39 @@ export default function LandingScreen({ onEnter }) {
   const handleStartDive = () => {
     if (isDiving) return;
     setIsDiving(true);
-    // Give time for celestial warp zoom effect before triggering camera descent
-    setTimeout(() => {
-      onEnter();
-    }, 400);
+    // Start 3D camera descent immediately in sync with the falling door animation
+    onEnter();
   };
 
   return (
     <div
       onClick={handleStartDive}
-      className={`fixed inset-0 z-50 flex flex-col items-center justify-center p-6 select-none overflow-hidden transition-all duration-1000 bg-[#030307] cursor-pointer ${
-        isDiving ? 'opacity-0 scale-125 pointer-events-none' : 'opacity-100 scale-100'
+      className={`fixed inset-0 z-50 flex flex-col items-center justify-center p-6 select-none overflow-hidden transition-all duration-1000 [perspective:1200px] cursor-pointer ${
+        isDiving ? 'bg-transparent pointer-events-none' : 'bg-[#030307]'
       }`}
     >
       {/* Subtle Background Radial Aura */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(229,184,105,0.1)_0%,rgba(10,10,25,0.8)_50%,rgba(3,3,7,1)_95%)] pointer-events-none" />
+      <div
+        className={`absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(229,184,105,0.1)_0%,rgba(10,10,25,0.8)_50%,rgba(3,3,7,1)_95%)] pointer-events-none transition-opacity duration-1000 ${
+          isDiving ? 'opacity-0' : 'opacity-100'
+        }`}
+      />
 
-      {/* Center: Astrolabe Logo with Rotating Zodiac Ring & Center Monogram */}
-      <main className="relative z-10 flex flex-col items-center justify-center group transition-transform duration-700 hover:scale-105">
+      {/* Center: Astrolabe Logo - "Porta Celeste che cade in avanti ingrandendosi e diventa pavimento" */}
+      <main
+        className={`relative z-10 flex flex-col items-center justify-center group transition-all duration-1200 ease-out ${
+          isDiving
+            ? '[transform:rotateX(78deg)_translateY(36%)_scale(3.6)] opacity-35'
+            : '[transform:rotateX(0deg)_translateY(0)_scale(1)] opacity-100 hover:scale-105'
+        }`}
+        style={{ transformOrigin: 'center bottom', transformStyle: 'preserve-3d' }}
+      >
         {/* Luminous Pulsing Glow Backdrop */}
-        <div className="absolute w-72 h-72 sm:w-96 sm:h-96 rounded-full bg-amber-500/10 filter blur-3xl group-hover:bg-amber-400/20 transition-all duration-1000 animate-pulse" />
+        <div
+          className={`absolute w-72 h-72 sm:w-96 sm:h-96 rounded-full bg-amber-500/10 filter blur-3xl transition-all duration-1000 ${
+            isDiving ? 'opacity-0 scale-150' : 'group-hover:bg-amber-400/20 animate-pulse'
+          }`}
+        />
 
         {/* Circular Astrolabe Interactive Unit */}
         <div
@@ -51,7 +64,11 @@ export default function LandingScreen({ onEnter }) {
         </div>
 
         {/* Pure Astrology Art Atlas Typography */}
-        <div className="mt-8 text-center space-y-1.5">
+        <div
+          className={`mt-8 text-center space-y-1.5 transition-all duration-700 ${
+            isDiving ? 'opacity-0 -translate-y-6' : 'opacity-100 translate-y-0'
+          }`}
+        >
           <div className="text-2xl sm:text-3xl md:text-4xl font-serif font-semibold tracking-[0.35em] text-[#e5b869] drop-shadow-[0_0_18px_rgba(229,184,105,0.6)]">
             AAA
           </div>
