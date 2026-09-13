@@ -231,9 +231,13 @@ export default function App() {
     const loadAtlasData = async () => {
       // Live API fetch (GitHub single source of truth)
       try {
+        const githubToken = localStorage.getItem('aaa_github_token') || '';
         const res = await fetch(`/api/get-atlas?t=${Date.now()}`, {
           cache: 'no-store',
-          headers: { 'Cache-Control': 'no-cache, no-store' },
+          headers: {
+            'Cache-Control': 'no-cache, no-store',
+            ...(githubToken.trim() ? { Authorization: `Bearer ${githubToken.trim()}` } : {}),
+          },
         });
         if (res.ok) {
           const json = await res.json();
