@@ -39,11 +39,11 @@ export default function LandingScreen({ onEnter }) {
             className="absolute inset-0 w-full h-full object-contain animate-[spin_80s_linear_infinite] drop-shadow-[0_0_20px_rgba(229,184,105,0.45)]"
           />
 
-          {/* 2. Fixed Center AAA Monogram */}
+          {/* 2. Fixed Center AAA Monogram (Perfettamente centrato con la corona rotante) */}
           <img
             src="/images/aaa-logo-center.png"
             alt="AAA Center Monogram"
-            className="w-[68%] h-[68%] object-contain drop-shadow-[0_0_25px_rgba(243,203,114,0.6)] group-hover:scale-105 transition-transform duration-500 z-10"
+            className="absolute inset-0 w-full h-full object-contain drop-shadow-[0_0_25px_rgba(243,203,114,0.6)] group-hover:scale-105 transition-transform duration-500 z-10"
           />
 
           {/* Hover Portal Ring Hint */}
