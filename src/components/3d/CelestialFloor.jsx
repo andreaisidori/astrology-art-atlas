@@ -12,8 +12,8 @@ export default function CelestialFloor({ radius = 25, yPosition = -12, opacity =
   const ringTexture = useLoader(THREE.TextureLoader, "/images/aaa-logo-ring.png");
   const centerTexture = useLoader(THREE.TextureLoader, "/images/aaa-logo-center.png");
 
-  // Calibrazione: la corona zodiacale a terra è agganciata 1:1 alla volta celeste in coordinate mondo
-  const SKY_ALIGN_ROT_Z = (-15 * Math.PI) / 180;
+  // Calibrazione: la corona zodiacale a terra è agganciata 1:1 alla volta celeste in coordinate mondo (Ariete 15°, Cancro 105°, Bilancia 195°, ecc.)
+  const SKY_ALIGN_ROT_Z = (165 * Math.PI) / 180;
 
   useFrame(({ camera }, delta) => {
     // Smoothly blend in floor during landing
@@ -42,10 +42,10 @@ export default function CelestialFloor({ radius = 25, yPosition = -12, opacity =
 
   return (
     <group position={[0, yPosition, 0]}>
-      {/* 1. Corona Zodiacale Esterna (Agganciata al cielo: Cancro con Cancro, Ariete con Ariete, ecc.) */}
+      {/* 1. Corona Zodiacale Esterna (Agganciata 1:1 al cielo, non specchiata) */}
       <mesh
         rotation={[-Math.PI / 2, 0, SKY_ALIGN_ROT_Z]}
-        scale={[-1, 1, 1]}
+        scale={[1, 1, 1]}
         position={[0, 0, 0]}
       >
         <planeGeometry args={[radius * 2, radius * 2]} />
