@@ -5,139 +5,127 @@ const YOUTUBE_VIDEO_ID = 'm86mBRKZHY0';
 
 export default function BackgroundMusic({ isHome = true }) {
   const [isMuted, setIsMuted] = useState(false);
+  const playerRef = useRef(null);
   const isMutedRef = useRef(false);
-  const iframeRef = useRef(null);
-  const audioCtxRef = useRef(null);
-  const synthNodesRef = useRef(null);
-  const synthGainRef = useRef(null);
 
-  // Keep isMutedRef in sync
+  // Synchronize ref with state
   useEffect(() => {
     isMutedRef.current = isMuted;
   }, [isMuted]);
 
-  // Send command to YouTube Iframe via postMessage
-  const sendIframeCommand = (func, args = '') => {
-    if (iframeRef.current && iframeRef.current.contentWindow) {
-      iframeRef.current.contentWindow.postMessage(
-        JSON.stringify({ event: 'command', func, args }),
-        '*'
-      );
-    }
-  };
-
-  // Ethereal Celestial Web Audio Synthesizer (Harmonic 432Hz ambient drone) as backup
-  const initCelestialSynth = () => {
-    try {
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
-      if (!AudioContext) return;
-
-      if (!audioCtxRef.current) {
-        audioCtxRef.current = new AudioContext();
-      }
-
-      if (audioCtxRef.current.state === 'suspended') {
-        audioCtxRef.current.resume();
-      }
-
-      if (synthNodesRef.current) return;
-
-      const ctx = audioCtxRef.current;
-      const masterGain = ctx.createGain();
-      masterGain.gain.setValueAtTime(0.001, ctx.currentTime);
-      masterGain.gain.exponentialRampToValueAtTime(0.20, ctx.currentTime + 2);
-      masterGain.connect(ctx.destination);
-      synthGainRef.current = masterGain;
-
-      // Celestial Frequencies (Cosmic F# Major / 432Hz harmonic constellation chord)
-      const freqs = [108, 144, 216, 288, 432, 648];
-      const oscillators = freqs.map((freq, i) => {
-        const osc = ctx.createOscillator();
-        const oscGain = ctx.createGain();
-        const panner = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
-
-        osc.type = i % 2 === 0 ? 'sine' : 'triangle';
-        osc.frequency.setValueAtTime(freq, ctx.currentTime);
-
-        // Subtle slow frequency shimmer
-        const lfo = ctx.createOscillator();
-        const lfoGain = ctx.createGain();
-        lfo.frequency.value = 0.08 + i * 0.02;
-        lfoGain.gain.value = 0.8;
-        lfo.connect(osc.frequency);
-        lfo.start();
-
-        const vol = (0.16 / freqs.length) * (1 - i * 0.1);
-        oscGain.gain.setValueAtTime(vol, ctx.currentTime);
-
-        if (panner) {
-          panner.pan.value = (i / (freqs.length - 1)) * 1.6 - 0.8;
-          osc.connect(panner);
-          panner.connect(oscGain);
-        } else {
-          osc.connect(oscGain);
-        }
-
-        oscGain.connect(masterGain);
-        osc.start();
-        return osc;
-      });
-
-      synthNodesRef.current = oscillators;
-    } catch (e) {
-      console.warn('Web Audio synth unavailable:', e);
-    }
-  };
-
-  const startAudio = () => {
-    if (isMutedRef.current) return;
-
-    // 1. Unmute and play YouTube
-    sendIframeCommand('unMute');
-    sendIframeCommand('setVolume', [80]);
-    sendIframeCommand('playVideo');
-
-    // 2. Initialize Web Audio harmonic synth
-    initCelestialSynth();
-  };
-
   useEffect(() => {
-    let hasUnlocked = false;
+    let isCancelled = false;
 
-    // One-time unlock listener to satisfy browser autoplay policy on initial entry
-    const unlockOnce = () => {
-      if (hasUnlocked) return;
-      hasUnlocked = true;
+    // Initialize YouTube Player once API is ready
+    const initPlayer = () => {
+      if (isCancelled || !window.YT || !window.YT.Player) return;
 
-      // Immediately remove all unlock listeners so they NEVER trigger again on subsequent clicks!
-      window.removeEventListener('click', unlockOnce);
-      window.removeEventListener('touchstart', unlockOnce);
-      window.removeEventListener('pointerdown', unlockOnce);
-      window.removeEventListener('keydown', unlockOnce);
+      try {
+        if (playerRef.current) return;
 
-      if (!isMutedRef.current) {
-        startAudio();
+        playerRef.current = new window.YT.Player('aaa-youtube-bg-player', {
+          height: '100',
+          width: '100',
+          videoId: YOUTUBE_VIDEO_ID,
+          playerVars: {
+            autoplay: 1,
+            controls: 0,
+            disablekb: 1,
+            enablejsapi: 1,
+            fs: 0,
+            loop: 1,
+            playlist: YOUTUBE_VIDEO_ID,
+            modestbranding: 1,
+            playsinline: 1,
+            rel: 0,
+            origin: typeof window !== 'undefined' ? window.location.origin : '',
+          },
+          events: {
+            onReady: (event) => {
+              if (isCancelled) return;
+              try {
+                event.target.setVolume(75);
+                if (!isMutedRef.current) {
+                  event.target.unMute();
+                  event.target.playVideo();
+                }
+              } catch (e) {
+                console.warn('YouTube onReady playback error:', e);
+              }
+            },
+            onError: (e) => {
+              console.warn('YouTube Player error code:', e.data);
+            },
+          },
+        });
+      } catch (err) {
+        console.warn('YouTube Player setup exception:', err);
       }
     };
 
-    window.addEventListener('click', unlockOnce, { once: true, passive: true });
-    window.addEventListener('touchstart', unlockOnce, { once: true, passive: true });
-    window.addEventListener('pointerdown', unlockOnce, { once: true, passive: true });
-    window.addEventListener('keydown', unlockOnce, { once: true, passive: true });
-
-    // Initial silent kick
-    const timer = setTimeout(() => {
-      if (!isMutedRef.current) {
-        sendIframeCommand('playVideo');
+    // Load official YouTube Iframe API script if not already present
+    if (!window.YT) {
+      const existingScript = document.querySelector('script[src*="youtube.com/iframe_api"]');
+      if (!existingScript) {
+        const tag = document.createElement('script');
+        tag.src = 'https://www.youtube.com/iframe_api';
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        if (firstScriptTag && firstScriptTag.parentNode) {
+          firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        } else {
+          document.head.appendChild(tag);
+        }
       }
-    }, 600);
+
+      const prevCallback = window.onYouTubeIframeAPIReady;
+      window.onYouTubeIframeAPIReady = () => {
+        if (typeof prevCallback === 'function') prevCallback();
+        initPlayer();
+      };
+    } else if (window.YT && window.YT.Player) {
+      initPlayer();
+    }
+
+    // Modern browser autoplay policy: unlock audio on first user gesture anywhere
+    const unlockOnUserGesture = () => {
+      window.removeEventListener('click', unlockOnUserGesture);
+      window.removeEventListener('touchstart', unlockOnUserGesture);
+      window.removeEventListener('pointerdown', unlockOnUserGesture);
+      window.removeEventListener('keydown', unlockOnUserGesture);
+
+      if (playerRef.current && typeof playerRef.current.playVideo === 'function') {
+        if (!isMutedRef.current) {
+          try {
+            playerRef.current.unMute();
+            playerRef.current.setVolume(75);
+            playerRef.current.playVideo();
+          } catch (e) {
+            // ignore
+          }
+        }
+      }
+    };
+
+    window.addEventListener('click', unlockOnUserGesture, { once: true, passive: true });
+    window.addEventListener('touchstart', unlockOnUserGesture, { once: true, passive: true });
+    window.addEventListener('pointerdown', unlockOnUserGesture, { once: true, passive: true });
+    window.addEventListener('keydown', unlockOnUserGesture, { once: true, passive: true });
 
     return () => {
-      clearTimeout(timer);
-      window.removeEventListener('click', unlockOnce);
-      window.removeEventListener('touchstart', unlockOnce);
-      window.removeEventListener('pointerdown', unlockOnce);
-      window.removeEventListener('keydown', unlockOnce);
+      isCancelled = true;
+      window.removeEventListener('click', unlockOnUserGesture);
+      window.removeEventListener('touchstart', unlockOnUserGesture);
+      window.removeEventListener('pointerdown', unlockOnUserGesture);
+      window.removeEventListener('keydown', unlockOnUserGesture);
+
+      if (playerRef.current && typeof playerRef.current.destroy === 'function') {
+        try {
+          playerRef.current.destroy();
+          playerRef.current = null;
+        } catch (e) {
+          // ignore
+        }
+      }
     };
   }, []);
 
@@ -145,62 +133,54 @@ export default function BackgroundMusic({ isHome = true }) {
     e.stopPropagation();
     e.preventDefault();
 
+    const player = playerRef.current;
+
     if (isMuted) {
       // --- UNMUTE ---
       setIsMuted(false);
       isMutedRef.current = false;
-
-      // 1. Resume YouTube
-      sendIframeCommand('unMute');
-      sendIframeCommand('setVolume', [80]);
-      sendIframeCommand('playVideo');
-
-      // 2. Resume Web Audio
-      if (audioCtxRef.current) {
-        if (audioCtxRef.current.state === 'suspended') {
-          audioCtxRef.current.resume();
+      if (player) {
+        try {
+          if (typeof player.unMute === 'function') player.unMute();
+          if (typeof player.setVolume === 'function') player.setVolume(75);
+          if (typeof player.playVideo === 'function') player.playVideo();
+        } catch (err) {
+          console.warn('Error unmuting YouTube:', err);
         }
-        if (synthGainRef.current) {
-          synthGainRef.current.gain.cancelScheduledValues(audioCtxRef.current.currentTime);
-          synthGainRef.current.gain.setValueAtTime(0.20, audioCtxRef.current.currentTime);
-        }
-      } else {
-        initCelestialSynth();
       }
     } else {
       // --- MUTE ---
       setIsMuted(true);
       isMutedRef.current = true;
-
-      // 1. Mute & Pause YouTube
-      sendIframeCommand('mute');
-      sendIframeCommand('pauseVideo');
-
-      // 2. Mute & Suspend Web Audio
-      if (audioCtxRef.current && synthGainRef.current) {
-        synthGainRef.current.gain.cancelScheduledValues(audioCtxRef.current.currentTime);
-        synthGainRef.current.gain.setValueAtTime(0, audioCtxRef.current.currentTime);
-        audioCtxRef.current.suspend();
+      if (player) {
+        try {
+          if (typeof player.mute === 'function') player.mute();
+          if (typeof player.pauseVideo === 'function') player.pauseVideo();
+        } catch (err) {
+          console.warn('Error muting YouTube:', err);
+        }
       }
     }
   };
 
   return (
     <>
-      {/* 
-        YouTube IFrame Player (rendered on-screen with near-zero opacity so YouTube API doesn't suspend it)
-      */}
+      {/* Hidden YouTube Iframe Player element */}
       <div
-        className="fixed bottom-0 left-0 w-8 h-8 opacity-[0.01] pointer-events-none z-[-1] overflow-hidden"
+        style={{
+          position: 'fixed',
+          top: -9999,
+          left: -9999,
+          width: 1,
+          height: 1,
+          opacity: 0,
+          pointerEvents: 'none',
+          overflow: 'hidden',
+          zIndex: -1,
+        }}
         aria-hidden="true"
       >
-        <iframe
-          ref={iframeRef}
-          title="AAA Background Audio"
-          src={`https://www.youtube-nocookie.com/embed/${YOUTUBE_VIDEO_ID}?enablejsapi=1&autoplay=1&mute=0&loop=1&playlist=${YOUTUBE_VIDEO_ID}&playsinline=1&controls=0&disablekb=1&fs=0&rel=0&origin=${typeof window !== 'undefined' ? encodeURIComponent(window.location.origin) : ''}`}
-          allow="autoplay; encrypted-media"
-          className="w-full h-full"
-        />
+        <div id="aaa-youtube-bg-player" />
       </div>
 
       {/* Floating Bottom-Left Audio Control Button */}
