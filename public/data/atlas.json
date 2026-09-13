@@ -9,6 +9,14 @@
       "instagram": "https://instagram.com/astro.expression",
       "email": "astro.expression@gmail.com"
     },
+    "info": {
+      "titolo": "AAA — Astrology Art Atlas",
+      "sottotitolo": "Visione Concettuale • Dottorato di Ricerca",
+      "crediti": "Curatela e ricerca di Giacomo Isidori • Ispirato ad Aby Warburg",
+      "testo_concettuale": "Questo atlante celeste dinamico in 3D costituisce la parte pratica di una ricerca di storia dell'arte ispirata al metodo di Aby Warburg e al suo celebre Bilderatlas Mnemosyne: un sistema aperto, non gerarchico, per orientarsi nell'immaginario collettivo attraverso il montaggio associativo di immagini anziché una narrazione lineare.",
+      "testo_struttura": "Non si tratta di un progetto astrologico in senso divinatorio: lo zodiaco è impiegato come struttura archivistica e mnemotecnica, un sistema di 12 categorie simboliche per organizzare un vasto corpus di opere d'arte contemporanea.",
+      "testo_cupola": "Il sito è progettato per essere fruibile nel browser ed essere successivamente proiettato dall'alto su una semisfera/cupola tramite specchio sferico. Nel buio dell'installazione, il pubblico sdraiato a terra \"naviga\" tra le immagini con lo sguardo rivolto verso l'alto — un'esperienza di pensiero associativo, orizzontale e onirico."
+    },
     "descrizione": "Atlante mnemotecnico e archivio dinamico in 3D per l'immaginario artistico contemporaneo, strutturato sui 12 segni zodiacali come categorie simboliche aperte.",
     "ispirazione": "Aby Warburg — Bilderatlas Mnemosyne",
     "totale_artisti": 171

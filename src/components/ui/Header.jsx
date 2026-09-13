@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, Sun, Moon, Info, Eye, Disc, Lock } from 'lucide-react';
+import { Sparkles, Sun, Moon, Eye, Disc, Lock } from 'lucide-react';
 import ZodiacGlyph from './ZodiacGlyph';
 
 export default function Header({
@@ -35,7 +35,14 @@ export default function Header({
             <h1 className={`text-sm md:text-base font-mono font-bold tracking-wider uppercase transition-colors flex items-center gap-1.5 ${
               isNight ? 'text-white' : 'text-zinc-900'
             }`}>
-              <span className="text-amber-400 font-extrabold tracking-widest">AAA</span>
+              <button
+                type="button"
+                onClick={onOpenInfo}
+                className="text-amber-400 hover:text-amber-300 font-extrabold tracking-widest hover:underline underline-offset-4 cursor-pointer transition-all focus:outline-none drop-shadow-[0_0_10px_rgba(243,203,114,0.3)]"
+                title="Informazioni sul Progetto, Visione Mnemosyne e Metodo (AAA)"
+              >
+                AAA
+              </button>
               <span className="text-[11px] font-normal opacity-60 lowercase font-mono">/ astrology art atlas</span>
             </h1>
           </div>
@@ -92,23 +99,10 @@ export default function Header({
           )}
         </button>
 
-        {/* Info & Statement Modal Button */}
-        <button
-          onClick={onOpenInfo}
-          title="Visione e Metodo Mnemosyne"
-          className={`p-2 rounded-lg border transition-all backdrop-blur-md ${
-            isNight
-              ? 'bg-white/5 border-white/10 text-white/70 hover:text-white hover:bg-white/15'
-              : 'bg-white border-zinc-200 text-zinc-700 hover:text-zinc-950 shadow-sm'
-          }`}
-        >
-          <Info className="w-4 h-4" />
-        </button>
-
         {/* Protected Curator Studio Button */}
         <button
           onClick={onOpenAdmin}
-          title="Curator Studio / Gestione Backend (Opere o Bio)"
+          title="Curator Studio / Gestione Backend (Opere, Bio o Info Progetto)"
           className={`p-2 rounded-lg border transition-all backdrop-blur-md ${
             isNight
               ? 'bg-white/5 border-white/10 text-cyan-400 hover:text-cyan-300 hover:bg-white/15 hover:border-cyan-400/40'

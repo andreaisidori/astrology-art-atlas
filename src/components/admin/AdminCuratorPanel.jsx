@@ -10,6 +10,8 @@ export default function AdminCuratorPanel({
   onFocusArtwork3D,
   bioData,
   onUpdateBio,
+  infoData,
+  onUpdateInfo,
 }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [passwordInput, setPasswordInput] = useState("");
@@ -23,7 +25,7 @@ export default function AdminCuratorPanel({
   const [imageUploadStatus, setImageUploadStatus] = useState("");
   const [isOptimizingImage, setIsOptimizingImage] = useState(false);
 
-  // Tab: "artworks" | "bio"
+  // Tab: "artworks" | "bio" | "info"
   const [activeTab, setActiveTab] = useState("artworks");
 
   // Selected artwork for editing or null for new
@@ -55,6 +57,30 @@ export default function AdminCuratorPanel({
       });
     }
   }, [bioData]);
+
+  // Info & Vision Statement Form State
+  const [infoForm, setInfoForm] = useState({
+    titolo: infoData?.titolo || "AAA — Astrology Art Atlas",
+    sottotitolo: infoData?.sottotitolo || "Visione Concettuale • Dottorato di Ricerca",
+    crediti: infoData?.crediti || "Curatela e ricerca di Giacomo Isidori • Ispirato ad Aby Warburg",
+    testo_concettuale: infoData?.testo_concettuale || "Questo atlante celeste dinamico in 3D costituisce la parte pratica di una ricerca di storia dell'arte ispirata al metodo di Aby Warburg e al suo celebre Bilderatlas Mnemosyne: un sistema aperto, non gerarchico, per orientarsi nell'immaginario collettivo attraverso il montaggio associativo di immagini anziché una narrazione lineare.",
+    testo_struttura: infoData?.testo_struttura || "Non si tratta di un progetto astrologico in senso divinatorio: lo zodiaco è impiegato come struttura archivistica e mnemotecnica, un sistema di 12 categorie simboliche per organizzare un vasto corpus di opere d'arte contemporanea.",
+    testo_cupola: infoData?.testo_cupola || "Il sito è progettato per essere fruibile nel browser ed essere successivamente proiettato dall'alto su una semisfera/cupola tramite specchio sferico. Nel buio dell'installazione, il pubblico sdraiato a terra \"naviga\" tra le immagini con lo sguardo rivolto verso l'alto — un'esperienza di pensiero associativo, orizzontale e onirico.",
+  });
+  const [infoSaved, setInfoSaved] = useState(false);
+
+  useEffect(() => {
+    if (infoData) {
+      setInfoForm({
+        titolo: infoData.titolo || "AAA — Astrology Art Atlas",
+        sottotitolo: infoData.sottotitolo || "Visione Concettuale • Dottorato di Ricerca",
+        crediti: infoData.crediti || "Curatela e ricerca di Giacomo Isidori • Ispirato ad Aby Warburg",
+        testo_concettuale: infoData.testo_concettuale || "",
+        testo_struttura: infoData.testo_struttura || "",
+        testo_cupola: infoData.testo_cupola || "",
+      });
+    }
+  }, [infoData]);
 
   // Artwork Form State
   // Artwork Form State
@@ -400,6 +426,16 @@ export default function AdminCuratorPanel({
     setTimeout(() => setBioSaved(false), 2500);
   };
 
+  // Save Project Info & Vision Form
+  const handleSaveInfo = (e) => {
+    e.preventDefault();
+    if (onUpdateInfo) {
+      onUpdateInfo(infoForm);
+    }
+    setInfoSaved(true);
+    setTimeout(() => setInfoSaved(false), 2500);
+  };
+
   // Delete artwork
   const handleDelete = (id) => {
     if (window.confirm("Sei sicuro di voler eliminare questa voce dall’atlante?")) {
@@ -416,8 +452,9 @@ export default function AdminCuratorPanel({
   const handleDownloadJSON = () => {
     const exportObject = {
       progetto: {
-        titolo: "AAA — Astrology Art Atlas",
+        titolo: infoForm.titolo || "AAA — Astrology Art Atlas",
         curatore: bioForm,
+        info: infoForm,
         descrizione: "Atlante mnemotecnico e archivio dinamico in 3D per l'immaginario artistico contemporaneo.",
         ispirazione: "Aby Warburg — Bilderatlas Mnemosyne",
         totale_artisti: artworks.length,
@@ -439,8 +476,9 @@ export default function AdminCuratorPanel({
   const handleCopyJSON = () => {
     const exportObject = {
       progetto: {
-        titolo: "AAA — Astrology Art Atlas",
+        titolo: infoForm.titolo || "AAA — Astrology Art Atlas",
         curatore: bioForm,
+        info: infoForm,
         descrizione: "Atlante mnemotecnico e archivio dinamico in 3D per l'immaginario artistico contemporaneo.",
         ispirazione: "Aby Warburg — Bilderatlas Mnemosyne",
         totale_artisti: artworks.length,
@@ -513,10 +551,10 @@ export default function AdminCuratorPanel({
 
         {/* Tab Switcher (Visible when Authenticated) */}
         {isAuthenticated && (
-          <div className="flex items-center gap-2 px-6 pt-3 pb-2 border-b border-white/10 bg-zinc-900/60">
+          <div className="flex items-center gap-2 px-6 pt-3 pb-2 border-b border-white/10 bg-zinc-900/60 overflow-x-auto">
             <button
               onClick={() => setActiveTab("artworks")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono transition-all ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono transition-all whitespace-nowrap ${
                 activeTab === "artworks"
                   ? "bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 shadow-sm"
                   : "text-zinc-400 hover:text-white hover:bg-white/5"
@@ -527,7 +565,7 @@ export default function AdminCuratorPanel({
             </button>
             <button
               onClick={() => setActiveTab("bio")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono transition-all ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono transition-all whitespace-nowrap ${
                 activeTab === "bio"
                   ? "bg-amber-500/20 text-amber-300 border border-amber-400/40 shadow-sm"
                   : "text-zinc-400 hover:text-white hover:bg-white/5"
@@ -535,6 +573,17 @@ export default function AdminCuratorPanel({
             >
               <User className="w-3.5 h-3.5" />
               <span>Biografia & Profilo Curatore (Giacomo Isidori)</span>
+            </button>
+            <button
+              onClick={() => setActiveTab("info")}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono transition-all whitespace-nowrap ${
+                activeTab === "info"
+                  ? "bg-purple-500/20 text-purple-300 border border-purple-400/40 shadow-sm"
+                  : "text-zinc-400 hover:text-white hover:bg-white/5"
+              }`}
+            >
+              <BookOpen className="w-3.5 h-3.5" />
+              <span>Visione & Info Progetto (AAA)</span>
             </button>
           </div>
         )}
@@ -720,6 +769,126 @@ export default function AdminCuratorPanel({
                 >
                   <Save className="w-4 h-4" />
                   <span>{bioSaved ? "Salvato!" : "Salva Tutte le Modifiche"}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        ) : activeTab === "info" ? (
+          /* TAB 3: PROJECT INFO & VISION STATEMENT EDITOR */
+          <div className="flex-1 overflow-y-auto p-6 md:p-8">
+            <form onSubmit={handleSaveInfo} className="max-w-3xl mx-auto space-y-6">
+              <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-2xl bg-purple-500/15 border border-purple-400/30 flex items-center justify-center text-purple-300">
+                    <BookOpen className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-serif font-bold text-white">Visione, Metodo Mnemosyne & Info Progetto</h3>
+                    <p className="text-xs font-mono text-zinc-400">
+                      Modifica il testo visualizzato quando gli utenti cliccano "AAA" nell'intestazione
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  className="flex items-center gap-2 px-5 py-2 rounded-xl bg-purple-500 hover:bg-purple-400 text-white font-semibold text-xs shadow-lg shadow-purple-500/20 transition-all font-mono"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>{infoSaved ? "Info Salvate!" : "Salva Info Progetto"}</span>
+                </button>
+              </div>
+
+              {infoSaved && (
+                <div className="p-3 rounded-xl bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-xs font-mono flex items-center gap-2">
+                  <Check className="w-4 h-4" />
+                  <span>Modifiche salvate con successo! La finestra informativa AAA è aggiornata in tempo reale.</span>
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-mono text-zinc-400 mb-1.5">Titolo Principale</label>
+                  <input
+                    type="text"
+                    value={infoForm.titolo}
+                    onChange={(e) => setInfoForm({ ...infoForm, titolo: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-white/15 text-white text-xs focus:ring-1 focus:ring-purple-400 font-mono"
+                    placeholder="AAA — Astrology Art Atlas"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-mono text-zinc-400 mb-1.5">Sottotitolo / Dottorato</label>
+                  <input
+                    type="text"
+                    value={infoForm.sottotitolo}
+                    onChange={(e) => setInfoForm({ ...infoForm, sottotitolo: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-white/15 text-white text-xs focus:ring-1 focus:ring-purple-400 font-mono"
+                    placeholder="Visione Concettuale • Dottorato di Ricerca"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-mono text-zinc-400 mb-1.5">Crediti di Ricerca & Curatela</label>
+                <input
+                  type="text"
+                  value={infoForm.crediti}
+                  onChange={(e) => setInfoForm({ ...infoForm, crediti: e.target.value })}
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-white/15 text-white text-xs focus:ring-1 focus:ring-purple-400 font-mono"
+                  placeholder="Curatela e ricerca di Giacomo Isidori • Ispirato ad Aby Warburg"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-mono text-zinc-400 mb-1.5 flex items-center justify-between">
+                  <span>1. Premessa Teorica & Metodo Mnemosyne (Aby Warburg)</span>
+                  <span className="text-[10px] text-zinc-500">Paragrafo principale di inquadramento metodologico</span>
+                </label>
+                <textarea
+                  rows={4}
+                  value={infoForm.testo_concettuale}
+                  onChange={(e) => setInfoForm({ ...infoForm, testo_concettuale: e.target.value })}
+                  className="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-white/15 text-white text-xs leading-relaxed focus:ring-1 focus:ring-purple-400"
+                  placeholder="Questo atlante celeste dinamico in 3D costituisce la parte pratica di una ricerca di storia dell'arte ispirata al metodo di Aby Warburg..."
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-mono text-zinc-400 mb-1.5 flex items-center justify-between">
+                  <span>2. La Struttura Astrologica come Archivio Non Divinatorio</span>
+                  <span className="text-[10px] text-zinc-500">Spiegazione delle 12 categorie mnemotecniche</span>
+                </label>
+                <textarea
+                  rows={3}
+                  value={infoForm.testo_struttura}
+                  onChange={(e) => setInfoForm({ ...infoForm, testo_struttura: e.target.value })}
+                  className="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-white/15 text-white text-xs leading-relaxed focus:ring-1 focus:ring-purple-400"
+                  placeholder="Non si tratta di un progetto astrologico in senso divinatorio: lo zodiaco è impiegato come struttura archivistica e mnemotecnica..."
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-mono text-amber-400 mb-1.5 flex items-center justify-between">
+                  <span>3. Dalla Volta Web all'Installazione su Cupola</span>
+                  <span className="text-[10px] text-zinc-500">Box evidenziato per proiezione semisferica e fruizione immersiva</span>
+                </label>
+                <textarea
+                  rows={4}
+                  value={infoForm.testo_cupola}
+                  onChange={(e) => setInfoForm({ ...infoForm, testo_cupola: e.target.value })}
+                  className="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-amber-400/20 text-white text-xs leading-relaxed focus:ring-1 focus:ring-amber-400"
+                  placeholder="Il sito è progettato per essere fruibile nel browser ed essere successivamente proiettato dall'alto su una semisfera/cupola tramite specchio sferico..."
+                />
+              </div>
+
+              <div className="pt-4 flex items-center justify-end">
+                <button
+                  type="submit"
+                  className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-purple-500 hover:bg-purple-400 text-white font-semibold text-xs shadow-lg shadow-purple-500/20 transition-all font-mono"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>{infoSaved ? "Salvato!" : "Salva Tutte le Modifiche Info"}</span>
                 </button>
               </div>
             </form>

@@ -62,6 +62,22 @@ export default function App() {
     }
   };
 
+  // Handle updating project info & vision statement
+  const handleUpdateInfo = (newInfo) => {
+    setData((prev) => ({
+      ...prev,
+      progetto: {
+        ...(prev.progetto || {}),
+        info: newInfo,
+      },
+    }));
+    try {
+      localStorage.setItem('aaa_project_info', JSON.stringify(newInfo));
+    } catch (e) {
+      console.warn('Impossibile salvare in localStorage:', e);
+    }
+  };
+
   // Load Atlas JSON and calculate Moon Position on Mount
   useEffect(() => {
     // 1. Calculate real-time moon position
@@ -82,6 +98,18 @@ export default function App() {
         } catch (e) {
           // ignore
         }
+
+        // Merge with locally stored project info if available
+        try {
+          const savedInfo = localStorage.getItem('aaa_project_info');
+          if (savedInfo) {
+            json.progetto = json.progetto || {};
+            json.progetto.info = JSON.parse(savedInfo);
+          }
+        } catch (e) {
+          // ignore
+        }
+
         setData(json);
         setLoading(false);
       })
@@ -276,6 +304,7 @@ export default function App() {
       <InfoModal
         isOpen={isInfoOpen}
         onClose={() => setIsInfoOpen(false)}
+        infoData={data.progetto?.info}
       />
 
       {/* Curator Bio Modal (Giacomo Isidori) */}
@@ -294,6 +323,8 @@ export default function App() {
         onUpdateArtworks={(newArtworks) => setData(d => ({ ...d, opere: newArtworks }))}
         bioData={data.progetto?.curatore}
         onUpdateBio={handleUpdateBio}
+        infoData={data.progetto?.info}
+        onUpdateInfo={handleUpdateInfo}
         onFocusArtwork3D={(art) => {
           setSelectedArtwork(art);
           setIsAdminOpen(false);
