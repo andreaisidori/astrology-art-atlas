@@ -409,6 +409,8 @@ export default function AdminCuratorPanel({
       nota_simbolica: formData.nota_simbolica,
       colore_dominante: formData.colore_dominante,
       link_fonte: formData.link_fonte,
+      scala: typeof (editingArt?.scala || formData.scala) === 'number' ? (editingArt?.scala || formData.scala) : 1.0,
+      dimensione: typeof (editingArt?.dimensione || formData.dimensione) === 'number' ? (editingArt?.dimensione || formData.dimensione) : 1.0,
     };
 
     let newArtworksList;
@@ -514,6 +516,8 @@ export default function AdminCuratorPanel({
         nota_simbolica: formData.nota_simbolica,
         colore_dominante: formData.colore_dominante,
         link_fonte: formData.link_fonte,
+        scala: typeof (editingArt?.scala || formData.scala) === 'number' ? (editingArt?.scala || formData.scala) : 1.0,
+        dimensione: typeof (editingArt?.dimensione || formData.dimensione) === 'number' ? (editingArt?.dimensione || formData.dimensione) : 1.0,
       };
 
       if (editingArt) {
