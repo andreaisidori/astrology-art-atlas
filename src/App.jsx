@@ -15,6 +15,7 @@ import CelestialSphere from './components/3d/CelestialSphere';
 import ArtworkNode from './components/3d/ArtworkNode';
 import ConstellationLines from './components/3d/ConstellationLines';
 import NavigationArrows from './components/ui/NavigationArrows';
+import ZoomControls from './components/ui/ZoomControls';
 import CameraController from './components/3d/CameraController';
 import { getCurrentMoonPosition } from './utils/astronomy';
 import { computeArtworkPositions } from './utils/layouts';
@@ -37,6 +38,7 @@ export default function App() {
   const [magnitude, setMagnitude] = useState(1.0); // Star and artwork scale
   const [showImages, setShowImages] = useState(false); // Default to fast lightweight square frames
   const [manualRotateVelocity, setManualRotateVelocity] = useState(0);
+  const [manualZoomVelocity, setManualZoomVelocity] = useState(0);
 
   // Trigger Sky-Door landing dive when entering from landing screen
   const handleEnterFromLanding = () => {
@@ -148,6 +150,19 @@ export default function App() {
     setManualRotateVelocity(0);
   };
 
+  // Handle Zoom In / Zoom Out (Zoom In decreases FOV, Zoom Out increases FOV)
+  const handleZoomIn = (speed = 0.9) => {
+    setManualZoomVelocity(-speed);
+  };
+
+  const handleZoomOut = (speed = 0.9) => {
+    setManualZoomVelocity(speed);
+  };
+
+  const handleStopZoom = () => {
+    setManualZoomVelocity(0);
+  };
+
   if (loading) {
     return (
       <div className="w-screen h-screen bg-space-950 flex flex-col items-center justify-center text-white gap-4">
@@ -228,6 +243,7 @@ export default function App() {
               onTargetReached={() => setTargetFlightSign(null)}
               isDomeView={isDomeView}
               manualRotateVelocity={manualRotateVelocity}
+              manualZoomVelocity={manualZoomVelocity}
               isLanding={isLandingTransition}
               onLandingComplete={() => setIsLandingTransition(false)}
             />
@@ -238,6 +254,13 @@ export default function App() {
             onRotateLeft={handleRotateLeft}
             onRotateRight={handleRotateRight}
             onStopRotate={handleStopRotate}
+          />
+
+          {/* Canonical Zoom In (+) / Zoom Out (-) Controls */}
+          <ZoomControls
+            onZoomIn={handleZoomIn}
+            onZoomOut={handleZoomOut}
+            onStopZoom={handleStopZoom}
           />
 
           {/* Spatial Layout Controls (Warburg / Chrono / Chromatic + Magnitude Slider + Mostra Opere Toggle) */}

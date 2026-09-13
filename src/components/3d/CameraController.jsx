@@ -10,12 +10,16 @@ export default function CameraController({
   onTargetReached,
   isDomeView,
   manualRotateVelocity = 0,
+  manualZoomVelocity = 0,
   isLanding = false,
   onLandingComplete,
 }) {
-  const { camera } = useThree();
+  const { camera, gl } = useThree();
   const controlsRef = useRef();
   const landingActive = useRef(isLanding);
+
+  // Target FOV for smooth zooming (default: 70°, min: 25°, max: 95°)
+  const targetFov = useRef(70);
 
   // Flight animation state for smooth non-uniform impulse ("lento -> veloce -> lento / spinta")
   const flightState = useRef({
@@ -41,6 +45,10 @@ export default function CameraController({
     if (isLanding) {
       camera.position.set(0, 32, 0.05);
       camera.lookAt(0, -12, 0);
+      targetFov.current = 70;
+      camera.fov = 70;
+      camera.updateProjectionMatrix();
+
       landingState.current = {
         active: true,
         startTime: performance.now(),
@@ -54,7 +62,85 @@ export default function CameraController({
     }
   }, [isLanding, camera]);
 
-  // When targetSignId changes, initiate dynamic rotation to 12 o'clock
+  // Canonical Mouse Wheel & Trackpad Pinch/Scroll Listener
+  useEffect(() => {
+    const dom = gl.domElement;
+    if (!dom) return;
+
+    const handleWheel = (e) => {
+      e.preventDefault();
+      // deltaY < 0 = scroll up -> zoom in (lower FOV)
+      // deltaY > 0 = scroll down -> zoom out (higher FOV)
+      const zoomStep = Math.sign(e.deltaY) * Math.min(Math.abs(e.deltaY) * 0.06, 6);
+      targetFov.current = Math.min(95, Math.max(25, targetFov.current + zoomStep));
+    };
+
+    // Touch 2-finger Pinch to Zoom
+    let touchDistance = 0;
+    let initialTouchFov = 70;
+
+    const handleTouchStart = (e) => {
+      if (e.touches.length === 2) {
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        touchDistance = Math.hypot(dx, dy);
+        initialTouchFov = targetFov.current;
+      }
+    };
+
+    const handleTouchMove = (e) => {
+      if (e.touches.length === 2 && touchDistance > 0) {
+        e.preventDefault();
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        const currentDist = Math.hypot(dx, dy);
+        if (currentDist > 0) {
+          const ratio = touchDistance / currentDist; // > 1 when pinching in, < 1 when spreading fingers
+          targetFov.current = Math.min(95, Math.max(25, initialTouchFov * ratio));
+        }
+      }
+    };
+
+    const handleTouchEnd = () => {
+      touchDistance = 0;
+    };
+
+    dom.addEventListener('wheel', handleWheel, { passive: false });
+    dom.addEventListener('touchstart', handleTouchStart, { passive: false });
+    dom.addEventListener('touchmove', handleTouchMove, { passive: false });
+    dom.addEventListener('touchend', handleTouchEnd);
+    dom.addEventListener('touchcancel', handleTouchEnd);
+
+    return () => {
+      dom.removeEventListener('wheel', handleWheel);
+      dom.removeEventListener('touchstart', handleTouchStart);
+      dom.removeEventListener('touchmove', handleTouchMove);
+      dom.removeEventListener('touchend', handleTouchEnd);
+      dom.removeEventListener('touchcancel', handleTouchEnd);
+    };
+  }, [gl]);
+
+  // Canonical Keyboard Zoom Shortcuts (+ / - / = / _)
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Don't intercept when typing in inputs/textareas
+      const tagName = document.activeElement?.tagName;
+      if (tagName === 'INPUT' || tagName === 'TEXTAREA') return;
+
+      if (e.key === '+' || e.key === '=' || e.code === 'NumpadAdd') {
+        e.preventDefault();
+        targetFov.current = Math.max(25, targetFov.current - 6);
+      } else if (e.key === '-' || e.key === '_' || e.code === 'NumpadSubtract') {
+        e.preventDefault();
+        targetFov.current = Math.min(95, targetFov.current + 6);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // When targetSignId changes, initiate dynamic rotation to 12 o'clock and reset FOV to standard
   useEffect(() => {
     if (!targetSignId || landingActive.current) return;
 
@@ -62,6 +148,9 @@ export default function CameraController({
       s => s.id === targetSignId || s.name.toLowerCase() === targetSignId.toLowerCase()
     );
     if (!sign) return;
+
+    // Reset FOV smoothly to default framing for clear constellation view
+    targetFov.current = 70;
 
     // Target azimuth angle for the sign on the ecliptic sphere
     const targetRad = ((sign.angle + 15) * Math.PI) / 180;
@@ -91,6 +180,16 @@ export default function CameraController({
   }, [targetSignId, camera]);
 
   useFrame((_, delta) => {
+    // Smoothly interpolate Camera FOV towards targetFov
+    if (manualZoomVelocity !== 0) {
+      targetFov.current = Math.min(95, Math.max(25, targetFov.current + manualZoomVelocity * delta * 45));
+    }
+
+    if (Math.abs(camera.fov - targetFov.current) > 0.05) {
+      camera.fov = THREE.MathUtils.lerp(camera.fov, targetFov.current, delta * 9);
+      camera.updateProjectionMatrix();
+    }
+
     // 1. Sky Landing Descent ("Atterraggio fluido e continuo sul tappeto celeste")
     if (landingState.current.active) {
       const elapsed = performance.now() - landingState.current.startTime;
@@ -172,11 +271,8 @@ export default function CameraController({
     <OrbitControls
       ref={controlsRef}
       enablePan={false}
-      enableZoom={true}
+      enableZoom={false}
       rotateSpeed={-0.6} // Responsive drag & swipe
-      zoomSpeed={0.8}
-      minDistance={0.01}
-      maxDistance={20}
       dampingFactor={0.08}
       enableDamping
       minPolarAngle={isDomeView ? 0.1 : Math.PI / 2 - 0.45}
