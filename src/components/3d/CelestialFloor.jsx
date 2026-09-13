@@ -3,60 +3,57 @@ import { useFrame, useLoader } from "@react-three/fiber";
 import * as THREE from "three";
 
 export default function CelestialFloor({ radius = 25, yPosition = -12, opacity = 0.42 }) {
-  const ringRef = useRef();
-  const currentRotZ = useRef(0);
+  const monogramRef = useRef();
   const ringTexture = useLoader(THREE.TextureLoader, "/images/aaa-logo-ring.png");
   const centerTexture = useLoader(THREE.TextureLoader, "/images/aaa-logo-center.png");
 
-  // Calibrazione fine: allineamento perfetto a ore 12 per il segno inquadrato
-  const CALIBRATION_OFFSET = -0.2618; // -15 deg per allineare esattamente Capricorno / Eclittica
+  // Calibrazione: la corona zodiacale a terra è agganciata 1:1 alla volta celeste in coordinate mondo
+  const SKY_ALIGN_ROT_Z = (-15 * Math.PI) / 180;
 
-  useFrame(({ camera }, delta) => {
-    if (ringRef.current) {
-      // 1. Calcola la direzione orizzontale in cui l'utente sta guardando con la camera
+  useFrame(({ camera }) => {
+    if (monogramRef.current) {
+      // 1. Direzione orizzontale di sguardo dell'osservatore (camera)
       const forward = new THREE.Vector3();
       camera.getWorldDirection(forward);
 
-      // 2. Azimuth orizzontale (0 quando si guarda verso -Z / ore 12:00)
+      // 2. Azimuth orizzontale
       const azimuth = Math.atan2(forward.x, -forward.z);
 
-      // 3. Target rotation per la corona zodiacale:
-      // La corona ruota in base alla rotazione della visuale dell'utente
-      const targetRotZ = -azimuth + CALIBRATION_OFFSET;
-
-      // 4. Interpolazione fluida per massima reattività e morbidezza visiva
-      currentRotZ.current = THREE.MathUtils.lerp(
-        currentRotZ.current,
-        targetRotZ,
-        Math.min(delta * 12, 1)
-      );
-
-      ringRef.current.rotation.z = currentRotZ.current;
+      // 3. Il monogramma AAA rimane sempre orientato a ore 12 di fronte all'osservatore
+      monogramRef.current.rotation.z = -azimuth;
     }
   });
 
   return (
     <group position={[0, yPosition, 0]}>
-      {/* 1. Monogramma Centrale AAA Fisso (Puntatore fisso a ore 12:00) */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
+      {/* 1. Corona Zodiacale Esterna (Agganciata al cielo / ruota con la volta celeste) */}
+      <mesh
+        rotation={[-Math.PI / 2, 0, SKY_ALIGN_ROT_Z]}
+        scale={[-1, 1, 1]}
+        position={[0, 0, 0]}
+      >
         <planeGeometry args={[radius * 2, radius * 2]} />
         <meshBasicMaterial
-          map={centerTexture}
+          map={ringTexture}
           transparent
-          opacity={opacity * 1.15}
+          opacity={opacity}
           depthWrite={false}
           side={THREE.DoubleSide}
           toneMapped={false}
         />
       </mesh>
 
-      {/* 2. Corona Zodiacale Esterna Dinamica (Ruota unicamente su azione dell'utente) */}
-      <mesh ref={ringRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]}>
+      {/* 2. Monogramma Centrale AAA (Puntatore fisso a ore 12 di fronte all'osservatore) */}
+      <mesh
+        ref={monogramRef}
+        rotation={[-Math.PI / 2, 0, 0]}
+        position={[0, 0.02, 0]}
+      >
         <planeGeometry args={[radius * 2, radius * 2]} />
         <meshBasicMaterial
-          map={ringTexture}
+          map={centerTexture}
           transparent
-          opacity={opacity}
+          opacity={opacity * 1.15}
           depthWrite={false}
           side={THREE.DoubleSide}
           toneMapped={false}
