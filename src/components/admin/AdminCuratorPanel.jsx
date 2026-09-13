@@ -69,30 +69,37 @@ export default function AdminCuratorPanel({
     link_fonte: "",
   });
 
-  // Authentication check
-  const verifyPassword = () => {
-    if (passwordInput === "warburg" || passwordInput === "aaa" || passwordInput === "admin") {
+  // Authentication check - Only triggered by physical slider swipe completion
+  const verifyPasswordOnSwipe = () => {
+    const valid = passwordInput.trim() === "warburg" || passwordInput.trim() === "aaa" || passwordInput.trim() === "admin";
+    if (valid) {
       setIsAuthenticated(true);
       setAuthError(false);
       setSliderProgress(100);
     } else {
       setAuthError(true);
+      // Reset slider to 0 on wrong password
       setSliderProgress(0);
     }
   };
 
-  const handleLogin = (e) => {
-    if (e) e.preventDefault();
-    verifyPassword();
+  // Prevent form submission on Enter
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    if (!passwordInput.trim()) {
+      setAuthError(true);
+    }
+    // Form submission does not bypass the slider
   };
 
   // Slider Drag & Swipe Logic
   const handleSliderStart = (e) => {
+    // Only allow starting drag from near the thumb (left side initially or current position)
     isDraggingSlider.current = true;
-    updateSlider(e);
+    updateSlider(e, false);
   };
 
-  const updateSlider = (e) => {
+  const updateSlider = (e, checkUnlock = false) => {
     if (!sliderTrackRef.current) return;
     const rect = sliderTrackRef.current.getBoundingClientRect();
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -100,22 +107,38 @@ export default function AdminCuratorPanel({
     const percent = Math.round((offsetX / rect.width) * 100);
     setSliderProgress(percent);
 
-    if (percent >= 90) {
-      isDraggingSlider.current = false;
-      verifyPassword();
+    if (checkUnlock) {
+      if (percent >= 88) {
+        verifyPasswordOnSwipe();
+      } else {
+        // Did not reach end, snap back to 0
+        setSliderProgress(0);
+      }
     }
   };
 
   useEffect(() => {
     const handleMove = (e) => {
       if (!isDraggingSlider.current) return;
-      updateSlider(e);
+      updateSlider(e, false);
     };
 
-    const handleEnd = () => {
+    const handleEnd = (e) => {
       if (!isDraggingSlider.current) return;
       isDraggingSlider.current = false;
-      setSliderProgress(prev => (prev >= 90 ? prev : 0));
+      const clientX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+      if (sliderTrackRef.current && clientX !== undefined) {
+        const rect = sliderTrackRef.current.getBoundingClientRect();
+        const offsetX = Math.max(0, Math.min(rect.width, clientX - rect.left));
+        const percent = Math.round((offsetX / rect.width) * 100);
+        if (percent >= 88) {
+          verifyPasswordOnSwipe();
+        } else {
+          setSliderProgress(0);
+        }
+      } else {
+        setSliderProgress(0);
+      }
     };
 
     window.addEventListener("mousemove", handleMove);
@@ -376,7 +399,7 @@ export default function AdminCuratorPanel({
                 Area protetta per la gestione delle schede degli artisti, dei temi natali, delle coordinate tridimensionali e della pagina biografia.
               </p>
             </div>
-            <form onSubmit={handleLogin} className="w-full space-y-4">
+            <form onSubmit={handleFormSubmit} className="w-full space-y-4">
               <div className="relative">
                 <input
                   type="password"
@@ -386,11 +409,11 @@ export default function AdminCuratorPanel({
                     setPasswordInput(e.target.value);
                     setAuthError(false);
                   }}
-                  className="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-white/20 text-sm text-center text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                  className="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-white/20 text-sm text-center text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-cyan-400 font-mono tracking-widest"
                 />
                 {authError && (
                   <p className="text-xs text-rose-400 font-mono mt-1.5 animate-shake">
-                    Password non valida. Riprova.
+                    Password non valida. Inserisci la password corretta e trascina il cursore.
                   </p>
                 )}
               </div>
@@ -399,28 +422,28 @@ export default function AdminCuratorPanel({
               <div className="pt-2">
                 <div
                   ref={sliderTrackRef}
-                  onMouseDown={handleSliderStart}
-                  onTouchStart={handleSliderStart}
-                  className="relative w-full h-12 rounded-xl bg-zinc-900 border border-white/15 overflow-hidden flex items-center justify-center cursor-pointer select-none"
+                  className="relative w-full h-12 rounded-xl bg-zinc-900 border border-white/15 overflow-hidden flex items-center justify-center select-none"
                 >
                   <div
                     className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-cyan-600/40 to-cyan-400/60"
                     style={{ width: `${sliderProgress}%` }}
                   />
                   <span className="relative z-0 text-xs font-mono tracking-wider text-zinc-400 pointer-events-none">
-                    {sliderProgress > 80 ? "Sblocco in corso..." : "Trascina per accedere →"}
+                    {sliderProgress > 80 ? "Rilascia per sbloccare..." : "Trascina il lucchetto verso destra →"}
                   </span>
                   <div
-                    className="absolute top-1 bottom-1 w-10 rounded-lg bg-cyan-400 text-black flex items-center justify-center shadow-lg transition-transform cursor-grab active:cursor-grabbing z-10"
+                    onMouseDown={handleSliderStart}
+                    onTouchStart={handleSliderStart}
+                    className="absolute top-1 bottom-1 w-11 rounded-lg bg-cyan-400 hover:bg-cyan-300 text-black flex items-center justify-center shadow-lg transition-transform cursor-grab active:cursor-grabbing z-10"
                     style={{
-                      left: `calc(${sliderProgress}% - ${(sliderProgress / 100) * 40}px)`,
+                      left: `calc(${sliderProgress}% - ${(sliderProgress / 100) * 44}px)`,
                     }}
                   >
                     <Lock className="w-4 h-4" />
                   </div>
                 </div>
                 <p className="text-[10px] font-mono text-zinc-500 mt-2 text-center">
-                  Inserisci la password e trascina il cursore verso destra per sbloccare
+                  Digitare la password e trascinare il lucchetto fino all'estremità destra
                 </p>
               </div>
             </form>
