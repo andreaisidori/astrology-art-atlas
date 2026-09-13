@@ -13,6 +13,7 @@ export default function AdminCuratorPanel({
   onUpdateBio,
   infoData,
   onUpdateInfo,
+  onCommitAtlas,
 }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [passwordInput, setPasswordInput] = useState("");
@@ -459,11 +460,11 @@ export default function AdminCuratorPanel({
     }
   };
 
-  // Commit & Sync directly to public/data/atlas.json (local disk or GitHub commit)
-  const handleCommitAndSync = async (isAuto = false) => {
+  // Commit & Sync directly to public/data/atlas.json (via centralized onCommitAtlas)
+  const handleCommitAndSync = async () => {
     if (isSyncing) return;
     setIsSyncing(true);
-    if (!isAuto) setSyncStatus(null);
+    setSyncStatus(null);
 
     // 1. Always propagate bioForm and infoForm to parent state
     if (onUpdateBio) {
@@ -528,68 +529,36 @@ export default function AdminCuratorPanel({
       onUpdateArtworks(currentArtworks);
     }
 
-    const exportObject = {
-      progetto: {
-        titolo: infoForm.titolo || "AAA — Astrology Art Atlas",
-        curatore: bioForm,
-        info: infoForm,
-        descrizione: "Atlante mnemotecnico e archivio dinamico in 3D per l'immaginario artistico contemporaneo.",
-        ispirazione: "Aby Warburg — Bilderatlas Mnemosyne",
-        totale_artisti: currentArtworks.length,
-        aggiornato_il: new Date().toISOString(),
-      },
-      opere: currentArtworks,
-    };
-
-    // 1. Always backup to localStorage
-    try {
-      localStorage.setItem("aaa_custom_artworks", JSON.stringify(currentArtworks));
-      localStorage.setItem("aaa_curator_bio", JSON.stringify(bioForm));
-      localStorage.setItem("aaa_project_info", JSON.stringify(infoForm));
-      if (githubToken) {
+    if (githubToken) {
+      try {
         localStorage.setItem("aaa_github_token", githubToken);
-      }
-    } catch (e) {
-      console.warn("LocalStorage backup:", e);
+      } catch (e) {}
     }
 
-    // 2. Call API to write file / commit to GitHub
     try {
-      const res = await fetch("/api/save-atlas", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          data: exportObject,
-          githubToken: githubToken.trim() || undefined,
-        }),
-      });
-
-      const json = await res.json();
-      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      setLastAutoSaveTime(timeStr);
-
-      if (res.ok && json.success) {
-        setSyncStatus({
-          type: "success",
-          message: isAuto
-            ? `Autosalvataggio & Commit eseguito alle ${timeStr} (${currentArtworks.length} opere).`
-            : json.message || `Atlante sincronizzato e salvato con successo (${currentArtworks.length} opere)!`,
+      if (onCommitAtlas) {
+        const result = await onCommitAtlas({
+          bio: bioForm,
+          info: infoForm,
+          artworks: currentArtworks,
         });
-      } else {
-        setSyncStatus({
-          type: "error",
-          message: json.error || "Errore durante il salvataggio su server/GitHub.",
-        });
+
+        if (result?.success) {
+          setSyncStatus({
+            type: "success",
+            message: result.message || `Atlante sincronizzato e committato con successo (${currentArtworks.length} opere)!`,
+          });
+        } else {
+          setSyncStatus({
+            type: "error",
+            message: result?.error || "Errore durante il salvataggio su GitHub.",
+          });
+        }
       }
     } catch (err) {
-      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      setLastAutoSaveTime(timeStr);
-      // In case API route is unreachable, localStorage is still saved
       setSyncStatus({
-        type: "success",
-        message: isAuto
-          ? `Autosalvataggio locale alle ${timeStr} (${currentArtworks.length} opere).`
-          : `Dati salvati nella memoria permanente del browser (${currentArtworks.length} opere).`,
+        type: "error",
+        message: `Errore durante il commit: ${err.message}`,
       });
     } finally {
       setIsSyncing(false);

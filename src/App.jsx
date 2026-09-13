@@ -105,29 +105,27 @@ export default function App() {
     setModifiedCount((c) => c + 1);
   };
 
-  // Commit and sync 3D positions and scales to permanent GitHub / API storage
-  const handleCommitAndSync3D = async () => {
+  // Unified Commit & Sync handler to persist Bio, Info, and 3D Artworks directly to GitHub
+  const handleSaveAndCommitAtlas = async (overrides = {}) => {
     setIsSyncing3D(true);
     setSyncStatus3D(null);
 
+    const mergedBio = overrides.bio || data.progetto?.curatore || {};
+    const mergedInfo = overrides.info || data.progetto?.info || {};
+    const mergedArtworks = overrides.artworks || data.opere || [];
+
     const exportObject = {
       progetto: {
-        titolo: data.progetto?.info?.titolo || 'AAA — Astrology Art Atlas',
-        curatore: data.progetto?.curatore || {},
-        info: data.progetto?.info || {},
+        titolo: mergedInfo.titolo || data.progetto?.info?.titolo || 'AAA — Astrology Art Atlas',
+        curatore: mergedBio,
+        info: mergedInfo,
         descrizione: "Atlante mnemotecnico e archivio dinamico in 3D per l'immaginario artistico contemporaneo.",
         ispirazione: 'Aby Warburg — Bilderatlas Mnemosyne',
-        totale_artisti: data.opere?.length || 0,
+        totale_artisti: mergedArtworks.length,
         aggiornato_il: new Date().toISOString(),
       },
-      opere: data.opere || [],
+      opere: mergedArtworks,
     };
-
-    try {
-      localStorage.setItem('aaa_custom_artworks', JSON.stringify(data.opere || []));
-    } catch (e) {
-      console.warn('LocalStorage backup error:', e);
-    }
 
     try {
       const githubToken = localStorage.getItem('aaa_github_token') || '';
@@ -142,26 +140,34 @@ export default function App() {
 
       const json = await res.json();
       if (res.ok && json.success) {
+        setData(exportObject);
+        setModifiedCount(0);
+        const successMsg = json.message || `Modifiche salvate e committate con successo su GitHub (${mergedArtworks.length} opere)!`;
         setSyncStatus3D({
           type: 'success',
-          message: json.message || `Modifiche 3D salvate e committate con successo (${data.opere.length} opere)!`,
+          message: successMsg,
         });
-        setModifiedCount(0);
+        return { success: true, message: successMsg };
       } else {
+        const errorMsg = json.error || 'Errore durante il salvataggio su GitHub.';
         setSyncStatus3D({
           type: 'error',
-          message: json.error || 'Errore durante il commit su GitHub.',
+          message: errorMsg,
         });
+        return { success: false, error: errorMsg };
       }
     } catch (err) {
+      console.error('Commit error:', err);
+      setData(exportObject);
+      const errMsg = `Errore di rete o server: ${err.message}`;
       setSyncStatus3D({
-        type: 'success',
-        message: `Salvataggio locale completato (${data.opere?.length || 0} opere).`,
+        type: 'error',
+        message: errMsg,
       });
-      setModifiedCount(0);
+      return { success: false, error: errMsg };
     } finally {
       setIsSyncing3D(false);
-      setTimeout(() => setSyncStatus3D(null), 5000);
+      setTimeout(() => setSyncStatus3D(null), 6000);
     }
   };
 
@@ -185,11 +191,6 @@ export default function App() {
         },
       },
     }));
-    try {
-      localStorage.setItem('aaa_curator_bio', JSON.stringify(newBio));
-    } catch (e) {
-      console.warn('Impossibile salvare in localStorage:', e);
-    }
   };
 
   // Handle updating project info & vision statement
@@ -204,50 +205,29 @@ export default function App() {
         },
       },
     }));
-    try {
-      localStorage.setItem('aaa_project_info', JSON.stringify(newInfo));
-    } catch (e) {
-      console.warn('Impossibile salvare in localStorage:', e);
-    }
   };
 
   // Handle updating artworks catalog
   const handleUpdateArtworks = (newArtworks) => {
     setData((prev) => ({ ...prev, opere: newArtworks }));
-    try {
-      localStorage.setItem('aaa_custom_artworks', JSON.stringify(newArtworks));
-    } catch (e) {
-      console.warn('Impossibile salvare opere in localStorage:', e);
-    }
   };
 
-  // Load Atlas JSON and calculate Moon Position on Mount
+  // Clean stale localStorage caches and load Atlas JSON from live API
   useEffect(() => {
     // 1. Calculate real-time moon position
     const moon = getCurrentMoonPosition();
     setMoonInfo(moon);
 
-    // 2. Restore cached local updates instantly
+    // 2. Erase any stale localStorage cache keys so GitHub / API remains the single source of truth
     try {
-      const cachedBio = localStorage.getItem('aaa_curator_bio');
-      const cachedInfo = localStorage.getItem('aaa_project_info');
-      const cachedArt = localStorage.getItem('aaa_custom_artworks');
-      if (cachedBio || cachedInfo || cachedArt) {
-        setData((prev) => ({
-          ...prev,
-          progetto: {
-            ...(prev.progetto || {}),
-            ...(cachedBio ? { curatore: JSON.parse(cachedBio) } : {}),
-            ...(cachedInfo ? { info: JSON.parse(cachedInfo) } : {}),
-          },
-          ...(cachedArt ? { opere: JSON.parse(cachedArt) } : {}),
-        }));
-      }
+      localStorage.removeItem('aaa_curator_bio');
+      localStorage.removeItem('aaa_project_info');
+      localStorage.removeItem('aaa_custom_artworks');
     } catch (e) {
-      console.warn('LocalStorage restore:', e);
+      console.warn('LocalStorage cleanup:', e);
     }
 
-    // 3. Load dataset asynchronously (first live API from GitHub, with static fallback)
+    // 3. Load dataset asynchronously (live API from GitHub first, with static fallback)
     const loadAtlasData = async () => {
       // Live API fetch (GitHub single source of truth)
       try {
@@ -494,7 +474,7 @@ export default function App() {
                 setIsSpatialEditMode(false);
                 setSelectedEditArtworkId(null);
               }}
-              onCommitAndSync={handleCommitAndSync3D}
+              onCommitAndSync={() => handleSaveAndCommitAtlas()}
               isSyncing={isSyncing3D}
               modifiedCount={modifiedCount}
               syncStatus={syncStatus3D}
@@ -550,6 +530,7 @@ export default function App() {
         onUpdateBio={handleUpdateBio}
         infoData={data.progetto?.info}
         onUpdateInfo={handleUpdateInfo}
+        onCommitAtlas={handleSaveAndCommitAtlas}
         onStartSpatialEdit={() => {
           setIsSpatialEditMode(true);
           setIsAdminOpen(false);

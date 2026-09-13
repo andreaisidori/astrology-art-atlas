@@ -21,28 +21,26 @@ export default async function handler(req, res) {
   const branch = process.env.GITHUB_BRANCH || 'main';
   const filePath = 'public/data/atlas.json';
 
-  // 1. Try to fetch the live, latest data from GitHub API
-  if (token) {
-    try {
-      const getFileUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}?ref=${branch}`;
-      const getFileRes = await fetch(getFileUrl, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: 'application/vnd.github.v3+json',
-          'User-Agent': 'AAA-Curator-Studio',
-        },
-        cache: 'no-store',
-      });
+  // 1. Try to fetch the live, latest data from GitHub raw URL (no 1MB size limit)
+  try {
+    const rawUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branch}/${filePath}?t=${Date.now()}`;
+    const rawRes = await fetch(rawUrl, {
+      headers: {
+        'Cache-Control': 'no-cache, no-store',
+        'User-Agent': 'AAA-Curator-Studio',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      cache: 'no-store',
+    });
 
-      if (getFileRes.ok) {
-        const fileInfo = await getFileRes.json();
-        const contentStr = Buffer.from(fileInfo.content, 'base64').toString('utf-8');
-        const json = JSON.parse(contentStr);
+    if (rawRes.ok) {
+      const json = await rawRes.json();
+      if (json && json.progetto && Array.isArray(json.opere) && json.opere.length > 0) {
         return res.status(200).json(json);
       }
-    } catch (ghErr) {
-      console.warn('GitHub live fetch fallback:', ghErr);
     }
+  } catch (ghErr) {
+    console.warn('GitHub raw live fetch fallback:', ghErr);
   }
 
   // 2. Fallback to local static file if GitHub API is unreachable
@@ -58,3 +56,4 @@ export default async function handler(req, res) {
 
   return res.status(500).json({ error: 'Impossibile caricare i dati dell’atlante.' });
 }
+
