@@ -56,7 +56,8 @@
       ],
       "nota_simbolica": "Artista archiviato nella categoria Ariete per risonanza tematica e principio simbolico.",
       "colore_dominante": "#e63946",
-      "link_fonte": ""
+      "link_fonte": "",
+      "miniatura": "/thumbnails/yayoi_kusama_1.jpg"
     },
     {
       "id": "jannis_kounellis_2",
@@ -85,7 +86,8 @@
       "link_fonte": "",
       "data_nascita": "23 March 1936",
       "anno_morte": "2017",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/jannis_kounellis_2.jpg"
     },
     {
       "id": "francesco_clemente_3",
@@ -114,7 +116,8 @@
       "link_fonte": "",
       "data_nascita": "",
       "anno_morte": "",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/francesco_clemente_3.jpg"
     },
     {
       "id": "rebecca_horn_4",
@@ -143,7 +146,8 @@
       "link_fonte": "",
       "data_nascita": "24 March 1944",
       "anno_morte": "2024",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/rebecca_horn_4.jpg"
     },
     {
       "id": "matthew_barney_5",
@@ -172,7 +176,8 @@
       "link_fonte": "",
       "data_nascita": "25 March 1967",
       "anno_morte": "",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Barney,_Matthew"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Barney,_Matthew",
+      "miniatura": "/thumbnails/matthew_barney_5.jpg"
     },
     {
       "id": "shirin_neshat_6",
@@ -201,7 +206,8 @@
       "link_fonte": "",
       "data_nascita": "26 March 1957",
       "anno_morte": "",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/shirin_neshat_6.jpg"
     },
     {
       "id": "paolo_canevari_7",
@@ -230,7 +236,8 @@
       "link_fonte": "",
       "data_nascita": "26 March 1963",
       "anno_morte": "",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/paolo_canevari_7.jpg"
     },
     {
       "id": "daniel_spoerri_8",
@@ -259,7 +266,8 @@
       "link_fonte": "",
       "data_nascita": "27 March 1930",
       "anno_morte": "2024",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Spoerri,_Daniel"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Spoerri,_Daniel",
+      "miniatura": "/thumbnails/daniel_spoerri_8.jpg"
     },
     {
       "id": "raffaello_sanzio_9",
@@ -288,7 +296,8 @@
       "link_fonte": "",
       "data_nascita": "27 March 1483",
       "anno_morte": "1520, 5 April Jul. calendar",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Raphael"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Raphael",
+      "miniatura": "/thumbnails/raffaello_sanzio_9.jpg"
     },
     {
       "id": "sarah_charlesworth_10",
@@ -317,7 +326,8 @@
       "link_fonte": "",
       "data_nascita": "29 March 1947",
       "anno_morte": "2013",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/sarah_charlesworth_10.jpg"
     },
     {
       "id": "francisco_goya_11",
@@ -346,7 +356,8 @@
       "link_fonte": "",
       "data_nascita": "30 March 1746",
       "anno_morte": "1828",
-      "link_tema_natale": "https://www.astro.com/astro-databank/De_Goya,_Francisco"
+      "link_tema_natale": "https://www.astro.com/astro-databank/De_Goya,_Francisco",
+      "miniatura": "/thumbnails/francisco_goya_11.jpg"
     },
     {
       "id": "vincent_van_gogh_12",
@@ -375,7 +386,8 @@
       "link_fonte": "",
       "data_nascita": "30 March 1853",
       "anno_morte": "1890",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Van_Gogh,_Vincent"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Van_Gogh,_Vincent",
+      "miniatura": "/thumbnails/vincent_van_gogh_12.jpg"
     },
     {
       "id": "fortunato_depero_13",
@@ -404,7 +416,8 @@
       "link_fonte": "",
       "data_nascita": "30 March 1892",
       "anno_morte": "1960",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/fortunato_depero_13.jpg"
     },
     {
       "id": "timm_ulrichs_14",
@@ -433,7 +446,8 @@
       "link_fonte": "",
       "data_nascita": "31 March 1940",
       "anno_morte": "",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/timm_ulrichs_14.jpg"
     },
     {
       "id": "gino_de_dominicis_15",
@@ -462,7 +476,8 @@
       "link_fonte": "",
       "data_nascita": "1 April 1947",
       "anno_morte": "1998",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/gino_de_dominicis_15.jpg"
     },
     {
       "id": "dan_flavin_16",
@@ -491,7 +506,8 @@
       "link_fonte": "",
       "data_nascita": "1 April 1933",
       "anno_morte": "1996",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Flavin,_Dan"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Flavin,_Dan",
+      "miniatura": "/thumbnails/dan_flavin_16.jpg"
     },
     {
       "id": "francesca_woodman_17",
@@ -520,7 +536,8 @@
       "link_fonte": "",
       "data_nascita": "3 April 1958",
       "anno_morte": "1981",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/francesca_woodman_17.jpg"
     },
     {
       "id": "gustave_moreau_18",
@@ -549,7 +566,8 @@
       "link_fonte": "",
       "data_nascita": "6 April 1826",
       "anno_morte": "1898",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Moreau,_Gustave"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Moreau,_Gustave",
+      "miniatura": "/thumbnails/gustave_moreau_18.jpg"
     },
     {
       "id": "leonora_carrington_19",
@@ -578,7 +596,8 @@
       "link_fonte": "",
       "data_nascita": "6 April 1917",
       "anno_morte": "2011",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/leonora_carrington_19.jpg"
     },
     {
       "id": "eadweard_muybridge_20",
@@ -607,7 +626,8 @@
       "link_fonte": "",
       "data_nascita": "9 April 1830",
       "anno_morte": "1904",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Muybridge,_Eadweard"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Muybridge,_Eadweard",
+      "miniatura": "/thumbnails/eadweard_muybridge_20.jpg"
     },
     {
       "id": "chris_burden_21",
@@ -636,7 +656,8 @@
       "link_fonte": "",
       "data_nascita": "11 April 1946",
       "anno_morte": "2015",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Burden,_Chris"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Burden,_Chris",
+      "miniatura": "/thumbnails/chris_burden_21.jpg"
     },
     {
       "id": "roger_ballen_22",
@@ -665,7 +686,8 @@
       "link_fonte": "",
       "data_nascita": "11 April 1950",
       "anno_morte": "",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/roger_ballen_22.jpg"
     },
     {
       "id": "jago_23",
@@ -694,7 +716,8 @@
       "link_fonte": "",
       "data_nascita": "18 April 1987",
       "anno_morte": "",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/jago_23.jpg"
     },
     {
       "id": "bas_jan_ader_24",
@@ -723,7 +746,8 @@
       "link_fonte": "",
       "data_nascita": "19 April 1942",
       "anno_morte": "1975",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/bas_jan_ader_24.jpg"
     },
     {
       "id": "carrie_mae_weems_25",
@@ -752,7 +776,8 @@
       "link_fonte": "",
       "data_nascita": "20 April 1953",
       "anno_morte": "",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/carrie_mae_weems_25.jpg"
     },
     {
       "id": "joan_mir__26",
@@ -781,7 +806,8 @@
       "link_fonte": "",
       "data_nascita": "20 April 1893",
       "anno_morte": "1983",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Mir%C3%B3,_Joan"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Mir%C3%B3,_Joan",
+      "miniatura": "/thumbnails/joan_mir__26.jpg"
     },
     {
       "id": "leonardo_da_vinci_27",
@@ -810,7 +836,8 @@
       "link_fonte": "",
       "data_nascita": "15 April 1452",
       "anno_morte": "1519",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Da_Vinci,_Leonardo"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Da_Vinci,_Leonardo",
+      "miniatura": "/thumbnails/leonardo_da_vinci_27.jpg"
     },
     {
       "id": "enzo_mari_28",
@@ -839,7 +866,8 @@
       "link_fonte": "",
       "data_nascita": "27 April 1932",
       "anno_morte": "2020",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/enzo_mari_28.jpg"
     },
     {
       "id": "domenico_gnoli_29",
@@ -868,7 +896,8 @@
       "link_fonte": "",
       "data_nascita": "3 May 1933",
       "anno_morte": "1970",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/domenico_gnoli_29.jpg"
     },
     {
       "id": "keith_haring_30",
@@ -897,7 +926,8 @@
       "link_fonte": "",
       "data_nascita": "4 May 1958",
       "anno_morte": "1990",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Haring,_Keith"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Haring,_Keith",
+      "miniatura": "/thumbnails/keith_haring_30.jpg"
     },
     {
       "id": "fathi_hassan_31",
@@ -926,7 +956,8 @@
       "link_fonte": "",
       "data_nascita": "10 May 1957",
       "anno_morte": "",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/fathi_hassan_31.jpg"
     },
     {
       "id": "salvador_dal__32",
@@ -955,7 +986,8 @@
       "link_fonte": "",
       "data_nascita": "11 May 1904",
       "anno_morte": "1989",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Dali,_Salvador"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Dali,_Salvador",
+      "miniatura": "/thumbnails/salvador_dal__32.jpg"
     },
     {
       "id": "dante_gabriel_rossetti_33",
@@ -984,7 +1016,8 @@
       "link_fonte": "",
       "data_nascita": "12 May 1828",
       "anno_morte": "1882",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Rossetti,_D._G."
+      "link_tema_natale": "https://www.astro.com/astro-databank/Rossetti,_D._G.",
+      "miniatura": "/thumbnails/dante_gabriel_rossetti_33.jpg"
     },
     {
       "id": "joseph_beuys_34",
@@ -1013,7 +1046,8 @@
       "link_fonte": "",
       "data_nascita": "12 May 1921",
       "anno_morte": "1986",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Beuys,_Joseph"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Beuys,_Joseph",
+      "miniatura": "/thumbnails/joseph_beuys_34.jpg"
     },
     {
       "id": "georges_braques_35",
@@ -1042,7 +1076,8 @@
       "link_fonte": "",
       "data_nascita": "",
       "anno_morte": "",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/georges_braques_35.jpg"
     },
     {
       "id": "francis_kurkdjian_36",
@@ -1071,7 +1106,8 @@
       "link_fonte": "",
       "data_nascita": "14 May 1969",
       "anno_morte": "",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/francis_kurkdjian_36.jpg"
     },
     {
       "id": "jasper_johns_37",
@@ -1100,7 +1136,8 @@
       "link_fonte": "",
       "data_nascita": "15 May 1930",
       "anno_morte": "",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/jasper_johns_37.jpg"
     },
     {
       "id": "walter_gropius_38",
@@ -1129,7 +1166,8 @@
       "link_fonte": "",
       "data_nascita": "18 May 1883",
       "anno_morte": "1969",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Gropius,_Walter"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Gropius,_Walter",
+      "miniatura": "/thumbnails/walter_gropius_38.jpg"
     },
     {
       "id": "jacob_jordaens_39",
@@ -1158,7 +1196,8 @@
       "link_fonte": "",
       "data_nascita": "19 May 1593",
       "anno_morte": "",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/jacob_jordaens_39.jpg"
     },
     {
       "id": "albrecht_d_rer_40",
@@ -1187,7 +1226,8 @@
       "link_fonte": "",
       "data_nascita": "21 May 1471, 31 May 1471 Greg. calendar",
       "anno_morte": "1528",
-      "link_tema_natale": "https://www.astro.com/astro-databank/D%C3%BCrer,_Albrecht"
+      "link_tema_natale": "https://www.astro.com/astro-databank/D%C3%BCrer,_Albrecht",
+      "miniatura": "/thumbnails/albrecht_d_rer_40.jpg"
     },
     {
       "id": "jean_tinguely_41",
@@ -1216,7 +1256,8 @@
       "link_fonte": "",
       "data_nascita": "22 May 1925",
       "anno_morte": "1991",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Tinguely,_Jean"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Tinguely,_Jean",
+      "miniatura": "/thumbnails/jean_tinguely_41.jpg"
     },
     {
       "id": "agn_s_varda_42",
@@ -1245,7 +1286,8 @@
       "link_fonte": "",
       "data_nascita": "30 May 1928",
       "anno_morte": "2019",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Varda,_Agn%C3%A8s"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Varda,_Agn%C3%A8s",
+      "miniatura": "/thumbnails/agn_s_varda_42.jpg"
     },
     {
       "id": "richard_long_43",
@@ -1274,7 +1316,8 @@
       "link_fonte": "",
       "data_nascita": "2 June 1945",
       "anno_morte": "",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/richard_long_43.jpg"
     },
     {
       "id": "raoul_dufy_44",
@@ -1303,7 +1346,8 @@
       "link_fonte": "",
       "data_nascita": "3 June 1877",
       "anno_morte": "1953",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Dufy,_Raoul"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Dufy,_Raoul",
+      "miniatura": "/thumbnails/raoul_dufy_44.jpg"
     },
     {
       "id": "damien_hirst_45",
@@ -1332,7 +1376,8 @@
       "link_fonte": "",
       "data_nascita": "7 June 1965",
       "anno_morte": "",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Hirst,_Damien"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Hirst,_Damien",
+      "miniatura": "/thumbnails/damien_hirst_45.jpg"
     },
     {
       "id": "gustave_courbet_46",
@@ -1361,7 +1406,8 @@
       "link_fonte": "",
       "data_nascita": "10 June 1819",
       "anno_morte": "1877",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Courbet,_Gustave"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Courbet,_Gustave",
+      "miniatura": "/thumbnails/gustave_courbet_46.jpg"
     },
     {
       "id": "john_constable_47",
@@ -1390,7 +1436,8 @@
       "link_fonte": "",
       "data_nascita": "11 June 1776",
       "anno_morte": "1837",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Constable,_John"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Constable,_John",
+      "miniatura": "/thumbnails/john_constable_47.jpg"
     },
     {
       "id": "egon_schiele_48",
@@ -1419,7 +1466,8 @@
       "link_fonte": "",
       "data_nascita": "12 June 1890",
       "anno_morte": "1918",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Schiele,_Egon"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Schiele,_Egon",
+      "miniatura": "/thumbnails/egon_schiele_48.jpg"
     },
     {
       "id": "saul_steinberg_49",
@@ -1448,7 +1496,8 @@
       "link_fonte": "",
       "data_nascita": "15 June 1914",
       "anno_morte": "1999",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Steinberg,_Saul"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Steinberg,_Saul",
+      "miniatura": "/thumbnails/saul_steinberg_49.jpg"
     },
     {
       "id": "maurits_cornelis_escher_50",
@@ -1477,7 +1526,8 @@
       "link_fonte": "",
       "data_nascita": "17 June 1898",
       "anno_morte": "1972",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/maurits_cornelis_escher_50.jpg"
     },
     {
       "id": "th_ophile_schuler_51",
@@ -1506,7 +1556,8 @@
       "link_fonte": "",
       "data_nascita": "18 June 1821",
       "anno_morte": "1878",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/th_ophile_schuler_51.jpg"
     },
     {
       "id": "kurt_schwitters_52",
@@ -1535,7 +1586,8 @@
       "link_fonte": "",
       "data_nascita": "20 June 1887",
       "anno_morte": "1948",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Schwitters,_Kurt"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Schwitters,_Kurt",
+      "miniatura": "/thumbnails/kurt_schwitters_52.jpg"
     },
     {
       "id": "gordon_matta_clark_53",
@@ -1564,7 +1616,8 @@
       "link_fonte": "",
       "data_nascita": "22 June 1943",
       "anno_morte": "1978",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Matta-Clark,_Gordon"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Matta-Clark,_Gordon",
+      "miniatura": "/thumbnails/gordon_matta_clark_53.jpg"
     },
     {
       "id": "antoni_gaud__54",
@@ -1593,7 +1646,8 @@
       "link_fonte": "",
       "data_nascita": "25 June 1852",
       "anno_morte": "1926",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Gaud%C3%AD,_Antoni"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Gaud%C3%AD,_Antoni",
+      "miniatura": "/thumbnails/antoni_gaud__54.jpg"
     },
     {
       "id": "antoine_de_saint_exup_ry_55",
@@ -1622,7 +1676,8 @@
       "link_fonte": "",
       "data_nascita": "29 June 1900",
       "anno_morte": "1944",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Saint-Exup%C3%A9ry,_Antoine_de"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Saint-Exup%C3%A9ry,_Antoine_de",
+      "miniatura": "/thumbnails/antoine_de_saint_exup_ry_55.jpg"
     },
     {
       "id": "tracey_emin_56",
@@ -1651,7 +1706,8 @@
       "link_fonte": "",
       "data_nascita": "3 July 1963",
       "anno_morte": "",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Emin,_Tracey"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Emin,_Tracey",
+      "miniatura": "/thumbnails/tracey_emin_56.jpg"
     },
     {
       "id": "frida_kahlo_57",
@@ -1680,7 +1736,8 @@
       "link_fonte": "",
       "data_nascita": "6 July 1907",
       "anno_morte": "1954",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Kahlo,_Frida"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Kahlo,_Frida",
+      "miniatura": "/thumbnails/frida_kahlo_57.jpg"
     },
     {
       "id": "marc_chagall_58",
@@ -1709,7 +1766,8 @@
       "link_fonte": "",
       "data_nascita": "7 July 1887",
       "anno_morte": "1985",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Chagall,_Marc"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Chagall,_Marc",
+      "miniatura": "/thumbnails/marc_chagall_58.jpg"
     },
     {
       "id": "david_hockney_59",
@@ -1738,7 +1796,8 @@
       "link_fonte": "",
       "data_nascita": "9 July 1937",
       "anno_morte": "",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Hockney,_David"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Hockney,_David",
+      "miniatura": "/thumbnails/david_hockney_59.jpg"
     },
     {
       "id": "camille_pissarro_60",
@@ -1767,7 +1826,8 @@
       "link_fonte": "",
       "data_nascita": "10 July 1830",
       "anno_morte": "1903",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Pissarro,_Camille"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Pissarro,_Camille",
+      "miniatura": "/thumbnails/camille_pissarro_60.jpg"
     },
     {
       "id": "giorgio_de_chirico_61",
@@ -1796,7 +1856,8 @@
       "link_fonte": "",
       "data_nascita": "10 July 1888",
       "anno_morte": "1978",
-      "link_tema_natale": "https://www.astro.com/astro-databank/De_Chirico,_Giorgio"
+      "link_tema_natale": "https://www.astro.com/astro-databank/De_Chirico,_Giorgio",
+      "miniatura": "/thumbnails/giorgio_de_chirico_61.jpg"
     },
     {
       "id": "james_abbott_mcneill_whistler_62",
@@ -1825,7 +1886,8 @@
       "link_fonte": "",
       "data_nascita": "10 July 1834",
       "anno_morte": "1903",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Whistler,_James_McNeill"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Whistler,_James_McNeill",
+      "miniatura": "/thumbnails/james_abbott_mcneill_whistler_62.jpg"
     },
     {
       "id": "amedeo_modigliani_63",
@@ -1854,7 +1916,8 @@
       "link_fonte": "",
       "data_nascita": "12 July 1884",
       "anno_morte": "1920",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Modigliani,_Amedeo"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Modigliani,_Amedeo",
+      "miniatura": "/thumbnails/amedeo_modigliani_63.jpg"
     },
     {
       "id": "gustav_klimt_64",
@@ -1883,7 +1946,8 @@
       "link_fonte": "",
       "data_nascita": "14 July 1862",
       "anno_morte": "1918",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Klimt,_Gustav"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Klimt,_Gustav",
+      "miniatura": "/thumbnails/gustav_klimt_64.jpg"
     },
     {
       "id": "rembrandt_van_rijn_65",
@@ -1912,7 +1976,8 @@
       "link_fonte": "",
       "data_nascita": "15 July 1606",
       "anno_morte": "1669, 5 July Jul. calendar",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Rembrandt"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Rembrandt",
+      "miniatura": "/thumbnails/rembrandt_van_rijn_65.jpg"
     },
     {
       "id": "jean_baptiste_camille_corot_66",
@@ -1941,7 +2006,8 @@
       "link_fonte": "",
       "data_nascita": "16 July 1796",
       "anno_morte": "1875",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Corot,_Camille"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Corot,_Camille",
+      "miniatura": "/thumbnails/jean_baptiste_camille_corot_66.jpg"
     },
     {
       "id": "edgar_degas_67",
@@ -1970,7 +2036,8 @@
       "link_fonte": "",
       "data_nascita": "19 July 1834",
       "anno_morte": "1917",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Degas,_Edgar"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Degas,_Edgar",
+      "miniatura": "/thumbnails/edgar_degas_67.jpg"
     },
     {
       "id": "edward_hopper_68",
@@ -1999,7 +2066,8 @@
       "link_fonte": "",
       "data_nascita": "22 July 1882",
       "anno_morte": "1967",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Hopper,_Edward"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Hopper,_Edward",
+      "miniatura": "/thumbnails/edward_hopper_68.jpg"
     },
     {
       "id": "alphonse_mucha_69",
@@ -2028,7 +2096,8 @@
       "link_fonte": "",
       "data_nascita": "24 July 1860",
       "anno_morte": "1939",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Mucha,_Alphonse"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Mucha,_Alphonse",
+      "miniatura": "/thumbnails/alphonse_mucha_69.jpg"
     },
     {
       "id": "carl_gustav_jung_70",
@@ -2057,7 +2126,8 @@
       "link_fonte": "",
       "data_nascita": "26 July 1875",
       "anno_morte": "1961",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Jung,_Carl_Gustav"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Jung,_Carl_Gustav",
+      "miniatura": "/thumbnails/carl_gustav_jung_70.jpg"
     },
     {
       "id": "joshua_reynolds_71",
@@ -2086,7 +2156,8 @@
       "link_fonte": "",
       "data_nascita": "16 July 1723",
       "anno_morte": "1792",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Reynolds,_Joshua"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Reynolds,_Joshua",
+      "miniatura": "/thumbnails/joshua_reynolds_71.jpg"
     },
     {
       "id": "giuseppe_pellizza_da_volpedo_72",
@@ -2115,7 +2186,8 @@
       "link_fonte": "",
       "data_nascita": "28 July 1868",
       "anno_morte": "1907",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Pellizza_da_Volpedo,_Giuseppe"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Pellizza_da_Volpedo,_Giuseppe",
+      "miniatura": "/thumbnails/giuseppe_pellizza_da_volpedo_72.jpg"
     },
     {
       "id": "marcel_duchamp_73",
@@ -2144,7 +2216,8 @@
       "link_fonte": "",
       "data_nascita": "28 July 1887",
       "anno_morte": "1968",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Duchamp,_Marcel"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Duchamp,_Marcel",
+      "miniatura": "/thumbnails/marcel_duchamp_73.jpg"
     },
     {
       "id": "gastone_novelli_74",
@@ -2173,7 +2246,8 @@
       "link_fonte": "",
       "data_nascita": "1 August 1925",
       "anno_morte": "1968",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/gastone_novelli_74.jpg"
     },
     {
       "id": "auguste_bartholdi_75",
@@ -2202,7 +2276,8 @@
       "link_fonte": "",
       "data_nascita": "2 August 1834",
       "anno_morte": "1904",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Bartholdi,_Fr%C3%A9d%C3%A9ric-Auguste"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Bartholdi,_Fr%C3%A9d%C3%A9ric-Auguste",
+      "miniatura": "/thumbnails/auguste_bartholdi_75.jpg"
     },
     {
       "id": "andy_warhol_76",
@@ -2231,7 +2306,8 @@
       "link_fonte": "",
       "data_nascita": "6 August 1928",
       "anno_morte": "1987",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Warhol,_Andy"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Warhol,_Andy",
+      "miniatura": "/thumbnails/andy_warhol_76.jpg"
     },
     {
       "id": "audrey_tautou_77",
@@ -2260,7 +2336,8 @@
       "link_fonte": "",
       "data_nascita": "9 August 1976",
       "anno_morte": "",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Tautou,_Audrey"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Tautou,_Audrey",
+      "miniatura": "/thumbnails/audrey_tautou_77.jpg"
     },
     {
       "id": "augustin_lesage_78",
@@ -2289,7 +2366,8 @@
       "link_fonte": "",
       "data_nascita": "9 August 1876",
       "anno_morte": "1954",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Lesage,_Augustin"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Lesage,_Augustin",
+      "miniatura": "/thumbnails/augustin_lesage_78.jpg"
     },
     {
       "id": "lorna_simpson_79",
@@ -2318,7 +2396,8 @@
       "link_fonte": "",
       "data_nascita": "13 August 1960",
       "anno_morte": "",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/lorna_simpson_79.jpg"
     },
     {
       "id": "maurizio_cattelan_80",
@@ -2347,7 +2426,8 @@
       "link_fonte": "",
       "data_nascita": "21 September 1960",
       "anno_morte": "",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Cattelan,_Maurizio"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Cattelan,_Maurizio",
+      "miniatura": "/thumbnails/maurizio_cattelan_80.jpg"
     },
     {
       "id": "man_ray_81",
@@ -2376,7 +2456,8 @@
       "link_fonte": "",
       "data_nascita": "27 August 1890",
       "anno_morte": "1976",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Ray,_Man"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Ray,_Man",
+      "miniatura": "/thumbnails/man_ray_81.jpg"
     },
     {
       "id": "roman_opa_ka_82",
@@ -2405,7 +2486,8 @@
       "link_fonte": "",
       "data_nascita": "27 August 1931",
       "anno_morte": "2011",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/roman_opa_ka_82.jpg"
     },
     {
       "id": "ai_weiwei_83",
@@ -2434,7 +2516,8 @@
       "link_fonte": "",
       "data_nascita": "28 August 1957",
       "anno_morte": "",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Ai,_Weiwei"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Ai,_Weiwei",
+      "miniatura": "/thumbnails/ai_weiwei_83.jpg"
     },
     {
       "id": "theo_van_doesburg_84",
@@ -2463,7 +2546,8 @@
       "link_fonte": "",
       "data_nascita": "30 August 1883",
       "anno_morte": "1931",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Doesburg,_Theo_van"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Doesburg,_Theo_van",
+      "miniatura": "/thumbnails/theo_van_doesburg_84.jpg"
     },
     {
       "id": "gaetano_previati_85",
@@ -2492,7 +2576,8 @@
       "link_fonte": "",
       "data_nascita": "31 August 1852",
       "anno_morte": "1920",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/gaetano_previati_85.jpg"
     },
     {
       "id": "gianfranco_baruchello_86",
@@ -2521,7 +2606,8 @@
       "link_fonte": "",
       "data_nascita": "4 September 1924",
       "anno_morte": "2023",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/gianfranco_baruchello_86.jpg"
     },
     {
       "id": "john_cage_87",
@@ -2550,7 +2636,8 @@
       "link_fonte": "",
       "data_nascita": "5 September 1912",
       "anno_morte": "1992",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Cage,_John"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Cage,_John",
+      "miniatura": "/thumbnails/john_cage_87.jpg"
     },
     {
       "id": "brassa__88",
@@ -2579,7 +2666,8 @@
       "link_fonte": "",
       "data_nascita": "9 September 1899",
       "anno_morte": "1984",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Brassa%C3%AF"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Brassa%C3%AF",
+      "miniatura": "/thumbnails/brassa__88.jpg"
     },
     {
       "id": "sol_lewitt_89",
@@ -2608,7 +2696,8 @@
       "link_fonte": "",
       "data_nascita": "9 September 1928",
       "anno_morte": "2007",
-      "link_tema_natale": "https://www.astro.com/astro-databank/LeWitt,_Sol"
+      "link_tema_natale": "https://www.astro.com/astro-databank/LeWitt,_Sol",
+      "miniatura": "/thumbnails/sol_lewitt_89.jpg"
     },
     {
       "id": "vincenzo_agnetti_90",
@@ -2637,7 +2726,8 @@
       "link_fonte": "",
       "data_nascita": "14 September 1926",
       "anno_morte": "1981",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/vincenzo_agnetti_90.jpg"
     },
     {
       "id": "carl_andre_91",
@@ -2666,7 +2756,8 @@
       "link_fonte": "",
       "data_nascita": "16 September 1935",
       "anno_morte": "2024",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Andre,_Carl"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Andre,_Carl",
+      "miniatura": "/thumbnails/carl_andre_91.jpg"
     },
     {
       "id": "hans_arp_92",
@@ -2695,7 +2786,8 @@
       "link_fonte": "",
       "data_nascita": "16 September 1886",
       "anno_morte": "1966",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Arp,_Jean"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Arp,_Jean",
+      "miniatura": "/thumbnails/hans_arp_92.jpg"
     },
     {
       "id": "mark_rothko_93",
@@ -2724,7 +2816,8 @@
       "link_fonte": "",
       "data_nascita": "25 September 1903",
       "anno_morte": "1970",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Rothko,_Mark"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Rothko,_Mark",
+      "miniatura": "/thumbnails/mark_rothko_93.jpg"
     },
     {
       "id": "francesco_borromini_94",
@@ -2753,7 +2846,8 @@
       "link_fonte": "",
       "data_nascita": "25 September 1599",
       "anno_morte": "1667",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Borromini,_Francesco"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Borromini,_Francesco",
+      "miniatura": "/thumbnails/francesco_borromini_94.jpg"
     },
     {
       "id": "alexandre_cabanel_95",
@@ -2782,7 +2876,8 @@
       "link_fonte": "",
       "data_nascita": "28 September 1823",
       "anno_morte": "1889",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Cabanel,_Alexandre"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Cabanel,_Alexandre",
+      "miniatura": "/thumbnails/alexandre_cabanel_95.jpg"
     },
     {
       "id": "francois_boucher_96",
@@ -2811,7 +2906,8 @@
       "link_fonte": "",
       "data_nascita": "29 September 1703",
       "anno_morte": "1770",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Boucher,_Fran%C3%A7ois"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Boucher,_Fran%C3%A7ois",
+      "miniatura": "/thumbnails/francois_boucher_96.jpg"
     },
     {
       "id": "pierre_bonnard_97",
@@ -2840,7 +2936,8 @@
       "link_fonte": "",
       "data_nascita": "3 October 1867",
       "anno_morte": "1947",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Bonnard,_Pierre"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Bonnard,_Pierre",
+      "miniatura": "/thumbnails/pierre_bonnard_97.jpg"
     },
     {
       "id": "pino_pascali_98",
@@ -2869,7 +2966,8 @@
       "link_fonte": "",
       "data_nascita": "3 October 1935",
       "anno_morte": "1968",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/pino_pascali_98.jpg"
     },
     {
       "id": "le_corbusier_99",
@@ -2898,7 +2996,8 @@
       "link_fonte": "",
       "data_nascita": "6 October 1887",
       "anno_morte": "1965",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Le_Corbusier"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Le_Corbusier",
+      "miniatura": "/thumbnails/le_corbusier_99.jpg"
     },
     {
       "id": "antoine_watteau_100",
@@ -2927,7 +3026,8 @@
       "link_fonte": "",
       "data_nascita": "10 October 1684",
       "anno_morte": "1721",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Watteau,_Antoine"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Watteau,_Antoine",
+      "miniatura": "/thumbnails/antoine_watteau_100.jpg"
     },
     {
       "id": "charlotte_perriand_101",
@@ -2956,7 +3056,8 @@
       "link_fonte": "",
       "data_nascita": "24 October 1903",
       "anno_morte": "1999",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Perriand,_Charlotte"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Perriand,_Charlotte",
+      "miniatura": "/thumbnails/charlotte_perriand_101.jpg"
     },
     {
       "id": "bruno_munari_102",
@@ -2985,7 +3086,8 @@
       "link_fonte": "",
       "data_nascita": "24 October 1907",
       "anno_morte": "1998",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/bruno_munari_102.jpg"
     },
     {
       "id": "clovis_trouille_103",
@@ -3014,7 +3116,8 @@
       "link_fonte": "",
       "data_nascita": "24 October 1889",
       "anno_morte": "1975",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/clovis_trouille_103.jpg"
     },
     {
       "id": "pablo_picasso_104",
@@ -3043,7 +3146,8 @@
       "link_fonte": "",
       "data_nascita": "25 October 1881",
       "anno_morte": "1973",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Picasso,_Pablo"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Picasso,_Pablo",
+      "miniatura": "/thumbnails/pablo_picasso_104.jpg"
     },
     {
       "id": "claude_cahun_105",
@@ -3072,7 +3176,8 @@
       "link_fonte": "",
       "data_nascita": "25 October 1894",
       "anno_morte": "1954",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Cahun,_Claude"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Cahun,_Claude",
+      "miniatura": "/thumbnails/claude_cahun_105.jpg"
     },
     {
       "id": "hilma_af_klint_106",
@@ -3101,7 +3206,8 @@
       "link_fonte": "",
       "data_nascita": "26 October 1862",
       "anno_morte": "1944",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/hilma_af_klint_106.jpg"
     },
     {
       "id": "francis_bacon_107",
@@ -3130,7 +3236,8 @@
       "link_fonte": "",
       "data_nascita": "28 October 1909",
       "anno_morte": "1992",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Bacon,_Francis"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Bacon,_Francis",
+      "miniatura": "/thumbnails/francis_bacon_107.jpg"
     },
     {
       "id": "niki_de_saint_phalle_108",
@@ -3159,7 +3266,8 @@
       "link_fonte": "",
       "data_nascita": "29 October 1930",
       "anno_morte": "2002",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Saint_Phalle,_Niki_de"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Saint_Phalle,_Niki_de",
+      "miniatura": "/thumbnails/niki_de_saint_phalle_108.jpg"
     },
     {
       "id": "helmut_newton_109",
@@ -3188,7 +3296,8 @@
       "link_fonte": "",
       "data_nascita": "31 October 1920",
       "anno_morte": "2004",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Newton,_Helmut"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Newton,_Helmut",
+      "miniatura": "/thumbnails/helmut_newton_109.jpg"
     },
     {
       "id": "robert_mapplethorpe_110",
@@ -3217,7 +3326,8 @@
       "link_fonte": "",
       "data_nascita": "4 November 1946",
       "anno_morte": "1989",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Mapplethorpe,_Robert"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Mapplethorpe,_Robert",
+      "miniatura": "/thumbnails/robert_mapplethorpe_110.jpg"
     },
     {
       "id": "emmanuel_poir___caran_d_ache__111",
@@ -3246,7 +3356,8 @@
       "link_fonte": "",
       "data_nascita": "Caran d'Ache",
       "anno_morte": "",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/emmanuel_poir___caran_d_ache__111.jpg"
     },
     {
       "id": "francisco_de_zurbar_n_112",
@@ -3275,7 +3386,8 @@
       "link_fonte": "",
       "data_nascita": "7 November 1598",
       "anno_morte": "1664",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Zurbar%C3%A1n,_Francisco_de"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Zurbar%C3%A1n,_Francisco_de",
+      "miniatura": "/thumbnails/francisco_de_zurbar_n_112.jpg"
     },
     {
       "id": "_ngeles_santos_torroella_113",
@@ -3304,7 +3416,8 @@
       "link_fonte": "",
       "data_nascita": "7 November 1911",
       "anno_morte": "2013",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/_ngeles_santos_torroella_113.jpg"
     },
     {
       "id": "piero_fornasetti_114",
@@ -3333,7 +3446,8 @@
       "link_fonte": "",
       "data_nascita": "10 November 1913",
       "anno_morte": "1988",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/piero_fornasetti_114.jpg"
     },
     {
       "id": "benvenuto_cellini_115",
@@ -3362,7 +3476,8 @@
       "link_fonte": "",
       "data_nascita": "3 November 1500, 13 November 1500 Greg. calendar",
       "anno_morte": "1571",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Cellini,_Benvenuto"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Cellini,_Benvenuto",
+      "miniatura": "/thumbnails/benvenuto_cellini_115.jpg"
     },
     {
       "id": "auguste_rodin_116",
@@ -3391,7 +3506,8 @@
       "link_fonte": "",
       "data_nascita": "12 November 1840",
       "anno_morte": "1917",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Rodin,_Auguste"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Rodin,_Auguste",
+      "miniatura": "/thumbnails/auguste_rodin_116.jpg"
     },
     {
       "id": "claude_monet_117",
@@ -3420,7 +3536,8 @@
       "link_fonte": "",
       "data_nascita": "14 November 1840",
       "anno_morte": "1927",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Monet,_Claude"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Monet,_Claude",
+      "miniatura": "/thumbnails/claude_monet_117.jpg"
     },
     {
       "id": "georgia_o_keeffe_118",
@@ -3449,7 +3566,8 @@
       "link_fonte": "",
       "data_nascita": "15 November 1887",
       "anno_morte": "1986",
-      "link_tema_natale": "https://www.astro.com/astro-databank/O%27Keeffe,_Georgia"
+      "link_tema_natale": "https://www.astro.com/astro-databank/O%27Keeffe,_Georgia",
+      "miniatura": "/thumbnails/georgia_o_keeffe_118.jpg"
     },
     {
       "id": "ana_mendieta_119",
@@ -3478,7 +3596,8 @@
       "link_fonte": "",
       "data_nascita": "18 November 1948",
       "anno_morte": "1985",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Mendieta,_Ana_Mar%C3%ADa"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Mendieta,_Ana_Mar%C3%ADa",
+      "miniatura": "/thumbnails/ana_mendieta_119.jpg"
     },
     {
       "id": "henri_de_toulouse_lautrec_120",
@@ -3514,7 +3633,8 @@
         "z": -50.36
       },
       "scala": 2,
-      "dimensione": 2
+      "dimensione": 2,
+      "miniatura": "/thumbnails/henri_de_toulouse_lautrec_120.jpg"
     },
     {
       "id": "luigi_ontani_121",
@@ -3543,7 +3663,8 @@
       "link_fonte": "",
       "data_nascita": "24 November 1943",
       "anno_morte": "",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/luigi_ontani_121.jpg"
     },
     {
       "id": "william_blake_122",
@@ -3572,7 +3693,8 @@
       "link_fonte": "",
       "data_nascita": "28 November 1757",
       "anno_morte": "1827",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Blake,_William"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Blake,_William",
+      "miniatura": "/thumbnails/william_blake_122.jpg"
     },
     {
       "id": "ulay_123",
@@ -3601,7 +3723,8 @@
       "link_fonte": "",
       "data_nascita": "30 November 1943",
       "anno_morte": "2020",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/ulay_123.jpg"
     },
     {
       "id": "marina_abramovi__124",
@@ -3630,7 +3753,8 @@
       "link_fonte": "",
       "data_nascita": "30 November 1946",
       "anno_morte": "",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Abramovi%C4%87,_Marina"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Abramovi%C4%87,_Marina",
+      "miniatura": "/thumbnails/marina_abramovi__124.jpg"
     },
     {
       "id": "ugo_rondinone_125",
@@ -3664,7 +3788,8 @@
         "x": -30.04,
         "y": -3.73,
         "z": -45.24
-      }
+      },
+      "miniatura": "/thumbnails/ugo_rondinone_125.jpg"
     },
     {
       "id": "bruce_nauman_126",
@@ -3693,7 +3818,8 @@
       "link_fonte": "",
       "data_nascita": "6 December 1941",
       "anno_morte": "",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Nauman,_Bruce"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Nauman,_Bruce",
+      "miniatura": "/thumbnails/bruce_nauman_126.jpg"
     },
     {
       "id": "cai_guo_qiang_127",
@@ -3722,7 +3848,8 @@
       "link_fonte": "",
       "data_nascita": "8 December 1957",
       "anno_morte": "",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/cai_guo_qiang_127.jpg"
     },
     {
       "id": "vasilij_kandinskij_128",
@@ -3751,7 +3878,8 @@
       "link_fonte": "",
       "data_nascita": "16 December 1866",
       "anno_morte": "1944",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Kandinsky,_Wassily"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Kandinsky,_Wassily",
+      "miniatura": "/thumbnails/vasilij_kandinskij_128.jpg"
     },
     {
       "id": "alighiero_boetti_129",
@@ -3780,7 +3908,8 @@
       "link_fonte": "",
       "data_nascita": "16 December 1940",
       "anno_morte": "1994",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/alighiero_boetti_129.jpg"
     },
     {
       "id": "paul_klee_130",
@@ -3809,7 +3938,8 @@
       "link_fonte": "",
       "data_nascita": "18 December 1879",
       "anno_morte": "1940",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Klee,_Paul"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Klee,_Paul",
+      "miniatura": "/thumbnails/paul_klee_130.jpg"
     },
     {
       "id": "louise_bourgeois_131",
@@ -3838,7 +3968,8 @@
       "link_fonte": "",
       "data_nascita": "25 December 1911",
       "anno_morte": "2010",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Bourgeois,_Louise"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Bourgeois,_Louise",
+      "miniatura": "/thumbnails/louise_bourgeois_131.jpg"
     },
     {
       "id": "vladimir_tatlin_132",
@@ -3867,7 +3998,8 @@
       "link_fonte": "",
       "data_nascita": "28 December 1885",
       "anno_morte": "1953",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/vladimir_tatlin_132.jpg"
     },
     {
       "id": "henri_matisse_133",
@@ -3896,7 +4028,8 @@
       "link_fonte": "",
       "data_nascita": "31 December 1869",
       "anno_morte": "1954",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Matisse,_Henri"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Matisse,_Henri",
+      "miniatura": "/thumbnails/henri_matisse_133.jpg"
     },
     {
       "id": "gianni_colombo_134",
@@ -3925,7 +4058,8 @@
       "link_fonte": "",
       "data_nascita": "1 January 1937",
       "anno_morte": "1993",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/gianni_colombo_134.jpg"
     },
     {
       "id": "on_kawara_135",
@@ -3954,7 +4088,8 @@
       "link_fonte": "",
       "data_nascita": "2 January 1933",
       "anno_morte": "2014",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/on_kawara_135.jpg"
     },
     {
       "id": "nicolas_de_sta_l_136",
@@ -3983,7 +4118,8 @@
       "link_fonte": "",
       "data_nascita": "5 January 1914",
       "anno_morte": "1955",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/nicolas_de_sta_l_136.jpg"
     },
     {
       "id": "luigi_ghirri_137",
@@ -4012,7 +4148,8 @@
       "link_fonte": "",
       "data_nascita": "5 January 1943",
       "anno_morte": "1992",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/luigi_ghirri_137.jpg"
     },
     {
       "id": "gustave_dor__138",
@@ -4041,7 +4178,8 @@
       "link_fonte": "",
       "data_nascita": "6 janvier 1832",
       "anno_morte": "1883",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Dor%C3%A9,_Gustave"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Dor%C3%A9,_Gustave",
+      "miniatura": "/thumbnails/gustave_dor__138.jpg"
     },
     {
       "id": "albert_bierstadt_139",
@@ -4075,7 +4213,8 @@
         "x": 9.72,
         "y": 12.23,
         "z": -48.49
-      }
+      },
+      "miniatura": "/thumbnails/albert_bierstadt_139.jpg"
     },
     {
       "id": "giovanni_segantini_140",
@@ -4104,7 +4243,8 @@
       "link_fonte": "",
       "data_nascita": "15 January 1858",
       "anno_morte": "1899",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Segantini,_Giovannni"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Segantini,_Giovannni",
+      "miniatura": "/thumbnails/giovanni_segantini_140.jpg"
     },
     {
       "id": "paul_c_zanne_141",
@@ -4133,7 +4273,8 @@
       "link_fonte": "",
       "data_nascita": "19 January 1839",
       "anno_morte": "1906",
-      "link_tema_natale": "https://www.astro.com/astro-databank/C%C3%A9zanne,_Paul"
+      "link_tema_natale": "https://www.astro.com/astro-databank/C%C3%A9zanne,_Paul",
+      "miniatura": "/thumbnails/paul_c_zanne_141.jpg"
     },
     {
       "id": "jeff_koons_142",
@@ -4162,7 +4303,8 @@
       "link_fonte": "",
       "data_nascita": "21 January 1955",
       "anno_morte": "",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Koons,_Jeff"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Koons,_Jeff",
+      "miniatura": "/thumbnails/jeff_koons_142.jpg"
     },
     {
       "id": "_douard_manet_143",
@@ -4191,7 +4333,8 @@
       "link_fonte": "",
       "data_nascita": "23 January 1832",
       "anno_morte": "1883",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Manet,_%C3%89douard"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Manet,_%C3%89douard",
+      "miniatura": "/thumbnails/_douard_manet_143.jpg"
     },
     {
       "id": "vito_acconci_144",
@@ -4220,7 +4363,8 @@
       "link_fonte": "",
       "data_nascita": "24 January 1940",
       "anno_morte": "2017",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Acconci,_Vito"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Acconci,_Vito",
+      "miniatura": "/thumbnails/vito_acconci_144.jpg"
     },
     {
       "id": "barbara_kruger_145",
@@ -4256,7 +4400,8 @@
         "z": -46.1
       },
       "scala": 1.95,
-      "dimensione": 1.95
+      "dimensione": 1.95,
+      "miniatura": "/thumbnails/barbara_kruger_145.jpg"
     },
     {
       "id": "jackson_pollock_146",
@@ -4285,7 +4430,8 @@
       "link_fonte": "",
       "data_nascita": "28 January 1912",
       "anno_morte": "1956",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Pollock,_Jackson"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Pollock,_Jackson",
+      "miniatura": "/thumbnails/jackson_pollock_146.jpg"
     },
     {
       "id": "claes_oldenburg_147",
@@ -4314,7 +4460,8 @@
       "link_fonte": "",
       "data_nascita": "28 January 1929",
       "anno_morte": "2022",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Oldenburg,_Claes"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Oldenburg,_Claes",
+      "miniatura": "/thumbnails/claes_oldenburg_147.jpg"
     },
     {
       "id": "luca_maria_patella_148",
@@ -4343,7 +4490,8 @@
       "link_fonte": "",
       "data_nascita": "4 February 1934",
       "anno_morte": "2023",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/luca_maria_patella_148.jpg"
     },
     {
       "id": "daniela_comani_149",
@@ -4372,7 +4520,8 @@
       "link_fonte": "",
       "data_nascita": "4 February 1965",
       "anno_morte": "",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/daniela_comani_149.jpg"
     },
     {
       "id": "mary_beth_edelson_150",
@@ -4401,7 +4550,8 @@
       "link_fonte": "",
       "data_nascita": "6 February 1933",
       "anno_morte": "2021",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Edelson,_Mary_Beth"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Edelson,_Mary_Beth",
+      "miniatura": "/thumbnails/mary_beth_edelson_150.jpg"
     },
     {
       "id": "frank_shepard_fairey_151",
@@ -4430,7 +4580,8 @@
       "link_fonte": "",
       "data_nascita": "15 February 1970",
       "anno_morte": "",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/frank_shepard_fairey_151.jpg"
     },
     {
       "id": "yoko_ono_152",
@@ -4459,7 +4610,8 @@
       "link_fonte": "",
       "data_nascita": "18 February 1933",
       "anno_morte": "",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Ono,_Yoko"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Ono,_Yoko",
+      "miniatura": "/thumbnails/yoko_ono_152.jpg"
     },
     {
       "id": "andr__breton_153",
@@ -4488,7 +4640,8 @@
       "link_fonte": "",
       "data_nascita": "19 February 1896",
       "anno_morte": "1966",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Breton,_Andr%C3%A9"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Breton,_Andr%C3%A9",
+      "miniatura": "/thumbnails/andr__breton_153.jpg"
     },
     {
       "id": "constantin_brancusi_154",
@@ -4517,7 +4670,8 @@
       "link_fonte": "",
       "data_nascita": "19 February 1876",
       "anno_morte": "1957, 2 March Greg. calendar",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Brancusi,_Constantin"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Brancusi,_Constantin",
+      "miniatura": "/thumbnails/constantin_brancusi_154.jpg"
     },
     {
       "id": "lucio_fontana_155",
@@ -4546,7 +4700,8 @@
       "link_fonte": "",
       "data_nascita": "19 February 1899",
       "anno_morte": "1968",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Fontana,_Lucio"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Fontana,_Lucio",
+      "miniatura": "/thumbnails/lucio_fontana_155.jpg"
     },
     {
       "id": "mariko_mori_156",
@@ -4575,7 +4730,8 @@
       "link_fonte": "",
       "data_nascita": "21 February 1967",
       "anno_morte": "",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/mariko_mori_156.jpg"
     },
     {
       "id": "george_frederic_watts_157",
@@ -4604,7 +4760,8 @@
       "link_fonte": "",
       "data_nascita": "23 February 1817",
       "anno_morte": "",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/george_frederic_watts_157.jpg"
     },
     {
       "id": "kazimir_malevi__158",
@@ -4633,7 +4790,8 @@
       "link_fonte": "",
       "data_nascita": "23 February 1879",
       "anno_morte": "1904",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Malevich,_Kazimir"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Malevich,_Kazimir",
+      "miniatura": "/thumbnails/kazimir_malevi__158.jpg"
     },
     {
       "id": "victor_hugo_159",
@@ -4662,7 +4820,8 @@
       "link_fonte": "",
       "data_nascita": "26 February 1802",
       "anno_morte": "1885",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Hugo,_Victor"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Hugo,_Victor",
+      "miniatura": "/thumbnails/victor_hugo_159.jpg"
     },
     {
       "id": "camille_flammarion_160",
@@ -4691,7 +4850,8 @@
       "link_fonte": "",
       "data_nascita": "26 February 1842",
       "anno_morte": "1925",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Flammarion,_Camille"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Flammarion,_Camille",
+      "miniatura": "/thumbnails/camille_flammarion_160.jpg"
     },
     {
       "id": "rudolf_steiner_161",
@@ -4720,7 +4880,8 @@
       "link_fonte": "",
       "data_nascita": "27 February 1861",
       "anno_morte": "1925",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Steiner,_Rudolf"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Steiner,_Rudolf",
+      "miniatura": "/thumbnails/rudolf_steiner_161.jpg"
     },
     {
       "id": "frank_gehry_162",
@@ -4749,7 +4910,8 @@
       "link_fonte": "",
       "data_nascita": "28 February 1929",
       "anno_morte": "",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Gehry,_Frank"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Gehry,_Frank",
+      "miniatura": "/thumbnails/frank_gehry_162.jpg"
     },
     {
       "id": "claudio_parmiggiani_163",
@@ -4778,7 +4940,8 @@
       "link_fonte": "",
       "data_nascita": "1 March 1943",
       "anno_morte": "",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/claudio_parmiggiani_163.jpg"
     },
     {
       "id": "piet_mondrian_164",
@@ -4807,7 +4970,8 @@
       "link_fonte": "",
       "data_nascita": "7 March 1872",
       "anno_morte": "1944",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Mondrian,_Piet"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Mondrian,_Piet",
+      "miniatura": "/thumbnails/piet_mondrian_164.jpg"
     },
     {
       "id": "giuseppe_capogrossi_165",
@@ -4836,7 +5000,8 @@
       "link_fonte": "",
       "data_nascita": "7 March 1900",
       "anno_morte": "1972",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/giuseppe_capogrossi_165.jpg"
     },
     {
       "id": "daniel_tremblay_166",
@@ -4865,7 +5030,8 @@
       "link_fonte": "",
       "data_nascita": "7 March 1950",
       "anno_morte": "1985",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/daniel_tremblay_166.jpg"
     },
     {
       "id": "anselm_kiefer_167",
@@ -4894,7 +5060,8 @@
       "link_fonte": "",
       "data_nascita": "8 March 1945",
       "anno_morte": "",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Kiefer,_Anselm"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Kiefer,_Anselm",
+      "miniatura": "/thumbnails/anselm_kiefer_167.jpg"
     },
     {
       "id": "fr_d_ric_bruly_bouabr__168",
@@ -4923,7 +5090,8 @@
       "link_fonte": "",
       "data_nascita": "11 March 1923",
       "anno_morte": "2014",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/fr_d_ric_bruly_bouabr__168.jpg"
     },
     {
       "id": "alfredo_burri_169",
@@ -4952,7 +5120,8 @@
       "link_fonte": "",
       "data_nascita": "12 March 1915",
       "anno_morte": "1995",
-      "link_tema_natale": ""
+      "link_tema_natale": "",
+      "miniatura": "/thumbnails/alfredo_burri_169.jpg"
     },
     {
       "id": "anish_kapoor_170",
@@ -4981,7 +5150,8 @@
       "link_fonte": "",
       "data_nascita": "12 March 1954",
       "anno_morte": "",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Kapoor,_Anish"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Kapoor,_Anish",
+      "miniatura": "/thumbnails/anish_kapoor_170.jpg"
     },
     {
       "id": "michelangelo_buonarroti_171",
@@ -5010,7 +5180,8 @@
       "link_fonte": "",
       "data_nascita": "15 March 1475",
       "anno_morte": "1564, 6 March Jul. calendar",
-      "link_tema_natale": "https://www.astro.com/astro-databank/Michelangelo"
+      "link_tema_natale": "https://www.astro.com/astro-databank/Michelangelo",
+      "miniatura": "/thumbnails/michelangelo_buonarroti_171.jpg"
     },
     {
       "id": "art_1789310650544",
@@ -5045,7 +5216,8 @@
       ],
       "nota_simbolica": "Artista archiviato nella categoria Ariete per risonanza tematica e principio simbolico.",
       "colore_dominante": "#e63946",
-      "link_fonte": ""
+      "link_fonte": "",
+      "miniatura": "/thumbnails/art_1789310650544.jpg"
     },
     {
       "id": "art_1789310713953",
@@ -5080,7 +5252,8 @@
       ],
       "nota_simbolica": "Artista archiviato nella categoria Ariete per risonanza tematica e principio simbolico.",
       "colore_dominante": "#e63946",
-      "link_fonte": ""
+      "link_fonte": "",
+      "miniatura": "/thumbnails/art_1789310713953.jpg"
     },
     {
       "id": "art_1789310735460",
@@ -5115,7 +5288,8 @@
       ],
       "nota_simbolica": "Artista archiviato nella categoria Ariete per risonanza tematica e principio simbolico.",
       "colore_dominante": "#e63946",
-      "link_fonte": ""
+      "link_fonte": "",
+      "miniatura": "/thumbnails/art_1789310735460.jpg"
     }
   ]
 }

@@ -153,7 +153,7 @@ export default function ArchiveView({
               {/* Image Frame */}
               <div className="relative aspect-[4/3] bg-zinc-100 overflow-hidden">
                 <img
-                  src={art.immagine}
+                  src={art.miniatura || art.immagine}
                   alt={`${art.artista} - ${art.titolo}`}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   loading="lazy"

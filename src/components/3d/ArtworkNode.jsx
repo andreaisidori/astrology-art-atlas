@@ -136,7 +136,7 @@ export default function ArtworkNode({
             }
           >
             <ArtworkSquareMesh
-              url={artwork.immagine}
+              url={artwork.miniatura || artwork.immagine}
               isHovered={hovered}
               dominantColor={glowColor}
             />
