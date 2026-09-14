@@ -1,16 +1,47 @@
-import React, { useRef, useState, useMemo } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Html, useTexture } from '@react-three/drei';
+import { Html } from '@react-three/drei';
 import * as THREE from 'three';
 
-// Square artwork mesh with smooth texture loading
+// Global texture cache to prevent re-fetching and ensure instant texture reuse
+const textureCache = new Map();
+const textureLoader = new THREE.TextureLoader();
+
+// Square artwork mesh with robust asynchronous texture loading
 function ArtworkSquareMesh({ url, isHovered, dominantColor }) {
-  let texture = null;
-  try {
-    texture = useTexture(url);
-  } catch (e) {
-    texture = null;
-  }
+  const [texture, setTexture] = useState(() => {
+    if (!url) return null;
+    return textureCache.get(url) || null;
+  });
+
+  useEffect(() => {
+    if (!url) return;
+    if (textureCache.has(url)) {
+      setTexture(textureCache.get(url));
+      return;
+    }
+
+    let isMounted = true;
+    textureLoader.load(
+      url,
+      (loadedTex) => {
+        if (!isMounted) return;
+        loadedTex.colorSpace = THREE.SRGBColorSpace;
+        loadedTex.generateMipmaps = true;
+        loadedTex.minFilter = THREE.LinearMipmapLinearFilter;
+        textureCache.set(url, loadedTex);
+        setTexture(loadedTex);
+      },
+      undefined,
+      (err) => {
+        console.warn('Texture load fallback:', url, err);
+      }
+    );
+
+    return () => {
+      isMounted = false;
+    };
+  }, [url]);
 
   return (
     <group>
@@ -20,14 +51,14 @@ function ArtworkSquareMesh({ url, isHovered, dominantColor }) {
           <meshBasicMaterial
             map={texture}
             transparent
-            opacity={isHovered ? 1.0 : 0.9}
+            opacity={isHovered ? 1.0 : 0.95}
             side={THREE.DoubleSide}
           />
         ) : (
-          <meshStandardMaterial
+          <meshBasicMaterial
             color={dominantColor || '#ffffff'}
-            roughness={0.4}
-            metalness={0.1}
+            transparent
+            opacity={0.65}
             side={THREE.DoubleSide}
           />
         )}
@@ -127,20 +158,11 @@ export default function ArtworkNode({
 
         {/* Square Content: Either Image Texture OR Ultra-Fast Minimalist Square Space */}
         {showImages ? (
-          <React.Suspense
-            fallback={
-              <mesh>
-                <planeGeometry args={[2.4, 2.4]} />
-                <meshBasicMaterial color={glowColor} />
-              </mesh>
-            }
-          >
-            <ArtworkSquareMesh
-              url={artwork.miniatura || artwork.immagine}
-              isHovered={hovered}
-              dominantColor={glowColor}
-            />
-          </React.Suspense>
+          <ArtworkSquareMesh
+            url={artwork.miniatura || artwork.immagine}
+            isHovered={hovered}
+            dominantColor={glowColor}
+          />
         ) : (
           /* Lightweight Minimalist Square Space (Sagoma Quadrata Ultra-Leggera) */
           <group>
