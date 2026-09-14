@@ -59,13 +59,17 @@ export default function ArtworkModal({ artwork, onClose, onSelectSign, onSelectK
                     if (onSelectSign) onSelectSign(signInfo.id);
                     onClose();
                   }}
-                  className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono uppercase tracking-wider transition-all border"
+                  className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono uppercase tracking-wider transition-all border shadow-sm"
                   style={{
-                    backgroundColor: `${signInfo.color}20`,
-                    borderColor: `${signInfo.color}60`,
+                    backgroundColor: `${signInfo.color}25`,
+                    borderColor: `${signInfo.color}70`,
                     color: '#fff',
                   }}
                 >
+                  <span
+                    className="w-2.5 h-2.5 rounded-full border border-white/40 flex-shrink-0"
+                    style={{ backgroundColor: signInfo.color }}
+                  />
                   <ZodiacGlyph sign={signInfo.id} className="w-4 h-4 text-white" />
                   <span className="font-bold tracking-widest">{signInfo.latin}</span>
                 </button>

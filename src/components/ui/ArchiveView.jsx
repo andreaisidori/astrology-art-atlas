@@ -161,14 +161,14 @@ export default function ArchiveView({
                 {/* Zodiac Pill Badge on image */}
                 {signInfo && (
                   <div
-                    className="absolute top-3 left-3 px-2 py-1 rounded-md text-[10px] font-mono tracking-widest uppercase flex items-center gap-1.5 shadow-md backdrop-blur-md bg-white/95"
-                    style={{
-                      color: signInfo.color,
-                      border: `1px solid ${signInfo.color}40`,
-                    }}
+                    className="absolute top-3 left-3 px-2 py-1 rounded-md text-[10px] font-mono tracking-widest uppercase flex items-center gap-1.5 shadow-md backdrop-blur-md bg-zinc-950/85 text-white border border-white/15"
                   >
-                    <ZodiacGlyph sign={signInfo.id} className="w-3 h-3" color={signInfo.color} />
-                    <span className="font-bold">{signInfo.latin}</span>
+                    <span
+                      className="w-2.5 h-2.5 rounded-full border border-white/40 flex-shrink-0"
+                      style={{ backgroundColor: signInfo.color }}
+                    />
+                    <ZodiacGlyph sign={signInfo.id} className="w-3 h-3 text-white/90" color="#ffffff" />
+                    <span className="font-semibold text-white/90">{signInfo.latin}</span>
                   </div>
                 )}
                 {/* Year Badge */}

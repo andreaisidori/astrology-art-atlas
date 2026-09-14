@@ -4,18 +4,18 @@
  */
 
 export const ZODIAC_SIGNS = [
-  { id: 'ariete', name: 'Ariete', latin: 'Aries', symbol: '♈', element: 'Fuoco', angle: 0, color: '#e63946', keywords: ['Impulso', 'Nascita', 'Origine', 'Combattività'] },
-  { id: 'toro', name: 'Toro', latin: 'Taurus', symbol: '♉', element: 'Terra', angle: 30, color: '#2a9d8f', keywords: ['Materia', 'Corpo', 'Permanenza', 'Sensorialità'] },
-  { id: 'gemelli', name: 'Gemelli', latin: 'Gemini', symbol: '♊', element: 'Aria', angle: 60, color: '#f4a261', keywords: ['Dualità', 'Linguaggio', 'Rete', 'Metamorfosi'] },
-  { id: 'cancro', name: 'Cancro', latin: 'Cancer', symbol: '♋', element: 'Acqua', angle: 90, color: '#a8dadc', keywords: ['Memoria', 'Inconscio', 'Grembo', 'Origine'] },
-  { id: 'leone', name: 'Leone', latin: 'Leo', symbol: '♌', element: 'Fuoco', angle: 120, color: '#e9c46a', keywords: ['Centro', 'Splendore', 'Ego', 'Sovranità'] },
-  { id: 'vergine', name: 'Vergine', latin: 'Virgo', symbol: '♍', element: 'Terra', angle: 150, color: '#90be6d', keywords: ['Tassonomia', 'Dettaglio', 'Misura', 'Archivio'] },
-  { id: 'bilancia', name: 'Bilancia', latin: 'Libra', symbol: '♎', element: 'Aria', angle: 180, color: '#457b9d', keywords: ['Equilibrio', 'Forma', 'Relazione', 'Simmetria'] },
-  { id: 'scorpione', name: 'Scorpione', latin: 'Scorpio', symbol: '♏', element: 'Acqua', angle: 210, color: '#6a040f', keywords: ['Metamorfosi', 'Abisso', 'Dionisiaco', 'Eros'] },
-  { id: 'sagittario', name: 'Sagittario', latin: 'Sagittarius', symbol: '♐', element: 'Fuoco', angle: 240, color: '#9d0208', keywords: ['Orizzonte', 'Visione', 'Traiettoria', 'Mito'] },
-  { id: 'capricorno', name: 'Capricorno', latin: 'Capricornus', symbol: '♑', element: 'Terra', angle: 270, color: '#4a4e69', keywords: ['Struttura', 'Tempo', 'Pietra', 'Limite'] },
-  { id: 'acquario', name: 'Acquario', latin: 'Aquarius', symbol: '♒', element: 'Aria', angle: 300, color: '#0077b6', keywords: ['Utopia', 'Dispersione', 'Cosmo', 'Futuro'] },
-  { id: 'pesci', name: 'Pesci', latin: 'Pisces', symbol: '♓', element: 'Acqua', angle: 330, color: '#7209b7', keywords: ['Dissoluzione', 'Oceano', 'Sogno', 'Indistinto'] }
+  { id: 'ariete', name: 'Ariete', latin: 'Aries', symbol: '♈', element: 'Fuoco', angle: 0, color: '#E0362F', keywords: ['Impulso', 'Nascita', 'Origine', 'Combattività'] },
+  { id: 'toro', name: 'Toro', latin: 'Taurus', symbol: '♉', element: 'Terra', angle: 30, color: '#469F5B', keywords: ['Materia', 'Corpo', 'Permanenza', 'Sensorialità'] },
+  { id: 'gemelli', name: 'Gemelli', latin: 'Gemini', symbol: '♊', element: 'Aria', angle: 60, color: '#F17A38', keywords: ['Dualità', 'Linguaggio', 'Rete', 'Metamorfosi'] },
+  { id: 'cancro', name: 'Cancro', latin: 'Cancer', symbol: '♋', element: 'Acqua', angle: 90, color: '#16329F', keywords: ['Memoria', 'Inconscio', 'Grembo', 'Origine'] },
+  { id: 'leone', name: 'Leone', latin: 'Leo', symbol: '♌', element: 'Fuoco', angle: 120, color: '#E6B841', keywords: ['Centro', 'Splendore', 'Ego', 'Sovranità'] },
+  { id: 'vergine', name: 'Vergine', latin: 'Virgo', symbol: '♍', element: 'Terra', angle: 150, color: '#FFFFFF', keywords: ['Tassonomia', 'Dettaglio', 'Misura', 'Archivio'] },
+  { id: 'bilancia', name: 'Bilancia', latin: 'Libra', symbol: '♎', element: 'Aria', angle: 180, color: '#4DB6B1', keywords: ['Equilibrio', 'Forma', 'Relazione', 'Simmetria'] },
+  { id: 'scorpione', name: 'Scorpione', latin: 'Scorpio', symbol: '♏', element: 'Acqua', angle: 210, color: '#1A1A1A', keywords: ['Metamorfosi', 'Abisso', 'Dionisiaco', 'Eros'] },
+  { id: 'sagittario', name: 'Sagittario', latin: 'Sagittarius', symbol: '♐', element: 'Fuoco', angle: 240, color: '#433ACB', keywords: ['Orizzonte', 'Visione', 'Traiettoria', 'Mito'] },
+  { id: 'capricorno', name: 'Capricorno', latin: 'Capricornus', symbol: '♑', element: 'Terra', angle: 270, color: '#7C4B2A', keywords: ['Struttura', 'Tempo', 'Pietra', 'Limite'] },
+  { id: 'acquario', name: 'Acquario', latin: 'Aquarius', symbol: '♒', element: 'Aria', angle: 300, color: '#A9AEB4', keywords: ['Utopia', 'Dispersione', 'Cosmo', 'Futuro'] },
+  { id: 'pesci', name: 'Pesci', latin: 'Pisces', symbol: '♓', element: 'Acqua', angle: 330, color: '#9D45D9', keywords: ['Dissoluzione', 'Oceano', 'Sogno', 'Indistinto'] }
 ];
 
 /**

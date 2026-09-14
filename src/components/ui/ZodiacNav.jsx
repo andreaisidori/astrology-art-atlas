@@ -33,8 +33,8 @@ export default function ZodiacNav({ activeSignId, onSelectSign, onResetSign }) {
 
               {/* Active / Element bottom glow indicator */}
               <span
-                className={`absolute bottom-0.5 w-1.5 h-1.5 rounded-full transition-all ${
-                  isActive ? 'opacity-100 scale-125' : 'opacity-40 group-hover:opacity-100'
+                className={`absolute bottom-0.5 w-1.5 h-1.5 rounded-full transition-all border border-white/30 ${
+                  isActive ? 'opacity-100 scale-125' : 'opacity-60 group-hover:opacity-100'
                 }`}
                 style={{ backgroundColor: sign.color }}
               />
