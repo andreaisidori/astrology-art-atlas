@@ -4,8 +4,8 @@ import ZodiacGlyph from './ZodiacGlyph';
 
 export default function ZodiacNav({ activeSignId, onSelectSign, onResetSign }) {
   return (
-    <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-30 max-w-[98vw] xl:max-w-7xl pointer-events-auto">
-      <div className="flex items-center justify-center gap-1 sm:gap-1.5 md:gap-2 p-1.5 sm:p-2 rounded-2xl bg-black/85 backdrop-blur-2xl border border-white/20 shadow-[0_10px_35px_rgba(0,0,0,0.8)] flex-nowrap">
+    <nav className="fixed bottom-3 sm:bottom-6 left-1/2 -translate-x-1/2 z-30 max-w-[calc(100vw-1.25rem)] xl:max-w-7xl pointer-events-auto">
+      <div className="flex items-center justify-start sm:justify-center gap-1 sm:gap-1.5 md:gap-2 p-1.5 sm:p-2 rounded-2xl bg-black/85 backdrop-blur-2xl border border-white/20 shadow-[0_10px_35px_rgba(0,0,0,0.8)] flex-nowrap overflow-x-auto max-w-full [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden overscroll-x-contain touch-pan-x">
         {/* 12 Zodiac Glyphs */}
         {ZODIAC_SIGNS.map((sign) => {
           const isActive = activeSignId === sign.id;

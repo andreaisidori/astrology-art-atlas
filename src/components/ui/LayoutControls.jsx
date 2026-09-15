@@ -9,7 +9,7 @@ export default function LayoutControls({
   showImages = false,
   onToggleShowImages,
 }) {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
 
   const modes = [
     { id: 'manual', label: 'Simbolica', icon: Layers },

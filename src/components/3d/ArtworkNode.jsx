@@ -2,13 +2,14 @@ import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import * as THREE from 'three';
+import { ZODIAC_SIGNS } from '../../utils/astronomy';
 
 // Global texture cache to prevent re-fetching and ensure instant texture reuse
 const textureCache = new Map();
 const textureLoader = new THREE.TextureLoader();
 
-// Square artwork mesh with robust asynchronous texture loading
-function ArtworkSquareMesh({ url, isHovered, dominantColor }) {
+// Square artwork mesh with robust asynchronous texture loading and vibrant zodiac colored border
+function ArtworkSquareMesh({ url, isHovered, dominantColor, isDimmed, isSelected }) {
   const [texture, setTexture] = useState(() => {
     if (!url) return null;
     return textureCache.get(url) || null;
@@ -45,32 +46,33 @@ function ArtworkSquareMesh({ url, isHovered, dominantColor }) {
 
   return (
     <group>
+      {/* Artwork Canvas Plane */}
       <mesh>
         <planeGeometry args={[2.4, 2.4]} />
         {texture ? (
           <meshBasicMaterial
             map={texture}
             transparent
-            opacity={isHovered ? 1.0 : 0.95}
+            opacity={isDimmed ? 0.25 : isHovered ? 1.0 : 0.95}
             side={THREE.DoubleSide}
           />
         ) : (
           <meshBasicMaterial
             color={dominantColor || '#ffffff'}
             transparent
-            opacity={0.65}
+            opacity={isDimmed ? 0.1 : isHovered ? 0.85 : 0.65}
             side={THREE.DoubleSide}
           />
         )}
       </mesh>
 
-      {/* Subtle thin border line */}
+      {/* Vibrant Illuminated Border Frame */}
       <mesh position={[0, 0, 0.01]}>
-        <ringGeometry args={[1.68, 1.70, 4, 1, Math.PI / 4]} />
+        <ringGeometry args={[1.65, 1.73, 4, 1, Math.PI / 4]} />
         <meshBasicMaterial
           color={dominantColor || '#ffffff'}
           transparent
-          opacity={isHovered ? 0.9 : 0.4}
+          opacity={isDimmed ? 0.15 : isHovered ? 1.0 : isSelected ? 0.95 : 0.75}
           side={THREE.DoubleSide}
         />
       </mesh>
@@ -115,7 +117,19 @@ export default function ArtworkNode({
   });
 
   const baseScale = magnitude * individualScale * (hovered ? 1.45 : (isSelected || isEditingSelected) ? 1.25 : 1.0);
-  const glowColor = isEditingSelected ? '#10b981' : (artwork.colore_dominante || '#ffffff');
+
+  // Determine official sign color as vibrant foundation with fallback to dominant color
+  const signInfo = useMemo(() => {
+    const raw = (artwork.segno || '').toLowerCase().trim();
+    return ZODIAC_SIGNS.find(s => s.name.toLowerCase() === raw || s.id === raw);
+  }, [artwork.segno]);
+
+  const signColor = signInfo ? signInfo.color : '#4361ee';
+  const effectiveColor = isEditingSelected
+    ? '#10b981'
+    : (artwork.colore_dominante && artwork.colore_dominante !== '#ffffff'
+        ? artwork.colore_dominante
+        : signColor);
 
   return (
     <group ref={meshRef} position={targetPosition}>
@@ -136,13 +150,13 @@ export default function ArtworkNode({
           document.body.style.cursor = 'auto';
         }}
       >
-        {/* Glowing Aura Frame in dominant color or emerald if selected in edit mode */}
+        {/* Glowing Aura Frame in vibrant zodiac sign / dominant color */}
         <mesh position={[0, 0, -0.04]}>
-          <planeGeometry args={[2.7, 2.7]} />
+          <planeGeometry args={[2.75, 2.75]} />
           <meshBasicMaterial
-            color={glowColor}
+            color={effectiveColor}
             transparent
-            opacity={isEditingSelected ? 0.9 : hovered ? 0.75 : isSelected ? 0.55 : isDimmed ? 0.08 : 0.28}
+            opacity={isEditingSelected ? 0.9 : hovered ? 0.85 : isSelected ? 0.65 : isDimmed ? 0.05 : 0.35}
             depthWrite={false}
             side={THREE.DoubleSide}
           />
@@ -161,29 +175,42 @@ export default function ArtworkNode({
           <ArtworkSquareMesh
             url={artwork.miniatura || artwork.immagine}
             isHovered={hovered}
-            dominantColor={glowColor}
+            dominantColor={effectiveColor}
+            isDimmed={isDimmed}
+            isSelected={isSelected}
           />
         ) : (
-          /* Lightweight Minimalist Square Space (Sagoma Quadrata Ultra-Leggera) */
+          /* Vibrant Geometric Celestial Square Box */
           <group>
-            {/* Dark translucent square plate */}
+            {/* Deep translucent backing plate */}
             <mesh>
               <planeGeometry args={[2.2, 2.2]} />
               <meshBasicMaterial
                 color="#0a0a14"
                 transparent
-                opacity={hovered ? 0.95 : 0.8}
+                opacity={isDimmed ? 0.3 : hovered ? 0.9 : 0.75}
                 side={THREE.DoubleSide}
               />
             </mesh>
 
-            {/* Glowing square border */}
-            <mesh position={[0, 0, 0.01]}>
-              <ringGeometry args={[1.54, 1.57, 4, 1, Math.PI / 4]} />
+            {/* Tinted inner face in zodiac constellation color */}
+            <mesh position={[0, 0, 0.005]}>
+              <planeGeometry args={[2.14, 2.14]} />
               <meshBasicMaterial
-                color={glowColor}
+                color={effectiveColor}
                 transparent
-                opacity={hovered ? 0.95 : 0.5}
+                opacity={isDimmed ? 0.04 : hovered ? 0.65 : isSelected ? 0.5 : 0.28}
+                side={THREE.DoubleSide}
+              />
+            </mesh>
+
+            {/* Vibrant luminous square border */}
+            <mesh position={[0, 0, 0.01]}>
+              <ringGeometry args={[1.50, 1.58, 4, 1, Math.PI / 4]} />
+              <meshBasicMaterial
+                color={effectiveColor}
+                transparent
+                opacity={isDimmed ? 0.12 : hovered ? 1.0 : isSelected ? 0.95 : 0.8}
                 side={THREE.DoubleSide}
               />
             </mesh>
@@ -193,7 +220,10 @@ export default function ArtworkNode({
         {/* Central Luminous Star Nucleus Dot */}
         <mesh position={[0, 0, 0.06]}>
           <sphereGeometry args={[0.16, 16, 16]} />
-          <meshBasicMaterial color="#ffffff" />
+          <meshBasicMaterial
+            color={hovered ? '#ffffff' : effectiveColor}
+            transparent={false}
+          />
         </mesh>
 
         {/* Minimalist Hover Tooltip */}
@@ -204,7 +234,9 @@ export default function ArtworkNode({
               {artwork.date_biografiche && (
                 <p className="text-[9px] font-mono text-zinc-400">{artwork.date_biografiche}</p>
               )}
-              <p className="text-[9px] font-mono text-cyan-400 mt-0.5 tracking-wider uppercase">{artwork.segno}</p>
+              <p className="text-[9px] font-mono mt-0.5 tracking-wider uppercase font-bold" style={{ color: effectiveColor }}>
+                {artwork.segno}
+              </p>
             </div>
           </Html>
         )}
