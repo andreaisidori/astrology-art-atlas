@@ -161,7 +161,7 @@ export default function ArchiveView({
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-zinc-200">
           <div>
             <h2 className="text-3xl font-light tracking-tight text-zinc-950 font-serif">
-              Archivio
+              Astrology Art Archive
             </h2>
           </div>
 
