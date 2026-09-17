@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { Instagram } from 'lucide-react';
+import { Instagram, Scale } from 'lucide-react';
 import LandingScreen from './components/ui/LandingScreen';
 import Header from './components/ui/Header';
 import ZodiacNav from './components/ui/ZodiacNav';
@@ -471,10 +471,11 @@ export default function App() {
             <button
               type="button"
               onClick={() => setIsLegalOpen(true)}
-              title="Note Legali e Disclaimer"
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium border transition-all duration-300 shadow-2xl backdrop-blur-xl bg-black/80 hover:bg-black/95 border-white/15 text-white/80 hover:text-white hover:border-white/40 cursor-pointer font-mono"
+              title="Note Legali & Disclaimer"
+              aria-label="Note Legali & Disclaimer"
+              className="flex items-center justify-center w-9 h-9 rounded-full border transition-all duration-300 shadow-2xl backdrop-blur-xl bg-black/80 hover:bg-black/95 border-white/15 text-white/70 hover:text-amber-300 hover:border-amber-400/40 hover:scale-110 cursor-pointer group"
             >
-              <span>Note Legali &amp; Disclaimer</span>
+              <Scale className="w-4 h-4 transition-transform group-hover:rotate-6" />
             </button>
           </div>
 
