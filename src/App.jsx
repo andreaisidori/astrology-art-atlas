@@ -502,6 +502,8 @@ export default function App() {
       {/* Artwork Detail Modal */}
       <ArtworkModal
         artwork={selectedArtwork}
+        allArtworks={data.opere}
+        onSelectArtwork={setSelectedArtwork}
         onClose={() => setSelectedArtwork(null)}
         onSelectSign={(signId) => {
           setViewMode('3d');
