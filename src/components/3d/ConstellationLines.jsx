@@ -82,35 +82,52 @@ export default function ConstellationLines({ artworks, positions, activeSignId }
 
   return (
     <group>
-      {linesBySign.map((line) => (
-        <group key={line.id}>
-          {/* Main luminous constellation lines */}
-          {/* @ts-ignore */}
-          <lineSegments geometry={line.geometry}>
-            <lineBasicMaterial
-              color={line.color}
-              transparent
-              opacity={line.opacity}
-              linewidth={2}
-              depthWrite={false}
-            />
-          </lineSegments>
+      {linesBySign.map((line) => {
+        const isDarkLine = line.color === '#1A1A1A' || line.id === 'scorpione';
+        return (
+          <group key={line.id}>
+            {/* Lighter contrast shadow / halo layer specifically for black Scorpio constellation lines */}
+            {isDarkLine && (
+              /* @ts-ignore */
+              <lineSegments geometry={line.geometry}>
+                <lineBasicMaterial
+                  color="#e2e8f0"
+                  transparent
+                  opacity={line.opacity * 0.55}
+                  linewidth={3}
+                  depthWrite={false}
+                />
+              </lineSegments>
+            )}
 
-          {/* Subtle glow layer for active constellation */}
-          {line.opacity > 0.5 && (
-            /* @ts-ignore */
+            {/* Main constellation lines */}
+            {/* @ts-ignore */}
             <lineSegments geometry={line.geometry}>
               <lineBasicMaterial
-                color="#ffffff"
+                color={line.color}
                 transparent
-                opacity={line.opacity * 0.4}
-                linewidth={1}
+                opacity={line.opacity}
+                linewidth={2}
                 depthWrite={false}
               />
             </lineSegments>
-          )}
-        </group>
-      ))}
+
+            {/* Subtle glow layer for active constellation */}
+            {!isDarkLine && line.opacity > 0.5 && (
+              /* @ts-ignore */
+              <lineSegments geometry={line.geometry}>
+                <lineBasicMaterial
+                  color="#ffffff"
+                  transparent
+                  opacity={line.opacity * 0.4}
+                  linewidth={1}
+                  depthWrite={false}
+                />
+              </lineSegments>
+            )}
+          </group>
+        );
+      })}
     </group>
   );
 }

@@ -9,7 +9,7 @@ const textureCache = new Map();
 const textureLoader = new THREE.TextureLoader();
 
 // Square artwork mesh with robust asynchronous texture loading and vibrant zodiac colored border
-function ArtworkSquareMesh({ url, isHovered, dominantColor, isDimmed, isSelected }) {
+function ArtworkSquareMesh({ url, isHovered, dominantColor, isDimmed, isSelected, isDarkSign }) {
   const [texture, setTexture] = useState(() => {
     if (!url) return null;
     return textureCache.get(url) || null;
@@ -65,6 +65,19 @@ function ArtworkSquareMesh({ url, isHovered, dominantColor, isDimmed, isSelected
           />
         )}
       </mesh>
+
+      {/* Lighter contrast shadow for black border */}
+      {isDarkSign && (
+        <mesh position={[0, 0, 0.008]}>
+          <ringGeometry args={[1.63, 1.75, 4, 1, Math.PI / 4]} />
+          <meshBasicMaterial
+            color="#e2e8f0"
+            transparent
+            opacity={isDimmed ? 0.08 : hovered ? 0.5 : isSelected ? 0.45 : 0.28}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
+      )}
 
       {/* Vibrant Illuminated Border Frame */}
       <mesh position={[0, 0, 0.01]}>
@@ -126,6 +139,7 @@ export default function ArtworkNode({
 
   const signColor = signInfo ? signInfo.color : '#4361ee';
   const effectiveColor = isEditingSelected ? '#10b981' : signColor;
+  const isDarkSign = (artwork.segno || '').toLowerCase().trim() === 'scorpione' || effectiveColor === '#1A1A1A';
 
   return (
     <group ref={meshRef} position={targetPosition}>
@@ -146,6 +160,20 @@ export default function ArtworkNode({
           document.body.style.cursor = 'auto';
         }}
       >
+        {/* Lighter contrast shadow / halo for dark Scorpio shapes */}
+        {isDarkSign && (
+          <mesh position={[0, 0, -0.05]}>
+            <planeGeometry args={[2.95, 2.95]} />
+            <meshBasicMaterial
+              color="#e2e8f0"
+              transparent
+              opacity={isDimmed ? 0.05 : hovered ? 0.45 : isSelected ? 0.35 : 0.22}
+              depthWrite={false}
+              side={THREE.DoubleSide}
+            />
+          </mesh>
+        )}
+
         {/* Glowing Aura Frame in vibrant zodiac sign / dominant color */}
         <mesh position={[0, 0, -0.04]}>
           <planeGeometry args={[2.75, 2.75]} />
@@ -174,6 +202,7 @@ export default function ArtworkNode({
             dominantColor={effectiveColor}
             isDimmed={isDimmed}
             isSelected={isSelected}
+            isDarkSign={isDarkSign}
           />
         ) : (
           /* Vibrant Geometric Celestial Square Box */
@@ -200,6 +229,19 @@ export default function ArtworkNode({
               />
             </mesh>
 
+            {/* Subtle lighter backing ring for the border when the color is black */}
+            {isDarkSign && (
+              <mesh position={[0, 0, 0.008]}>
+                <ringGeometry args={[1.48, 1.60, 4, 1, Math.PI / 4]} />
+                <meshBasicMaterial
+                  color="#e2e8f0"
+                  transparent
+                  opacity={isDimmed ? 0.06 : hovered ? 0.45 : isSelected ? 0.4 : 0.25}
+                  side={THREE.DoubleSide}
+                />
+              </mesh>
+            )}
+
             {/* Vibrant luminous square border */}
             <mesh position={[0, 0, 0.01]}>
               <ringGeometry args={[1.50, 1.58, 4, 1, Math.PI / 4]} />
@@ -211,6 +253,18 @@ export default function ArtworkNode({
               />
             </mesh>
           </group>
+        )}
+
+        {/* Subtle lighter halo dot for black Scorpio star nucleus */}
+        {isDarkSign && (
+          <mesh position={[0, 0, 0.058]}>
+            <sphereGeometry args={[0.20, 16, 16]} />
+            <meshBasicMaterial
+              color="#e2e8f0"
+              transparent
+              opacity={isDimmed ? 0.1 : hovered ? 0.6 : 0.4}
+            />
+          </mesh>
         )}
 
         {/* Central Luminous Star Nucleus Dot */}
