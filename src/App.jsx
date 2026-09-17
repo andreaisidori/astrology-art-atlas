@@ -183,6 +183,17 @@ export default function App() {
     }, 1150);
   };
 
+  // Return to landing page
+  const handleOpenLanding = () => {
+    setIsLandingTransition(false);
+    setIsInfoOpen(false);
+    setIsBioOpen(false);
+    setIsLegalOpen(false);
+    setIsAdminOpen(false);
+    setSelectedArtwork(null);
+    setShowLanding(true);
+  };
+
   // Handle updating curator bio
   const handleUpdateBio = (newBio) => {
     setData((prev) => ({
@@ -336,7 +347,7 @@ export default function App() {
         moonInfo={moonInfo}
         onOpenInfo={() => setIsInfoOpen(true)}
         onOpenAdmin={() => setIsAdminOpen(true)}
-        onOpenLanding={() => setShowLanding(true)}
+        onOpenLanding={handleOpenLanding}
         onOpenBio={() => setIsBioOpen(true)}
         activeSignId={activeSignId}
         onResetSign={handleResetSign}

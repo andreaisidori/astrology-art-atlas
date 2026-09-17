@@ -24,8 +24,8 @@ export default function Header({
             src="/images/aaa-logo-gold.png"
             alt="AAA Logo"
             className="w-10 h-10 md:w-12 md:h-12 object-contain drop-shadow-[0_0_14px_rgba(243,203,114,0.5)] hover:rotate-12 transition-transform duration-500 cursor-pointer"
-            onClick={onOpenInfo || onOpenLanding || onResetSign}
-            title="informazioni sul progetto"
+            onClick={onOpenLanding}
+            title="Torna alla landing page"
           />
         </div>
 
