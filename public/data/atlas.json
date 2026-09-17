@@ -29,6 +29,16 @@
       "titolo_struttura": "2. La Struttura Astrologica come Archivio Non Divinatorio",
       "titolo_cupola": "3. Dalla Volta Web all'Installazione su Cupola"
     },
+    "legal": {
+      "titolo": "Note Legali e Disclaimer",
+      "sezione_1_titolo": "Atlante e Condivisione della Ricerca",
+      "sezione_1_testo": "I materiali, le raccolte e le analisi presenti su questo sito nascono come un progetto di studi aperti e condivisi. L'intero impianto e i testi originali sono pensati per la diffusione e la libera consultazione nell'ambito della ricerca; tuttavia, si richiede di citare la fonte e l'autore in caso di riutilizzo o condivisione dei contenuti.",
+      "sezione_2_titolo": "Immagini e materiali di terze parti",
+      "sezione_2_testo": "Le immagini di opere d'arte o di artisti eventualmente presenti nel sito sono utilizzate esclusivamente a fini di studio, ricerca, critica e documentazione, senza alcun intento di lucro o sfruttamento commerciale, ai sensi dell'articolo 70 della Legge sul Diritto d'Autore (L. 633/1941).",
+      "sezione_3_titolo": "Tutela e rimozione contenuti",
+      "sezione_3_testo": "Qualora il titolare di qualsiasi diritto sulle immagini o sui materiali pubblicati ritenesse che la loro presenza leda in alcun modo i propri interessi o diritti, è pregato di darne immediata comunicazione via email giacomo.isidori@gmail.com . L'autore provvederà alla loro tempestiva verifica e rimozione.",
+      "email_contatto": "giacomo.isidori@gmail.com"
+    },
     "descrizione": "Atlante mnemotecnico e archivio dinamico in 3D per l'immaginario artistico contemporaneo.",
     "ispirazione": "Aby Warburg — Bilderatlas Mnemosyne",
     "totale_artisti": 177,

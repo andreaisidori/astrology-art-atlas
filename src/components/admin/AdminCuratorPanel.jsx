@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
-import { X, Plus, Trash2, Edit3, Save, Download, Copy, Check, Lock, Sparkles, Image, Compass, Calendar, Moon, User, BookOpen, ExternalLink, Mail, Instagram, CopyPlus, Layers, Quote, UploadCloud, Loader2, Move, ChevronDown, ChevronRight, Users } from "lucide-react";
+import { X, Plus, Trash2, Edit3, Save, Download, Copy, Check, Lock, Sparkles, Image, Compass, Calendar, Moon, User, BookOpen, ExternalLink, Mail, Instagram, CopyPlus, Layers, Quote, UploadCloud, Loader2, Move, ChevronDown, ChevronRight, Users, ShieldCheck, Scale, FileText } from "lucide-react";
 import { ZODIAC_SIGNS, parseBiographicalDates, formatBiographicalDates } from "../../utils/astronomy";
 
 export default function AdminCuratorPanel({
@@ -13,6 +13,8 @@ export default function AdminCuratorPanel({
   onUpdateBio,
   infoData,
   onUpdateInfo,
+  legalData,
+  onUpdateLegal,
   onCommitAtlas,
 }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -27,7 +29,7 @@ export default function AdminCuratorPanel({
   const [imageUploadStatus, setImageUploadStatus] = useState("");
   const [isOptimizingImage, setIsOptimizingImage] = useState(false);
 
-  // Tab: "artworks" | "bio" | "info"
+  // Tab: "artworks" | "bio" | "info" | "legal"
   const [activeTab, setActiveTab] = useState("artworks");
 
   // Selected artwork for editing or null for new
@@ -66,8 +68,8 @@ export default function AdminCuratorPanel({
         titolo_visione: bioData.titolo_visione || "Visione & Metodo Curatoriale",
         visione: bioData.visione || "",
         titolo_contatti: bioData.titolo_contatti || "Contatti Ufficiali & Curatela",
-        instagram: bioData.instagram || "https://instagram.com/astro.expression",
-        email: bioData.email || "astro.expression@gmail.com",
+        instagram: bioData.instagram || "",
+        email: bioData.email || "",
       });
     }
   }, [bioData]);
@@ -113,6 +115,34 @@ export default function AdminCuratorPanel({
       });
     }
   }, [infoData]);
+
+  // Legal / Disclaimer Form State
+  const [legalForm, setLegalForm] = useState({
+    titolo: legalData?.titolo || "Note Legali e Disclaimer",
+    sezione_1_titolo: legalData?.sezione_1_titolo || "Atlante e Condivisione della Ricerca",
+    sezione_1_testo: legalData?.sezione_1_testo || "I materiali, le raccolte e le analisi presenti su questo sito nascono come un progetto di studi aperti e condivisi. L'intero impianto e i testi originali sono pensati per la diffusione e la libera consultazione nell'ambito della ricerca; tuttavia, si richiede di citare la fonte e l'autore in caso di riutilizzo o condivisione dei contenuti.",
+    sezione_2_titolo: legalData?.sezione_2_titolo || "Immagini e materiali di terze parti",
+    sezione_2_testo: legalData?.sezione_2_testo || "Le immagini di opere d'arte o di artisti eventualmente presenti nel sito sono utilizzate esclusivamente a fini di studio, ricerca, critica e documentazione, senza alcun intento di lucro o sfruttamento commerciale, ai sensi dell'articolo 70 della Legge sul Diritto d'Autore (L. 633/1941).",
+    sezione_3_titolo: legalData?.sezione_3_titolo || "Tutela e rimozione contenuti",
+    sezione_3_testo: legalData?.sezione_3_testo || "Qualora il titolare di qualsiasi diritto sulle immagini o sui materiali pubblicati ritenesse che la loro presenza leda in alcun modo i propri interessi o diritti, è pregato di darne immediata comunicazione via email giacomo.isidori@gmail.com . L'autore provvederà alla loro tempestiva verifica e rimozione.",
+    email_contatto: legalData?.email_contatto || "giacomo.isidori@gmail.com",
+  });
+  const [legalSaved, setLegalSaved] = useState(false);
+
+  useEffect(() => {
+    if (legalData) {
+      setLegalForm({
+        titolo: legalData.titolo || "Note Legali e Disclaimer",
+        sezione_1_titolo: legalData.sezione_1_titolo || "Atlante e Condivisione della Ricerca",
+        sezione_1_testo: legalData.sezione_1_testo || "I materiali, le raccolte e le analisi presenti su questo sito nascono come un progetto di studi aperti e condivisi. L'intero impianto e i testi originali sono pensati per la diffusione e la libera consultazione nell'ambito della ricerca; tuttavia, si richiede di citare la fonte e l'autore in caso di riutilizzo o condivisione dei contenuti.",
+        sezione_2_titolo: legalData.sezione_2_titolo || "Immagini e materiali di terze parti",
+        sezione_2_testo: legalData.sezione_2_testo || "Le immagini di opere d'arte o di artisti eventualmente presenti nel sito sono utilizzate esclusivamente a fini di studio, ricerca, critica e documentazione, senza alcun intento di lucro o sfruttamento commerciale, ai sensi dell'articolo 70 della Legge sul Diritto d'Autore (L. 633/1941).",
+        sezione_3_titolo: legalData.sezione_3_titolo || "Tutela e rimozione contenuti",
+        sezione_3_testo: legalData.sezione_3_testo || "Qualora il titolare di qualsiasi diritto sulle immagini o sui materiali pubblicati ritenesse che la loro presenza leda in alcun modo i propri interessi o diritti, è pregato di darne immediata comunicazione via email giacomo.isidori@gmail.com . L'autore provvederà alla loro tempestiva verifica e rimozione.",
+        email_contatto: legalData.email_contatto || "giacomo.isidori@gmail.com",
+      });
+    }
+  }, [legalData]);
 
   // Artwork Form State
   const [formData, setFormData] = useState({
@@ -621,6 +651,7 @@ export default function AdminCuratorPanel({
         const result = await onCommitAtlas({
           bio: bioForm,
           info: infoForm,
+          legal: legalForm,
           artworks: currentArtworks,
         });
 
@@ -653,6 +684,7 @@ export default function AdminCuratorPanel({
         titolo: infoForm.titolo || "AAA — Astrology Art Atlas",
         curatore: bioForm,
         info: infoForm,
+        legal: legalForm,
         descrizione: "Atlante mnemotecnico e archivio dinamico in 3D per l'immaginario artistico contemporaneo.",
         ispirazione: "Aby Warburg — Bilderatlas Mnemosyne",
         totale_artisti: artworks.length,
@@ -677,6 +709,7 @@ export default function AdminCuratorPanel({
         titolo: infoForm.titolo || "AAA — Astrology Art Atlas",
         curatore: bioForm,
         info: infoForm,
+        legal: legalForm,
         descrizione: "Atlante mnemotecnico e archivio dinamico in 3D per l'immaginario artistico contemporaneo.",
         ispirazione: "Aby Warburg — Bilderatlas Mnemosyne",
         totale_artisti: artworks.length,
@@ -882,6 +915,17 @@ export default function AdminCuratorPanel({
             >
               <BookOpen className="w-3.5 h-3.5" />
               <span>Visione & Info Progetto (AAA)</span>
+            </button>
+            <button
+              onClick={() => setActiveTab("legal")}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono transition-all whitespace-nowrap ${
+                activeTab === "legal"
+                  ? "bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 shadow-sm"
+                  : "text-zinc-400 hover:text-white hover:bg-white/5"
+              }`}
+            >
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>Note Legali & Disclaimer</span>
             </button>
           </div>
         )}
@@ -1327,6 +1371,153 @@ export default function AdminCuratorPanel({
                 >
                   <Save className="w-4 h-4" />
                   <span>{infoSaved ? "Salvato!" : "Salva Tutte le Modifiche Info"}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        ) : activeTab === "legal" ? (
+          /* TAB 4: LEGAL & DISCLAIMER EDITOR */
+          <div className="flex-1 overflow-y-auto p-6 md:p-8">
+            <form onSubmit={handleSaveLegal} className="max-w-3xl mx-auto space-y-6">
+              <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                <div>
+                  <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                    <ShieldCheck className="w-5 h-5 text-emerald-400" />
+                    <span>Gestione Note Legali & Disclaimer</span>
+                  </h3>
+                  <p className="text-xs text-zinc-400 mt-1">
+                    Modifica i testi di copyright, liberatoria e i contatti mostrati nella finestra modale del sito.
+                  </p>
+                </div>
+                {legalSaved && (
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-xs font-mono animate-fade-in">
+                    <Check className="w-3.5 h-3.5" />
+                    <span>Salvato nella sessione! Ricorda di cliccare "Salva &amp; Sincronizza su GitHub".</span>
+                  </div>
+                )}
+              </div>
+
+              {/* General Settings */}
+              <div className="space-y-4 bg-zinc-900/60 border border-white/10 rounded-2xl p-5">
+                <div className="flex items-center gap-2 pb-2 border-b border-white/5">
+                  <FileText className="w-4 h-4 text-emerald-400" />
+                  <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider font-mono">Intestazione & Contatto</h4>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-[11px] font-mono text-zinc-400 mb-1">Titolo Modale</label>
+                    <input
+                      type="text"
+                      value={legalForm.titolo || ""}
+                      onChange={(e) => setLegalForm({ ...legalForm, titolo: e.target.value })}
+                      className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-xs text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-emerald-400 font-serif"
+                      placeholder="Note Legali e Disclaimer"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-mono text-zinc-400 mb-1">Email per segnalazioni / rimozione</label>
+                    <input
+                      type="email"
+                      value={legalForm.email_contatto || ""}
+                      onChange={(e) => setLegalForm({ ...legalForm, email_contatto: e.target.value })}
+                      className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-xs text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-emerald-400 font-mono"
+                      placeholder="giacomo.isidori@gmail.com"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Section 1 */}
+              <div className="space-y-3 bg-zinc-900/60 border border-white/10 rounded-2xl p-5">
+                <div className="flex items-center gap-2 pb-2 border-b border-white/5">
+                  <Scale className="w-4 h-4 text-amber-400" />
+                  <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider font-mono">Sezione 1: Ricerca e Condivisione</h4>
+                </div>
+                <div>
+                  <label className="block text-[11px] font-mono text-zinc-400 mb-1">Titolo Sezione 1</label>
+                  <input
+                    type="text"
+                    value={legalForm.sezione_1_titolo || ""}
+                    onChange={(e) => setLegalForm({ ...legalForm, sezione_1_titolo: e.target.value })}
+                    className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-xs text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-emerald-400 font-medium"
+                    placeholder="Atlante e Condivisione della Ricerca"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-mono text-zinc-400 mb-1">Testo Sezione 1</label>
+                  <textarea
+                    rows={4}
+                    value={legalForm.sezione_1_testo || ""}
+                    onChange={(e) => setLegalForm({ ...legalForm, sezione_1_testo: e.target.value })}
+                    className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-xs text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-emerald-400 font-sans leading-relaxed resize-y"
+                    placeholder="I materiali, le raccolte e le analisi presenti su questo sito..."
+                  />
+                </div>
+              </div>
+
+              {/* Section 2 */}
+              <div className="space-y-3 bg-zinc-900/60 border border-white/10 rounded-2xl p-5">
+                <div className="flex items-center gap-2 pb-2 border-b border-white/5">
+                  <Scale className="w-4 h-4 text-cyan-400" />
+                  <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider font-mono">Sezione 2: Immagini e Materiali di Terze Parti</h4>
+                </div>
+                <div>
+                  <label className="block text-[11px] font-mono text-zinc-400 mb-1">Titolo Sezione 2</label>
+                  <input
+                    type="text"
+                    value={legalForm.sezione_2_titolo || ""}
+                    onChange={(e) => setLegalForm({ ...legalForm, sezione_2_titolo: e.target.value })}
+                    className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-xs text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-emerald-400 font-medium"
+                    placeholder="Immagini e materiali di terze parti"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-mono text-zinc-400 mb-1">Testo Sezione 2</label>
+                  <textarea
+                    rows={4}
+                    value={legalForm.sezione_2_testo || ""}
+                    onChange={(e) => setLegalForm({ ...legalForm, sezione_2_testo: e.target.value })}
+                    className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-xs text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-emerald-400 font-sans leading-relaxed resize-y"
+                    placeholder="Le immagini di opere d'arte o di artisti eventualmente presenti nel sito..."
+                  />
+                </div>
+              </div>
+
+              {/* Section 3 */}
+              <div className="space-y-3 bg-zinc-900/60 border border-white/10 rounded-2xl p-5">
+                <div className="flex items-center gap-2 pb-2 border-b border-white/5">
+                  <Scale className="w-4 h-4 text-rose-400" />
+                  <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider font-mono">Sezione 3: Tutela e Rimozione Contenuti</h4>
+                </div>
+                <div>
+                  <label className="block text-[11px] font-mono text-zinc-400 mb-1">Titolo Sezione 3</label>
+                  <input
+                    type="text"
+                    value={legalForm.sezione_3_titolo || ""}
+                    onChange={(e) => setLegalForm({ ...legalForm, sezione_3_titolo: e.target.value })}
+                    className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-xs text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-emerald-400 font-medium"
+                    placeholder="Tutela e rimozione contenuti"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-mono text-zinc-400 mb-1">Testo Sezione 3</label>
+                  <textarea
+                    rows={4}
+                    value={legalForm.sezione_3_testo || ""}
+                    onChange={(e) => setLegalForm({ ...legalForm, sezione_3_testo: e.target.value })}
+                    className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-xs text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-emerald-400 font-sans leading-relaxed resize-y"
+                    placeholder="Qualora il titolare di qualsiasi diritto sulle immagini..."
+                  />
+                </div>
+              </div>
+
+              <div className="pt-4 flex items-center justify-end">
+                <button
+                  type="submit"
+                  className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs shadow-lg shadow-emerald-500/20 transition-all font-mono"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>{legalSaved ? "Salvato!" : "Salva Note Legali"}</span>
                 </button>
               </div>
             </form>

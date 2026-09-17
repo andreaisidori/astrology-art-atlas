@@ -10,6 +10,7 @@ import ArchiveView from './components/ui/ArchiveView';
 import DomeOverlay from './components/ui/DomeOverlay';
 import InfoModal from './components/ui/InfoModal';
 import BioModal from './components/ui/BioModal';
+import LegalModal from './components/ui/LegalModal';
 import AdminCuratorPanel from './components/admin/AdminCuratorPanel';
 import CelestialSphere from './components/3d/CelestialSphere';
 import ArtworkNode from './components/3d/ArtworkNode';
@@ -34,6 +35,7 @@ export default function App() {
   const [isDomeView, setIsDomeView] = useState(false);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const [isBioOpen, setIsBioOpen] = useState(false);
+  const [isLegalOpen, setIsLegalOpen] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [moonInfo, setMoonInfo] = useState(null);
   const [magnitude, setMagnitude] = useState(1.0); // Star and artwork scale
@@ -105,13 +107,14 @@ export default function App() {
     setModifiedCount((c) => c + 1);
   };
 
-  // Unified Commit & Sync handler to persist Bio, Info, and 3D Artworks directly to GitHub
+  // Unified Commit & Sync handler to persist Bio, Info, Legal, and 3D Artworks directly to GitHub
   const handleSaveAndCommitAtlas = async (overrides = {}) => {
     setIsSyncing3D(true);
     setSyncStatus3D(null);
 
     const mergedBio = overrides.bio || data.progetto?.curatore || {};
     const mergedInfo = overrides.info || data.progetto?.info || {};
+    const mergedLegal = overrides.legal || data.progetto?.legal || {};
     const mergedArtworks = overrides.artworks || data.opere || [];
 
     const exportObject = {
@@ -119,6 +122,7 @@ export default function App() {
         titolo: mergedInfo.titolo || data.progetto?.info?.titolo || 'AAA — Astrology Art Atlas',
         curatore: mergedBio,
         info: mergedInfo,
+        legal: mergedLegal,
         descrizione: "Atlante mnemotecnico e archivio dinamico in 3D per l'immaginario artistico contemporaneo.",
         ispirazione: 'Aby Warburg — Bilderatlas Mnemosyne',
         totale_artisti: mergedArtworks.length,
@@ -202,6 +206,20 @@ export default function App() {
         info: {
           ...(prev.progetto?.info || {}),
           ...newInfo,
+        },
+      },
+    }));
+  };
+
+  // Handle updating legal disclaimer
+  const handleUpdateLegal = (newLegal) => {
+    setData((prev) => ({
+      ...prev,
+      progetto: {
+        ...(prev.progetto || {}),
+        legal: {
+          ...(prev.progetto?.legal || {}),
+          ...newLegal,
         },
       },
     }));
@@ -448,6 +466,18 @@ export default function App() {
             </button>
           </div>
 
+          {/* Bottom-Right Controls: Note Legali & Disclaimer */}
+          <div className="fixed bottom-6 right-4 md:right-8 z-30 pointer-events-auto flex items-center">
+            <button
+              type="button"
+              onClick={() => setIsLegalOpen(true)}
+              title="Note Legali e Disclaimer"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium border transition-all duration-300 shadow-2xl backdrop-blur-xl bg-black/80 hover:bg-black/95 border-white/15 text-white/80 hover:text-white hover:border-white/40 cursor-pointer font-mono"
+            >
+              <span>Note Legali &amp; Disclaimer</span>
+            </button>
+          </div>
+
           {/* Bottom Zodiac Navigation Ribbon */}
           <ZodiacNav
             activeSignId={activeSignId}
@@ -526,6 +556,13 @@ export default function App() {
         onOpenAdmin={() => setIsAdminOpen(true)}
       />
 
+      {/* Legal & Disclaimer Modal */}
+      <LegalModal
+        isOpen={isLegalOpen}
+        onClose={() => setIsLegalOpen(false)}
+        legalData={data.progetto?.legal}
+      />
+
       {/* Protected Admin / Curator Studio */}
       <AdminCuratorPanel
         isOpen={isAdminOpen}
@@ -536,6 +573,8 @@ export default function App() {
         onUpdateBio={handleUpdateBio}
         infoData={data.progetto?.info}
         onUpdateInfo={handleUpdateInfo}
+        legalData={data.progetto?.legal}
+        onUpdateLegal={handleUpdateLegal}
         onCommitAtlas={handleSaveAndCommitAtlas}
         onStartSpatialEdit={() => {
           setIsSpatialEditMode(true);
