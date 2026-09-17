@@ -107,13 +107,6 @@ export default function BioModal({ isOpen, onClose, bioData }) {
             </div>
           </div>
         </div>
-
-        {/* Modal Footer */}
-        <div className="p-4 px-6 border-t border-white/10 bg-black/40 flex items-center justify-between text-xs font-mono text-zinc-400">
-          <span>AAA &bull; Astrology Art Atlas</span>
-          <span className="text-zinc-500">Curatela: Giacomo Isidori &bull; @astro.expression</span>
-        </div>
-
       </div>
     </div>
   );
