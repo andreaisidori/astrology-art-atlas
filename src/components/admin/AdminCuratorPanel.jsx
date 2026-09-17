@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
-import { X, Plus, Trash2, Edit3, Save, Download, Copy, Check, Lock, Sparkles, Image, Compass, Calendar, Moon, User, BookOpen, ExternalLink, Mail, Instagram, CopyPlus, Layers, Quote, UploadCloud, Loader2, Move } from "lucide-react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
+import { X, Plus, Trash2, Edit3, Save, Download, Copy, Check, Lock, Sparkles, Image, Compass, Calendar, Moon, User, BookOpen, ExternalLink, Mail, Instagram, CopyPlus, Layers, Quote, UploadCloud, Loader2, Move, ChevronDown, ChevronRight, Users } from "lucide-react";
 import { ZODIAC_SIGNS, parseBiographicalDates, formatBiographicalDates } from "../../utils/astronomy";
 
 export default function AdminCuratorPanel({
@@ -115,7 +115,6 @@ export default function AdminCuratorPanel({
   }, [infoData]);
 
   // Artwork Form State
-  // Artwork Form State
   const [formData, setFormData] = useState({
     id: "",
     segno: "Ariete",
@@ -130,7 +129,7 @@ export default function AdminCuratorPanel({
     tecnica: "",
     immagine: "",
     tema_natale: { sole: "Ariete", luna: "", venere: "", mercurio: "" },
-    posizione_manuale: { x: 40, y: 0, z: 10 },
+    posizione_manuale: undefined,
     parole_chiave_str: "",
     nota_simbolica: "",
     colore_dominante: "#E0362F",
@@ -138,6 +137,17 @@ export default function AdminCuratorPanel({
     link_tema_natale: "",
     clonedFromArtist: "",
   });
+
+  // Sidebar Grouping Mode: "artists" (1-to-N) vs "artworks" (flat)
+  const [listGroupingMode, setListGroupingMode] = useState("artists");
+  const [expandedArtists, setExpandedArtists] = useState({});
+
+  const toggleArtistExpand = (artistName) => {
+    setExpandedArtists(prev => ({
+      ...prev,
+      [artistName]: prev[artistName] === undefined ? false : !prev[artistName]
+    }));
+  };
 
   // Client-Side Image File Upload & Automatic WebGL Canvas Compression
   const handleImageFileUpload = (e) => {
@@ -297,7 +307,7 @@ export default function AdminCuratorPanel({
 
   if (!isOpen) return null;
 
-  // Start creating new artwork
+  // Start creating new artist with first artwork
   const handleStartNew = () => {
     setEditingArt(null);
     setIsCreatingNew(true);
@@ -313,11 +323,11 @@ export default function AdminCuratorPanel({
       data_nascita: "",
       anno_morte: "",
       date_biografiche: "",
-      anno: 2024,
+      anno: new Date().getFullYear(),
       tecnica: "",
       immagine: "",
       tema_natale: { sole: "Ariete", luna: "", venere: "", mercurio: "" },
-      posizione_manuale: { x: 45, y: 0, z: 10 },
+      posizione_manuale: undefined,
       parole_chiave_str: "",
       nota_simbolica: "",
       colore_dominante: "#E0362F",
@@ -327,12 +337,20 @@ export default function AdminCuratorPanel({
     });
   };
 
-  // Start editing existing
+  // Start editing existing artwork
   const handleStartEdit = (art) => {
     setIsCreatingNew(false);
     setEditingArt(art);
     setImageUploadStatus("");
     const parsedDates = parseBiographicalDates(art.date_biografiche, art.data_nascita, art.anno_morte);
+    
+    // Only keep manual position if it is a real 3D custom coordinate (not dummy [40, 0, 10])
+    const isDummy = art.posizione_manuale &&
+      Math.abs(art.posizione_manuale.x - 40) < 6 &&
+      Math.abs(art.posizione_manuale.y) < 3 &&
+      Math.abs(art.posizione_manuale.z - 10) < 6 &&
+      (art.segno || "").toLowerCase() !== "ariete";
+
     setFormData({
       ...art,
       citazione: art.citazione || "",
@@ -342,13 +360,48 @@ export default function AdminCuratorPanel({
       anno_morte: parsedDates.anno_morte,
       date_biografiche: formatBiographicalDates({ ...art, ...parsedDates }),
       tema_natale: art.tema_natale || { sole: art.segno || "Ariete", luna: "", venere: "", mercurio: "" },
-      posizione_manuale: art.posizione_manuale || { x: 40, y: 0, z: 10 },
+      posizione_manuale: isDummy ? undefined : art.posizione_manuale,
       parole_chiave_str: (art.parole_chiave || []).join(", "),
       clonedFromArtist: "",
     });
   };
 
-  // Clone artwork to quickly add another piece for the same artist
+  // Add a new artwork directly for an existing artist (1-to-N relation)
+  const handleAddArtworkToArtist = (artistData) => {
+    setEditingArt(null);
+    setIsCreatingNew(true);
+    setImageUploadStatus("");
+    const newId = `art_${Date.now()}`;
+    const baseArt = (artistData.artworks && artistData.artworks[0]) ? artistData.artworks[0] : (artistData || {});
+    const parsedDates = parseBiographicalDates(baseArt.date_biografiche, baseArt.data_nascita, baseArt.anno_morte);
+
+    setFormData({
+      id: newId,
+      segno: baseArt.segno || "Ariete",
+      artista: artistData.name || baseArt.artista || "",
+      citazione: baseArt.citazione || "",
+      commento: "",
+      link_tema_natale: baseArt.link_tema_natale || "",
+      titolo: "",
+      data_nascita: parsedDates.data_nascita,
+      anno_morte: parsedDates.anno_morte,
+      date_biografiche: formatBiographicalDates({ ...baseArt, ...parsedDates }),
+      anno: new Date().getFullYear(),
+      tecnica: "",
+      immagine: "",
+      tema_natale: baseArt.tema_natale
+        ? { ...baseArt.tema_natale }
+        : { sole: baseArt.segno || "Ariete", luna: "", venere: "", mercurio: "" },
+      posizione_manuale: undefined,
+      parole_chiave_str: "",
+      nota_simbolica: "",
+      colore_dominante: baseArt.colore_dominante || "#E0362F",
+      link_fonte: baseArt.link_fonte || "",
+      clonedFromArtist: artistData.name || baseArt.artista || "",
+    });
+  };
+
+  // Clone artwork to quickly duplicate and add another piece for the same artist
   const handleCloneArtwork = (artToClone) => {
     const baseArt = artToClone || editingArt || formData;
     if (!baseArt) return;
@@ -366,7 +419,7 @@ export default function AdminCuratorPanel({
       citazione: baseArt.citazione || "",
       commento: "",
       link_tema_natale: baseArt.link_tema_natale || "",
-      titolo: "",
+      titolo: baseArt.titolo ? `${baseArt.titolo} (Nuova Versione)` : "",
       data_nascita: parsedDates.data_nascita,
       anno_morte: parsedDates.anno_morte,
       date_biografiche: formatBiographicalDates({ ...baseArt, ...parsedDates }),
@@ -376,11 +429,7 @@ export default function AdminCuratorPanel({
       tema_natale: baseArt.tema_natale
         ? { ...baseArt.tema_natale }
         : { sole: baseArt.segno || "Ariete", luna: "", venere: "", mercurio: "" },
-      posizione_manuale: {
-        x: (baseArt.posizione_manuale?.x || 40) + (Math.random() * 2 - 1),
-        y: (baseArt.posizione_manuale?.y || 0) + (Math.random() * 2 - 1),
-        z: (baseArt.posizione_manuale?.z || 10) + (Math.random() * 2 - 1),
-      },
+      posizione_manuale: undefined,
       parole_chiave_str: Array.isArray(baseArt.parole_chiave)
         ? baseArt.parole_chiave.join(", ")
         : (baseArt.parole_chiave_str || ""),
@@ -405,6 +454,14 @@ export default function AdminCuratorPanel({
       date_biografiche: formData.date_biografiche,
     });
 
+    const manualPos = (formData.posizione_manuale && typeof formData.posizione_manuale.x === 'number' && !(Math.abs(formData.posizione_manuale.x - 40) < 6 && Math.abs(formData.posizione_manuale.y) < 3 && Math.abs(formData.posizione_manuale.z - 10) < 6))
+      ? {
+          x: parseFloat(formData.posizione_manuale.x),
+          y: parseFloat(formData.posizione_manuale.y),
+          z: parseFloat(formData.posizione_manuale.z),
+        }
+      : undefined;
+
     const updatedItem = {
       id: formData.id || `art_${Date.now()}`,
       segno: formData.segno,
@@ -425,11 +482,7 @@ export default function AdminCuratorPanel({
         venere: formData.tema_natale?.venere || null,
         mercurio: formData.tema_natale?.mercurio || null,
       },
-      posizione_manuale: {
-        x: parseFloat(formData.posizione_manuale?.x) || 0,
-        y: parseFloat(formData.posizione_manuale?.y) || 0,
-        z: parseFloat(formData.posizione_manuale?.z) || 0,
-      },
+      ...(manualPos ? { posizione_manuale: manualPos } : {}),
       parole_chiave: keywordsArray,
       nota_simbolica: formData.nota_simbolica,
       colore_dominante: formData.colore_dominante,
@@ -513,6 +566,14 @@ export default function AdminCuratorPanel({
         date_biografiche: formData.date_biografiche,
       });
 
+      const manualPos = (formData.posizione_manuale && typeof formData.posizione_manuale.x === 'number' && !(Math.abs(formData.posizione_manuale.x - 40) < 6 && Math.abs(formData.posizione_manuale.y) < 3 && Math.abs(formData.posizione_manuale.z - 10) < 6))
+        ? {
+            x: parseFloat(formData.posizione_manuale.x),
+            y: parseFloat(formData.posizione_manuale.y),
+            z: parseFloat(formData.posizione_manuale.z),
+          }
+        : undefined;
+
       const activeItem = {
         id: formData.id || (editingArt?.id) || `art_${Date.now()}`,
         segno: formData.segno,
@@ -533,11 +594,7 @@ export default function AdminCuratorPanel({
           venere: formData.tema_natale?.venere || null,
           mercurio: formData.tema_natale?.mercurio || null,
         },
-        posizione_manuale: {
-          x: parseFloat(formData.posizione_manuale?.x) || 0,
-          y: parseFloat(formData.posizione_manuale?.y) || 0,
-          z: parseFloat(formData.posizione_manuale?.z) || 0,
-        },
+        ...(manualPos ? { posizione_manuale: manualPos } : {}),
         parole_chiave: keywordsArray,
         nota_simbolica: formData.nota_simbolica,
         colore_dominante: formData.colore_dominante,
@@ -640,6 +697,50 @@ export default function AdminCuratorPanel({
     (a.segno || "").toLowerCase().includes(searchFilter.toLowerCase()) ||
     (a.date_biografiche || "").toLowerCase().includes(searchFilter.toLowerCase())
   );
+
+  // Group artworks by artist (1-to-N relation)
+  const groupedArtists = useMemo(() => {
+    const map = new Map();
+    const q = (searchFilter || "").toLowerCase().trim();
+
+    artworks.forEach(art => {
+      const artistName = (art.artista || "Senza Autore").trim();
+      if (!map.has(artistName)) {
+        map.set(artistName, {
+          name: artistName,
+          segno: art.segno || "Ariete",
+          date_biografiche: art.date_biografiche || "",
+          data_nascita: art.data_nascita || "",
+          anno_morte: art.anno_morte || "",
+          tema_natale: art.tema_natale || null,
+          citazione: art.citazione || "",
+          link_tema_natale: art.link_tema_natale || "",
+          colore_dominante: art.colore_dominante || "#E0362F",
+          artworks: []
+        });
+      }
+      map.get(artistName).artworks.push(art);
+    });
+
+    const list = Array.from(map.values());
+
+    if (!q) return list;
+
+    // Filter artists and their artworks
+    return list.filter(group => {
+      const matchArtist = (group.name || "").toLowerCase().includes(q) ||
+        (group.segno || "").toLowerCase().includes(q) ||
+        (group.date_biografiche || "").toLowerCase().includes(q);
+      const matchAnyWork = group.artworks.some(w =>
+        (w.titolo || "").toLowerCase().includes(q) ||
+        (w.anno ? String(w.anno) : "").includes(q) ||
+        (w.tecnica || "").toLowerCase().includes(q) ||
+        (w.nota_simbolica || "").toLowerCase().includes(q) ||
+        (w.commento || "").toLowerCase().includes(q)
+      );
+      return matchArtist || matchAnyWork;
+    });
+  }, [artworks, searchFilter]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-6 bg-black/85 backdrop-blur-xl animate-fadeIn text-white">
@@ -1235,101 +1336,295 @@ export default function AdminCuratorPanel({
           <div className="flex-1 overflow-hidden grid grid-cols-1 lg:grid-cols-12">
             {/* Left Sidebar: Artwork/Artist List (5 cols) */}
             <div className="lg:col-span-5 border-r border-white/10 flex flex-col bg-black/40 overflow-hidden">
-              <div className="p-4 border-b border-white/10 flex items-center justify-between gap-3">
-                <input
-                  type="text"
-                  placeholder="Cerca artista, segno, date..."
-                  value={searchFilter}
-                  onChange={(e) => setSearchFilter(e.target.value)}
-                  className="flex-1 px-3 py-1.5 rounded-lg bg-zinc-900 border border-white/15 text-xs text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-cyan-400"
-                />
-                <button
-                  onClick={handleStartNew}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium transition-all shadow"
-                >
-                  <Plus className="w-3.5 h-3.5" />
-                  <span>Nuovo Artista</span>
-                </button>
+              {/* Search & Actions Header */}
+              <div className="p-3 border-b border-white/10 space-y-2">
+                <div className="flex items-center justify-between gap-2">
+                  <input
+                    type="text"
+                    placeholder="Cerca artista, opera, segno..."
+                    value={searchFilter}
+                    onChange={(e) => setSearchFilter(e.target.value)}
+                    className="flex-1 px-3 py-1.5 rounded-lg bg-zinc-900 border border-white/15 text-xs text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-cyan-400"
+                  />
+                  <button
+                    onClick={handleStartNew}
+                    className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium transition-all shadow shrink-0"
+                    title="Aggiungi un nuovo artista con prima opera"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Nuovo Artista</span>
+                  </button>
+                </div>
+
+                {/* View Mode Toggle: Per Artista (1 a N) vs Tutte le Opere */}
+                <div className="flex items-center p-0.5 rounded-lg bg-zinc-900/90 border border-white/10 text-[11px] font-mono">
+                  <button
+                    type="button"
+                    onClick={() => setListGroupingMode("artists")}
+                    className={`flex-1 flex items-center justify-center gap-1.5 py-1 rounded-md transition-all ${
+                      listGroupingMode === "artists"
+                        ? "bg-cyan-500/20 text-cyan-300 font-semibold border border-cyan-400/30"
+                        : "text-zinc-400 hover:text-white"
+                    }`}
+                  >
+                    <Users className="w-3 h-3" />
+                    <span>Per Artista</span>
+                    <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-white/10">
+                      {groupedArtists.length}
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setListGroupingMode("artworks")}
+                    className={`flex-1 flex items-center justify-center gap-1.5 py-1 rounded-md transition-all ${
+                      listGroupingMode === "artworks"
+                        ? "bg-cyan-500/20 text-cyan-300 font-semibold border border-cyan-400/30"
+                        : "text-zinc-400 hover:text-white"
+                    }`}
+                  >
+                    <Layers className="w-3 h-3" />
+                    <span>Tutte le Opere</span>
+                    <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-white/10">
+                      {artworks.length}
+                    </span>
+                  </button>
+                </div>
               </div>
 
               {/* Scrollable list */}
               <div className="flex-1 overflow-y-auto divide-y divide-white/5 p-2 space-y-1">
-                {filteredList.map((art) => {
-                  const isSelected = (editingArt && editingArt.id === art.id) || (formData.id === art.id);
-                  const sign = ZODIAC_SIGNS.find(s => s.name.toLowerCase() === (art.segno || "").toLowerCase() || s.id === art.segno);
+                {listGroupingMode === "artists" ? (
+                  /* 1-to-N ARTISTS VIEW */
+                  groupedArtists.map((artistGroup) => {
+                    const isExpanded = expandedArtists[artistGroup.name] !== false; // expanded by default
+                    const sign = ZODIAC_SIGNS.find(s => s.name.toLowerCase() === (artistGroup.segno || "").toLowerCase() || s.id === artistGroup.segno);
+                    const isArtistActive = formData.artista?.toLowerCase() === artistGroup.name.toLowerCase();
 
-                  return (
-                    <div
-                      key={art.id}
-                      onClick={() => handleStartEdit(art)}
-                      className={`p-3 rounded-xl flex items-center justify-between gap-3 cursor-pointer transition-all ${
-                        isSelected
-                          ? "bg-white/15 border border-white/30 shadow"
-                          : "hover:bg-white/5 border border-transparent"
-                      }`}
-                    >
-                      <div className="flex items-center gap-3 min-w-0">
-                        <img
-                          src={art.immagine}
-                          alt=""
-                          className="w-10 h-10 rounded-lg object-cover bg-zinc-800 flex-shrink-0"
-                        />
-                        <div className="min-w-0">
-                          <p className="text-xs font-bold text-white truncate">{art.artista || "Senza autore"}</p>
-                          {art.titolo && (
-                            <p className="text-[11px] text-cyan-300/80 truncate italic">{art.titolo}</p>
-                          )}
-                          {(art.data_nascita || art.anno_morte || art.date_biografiche) && (
-                            <p className="text-[10px] text-zinc-400 font-mono truncate">
-                              {formatBiographicalDates(art)}
-                            </p>
-                          )}
-                          <div className="flex items-center gap-1.5 mt-0.5">
-                            <span
-                              className="text-[9px] font-mono px-1.5 py-0.2 rounded"
-                              style={{
-                                backgroundColor: `${sign?.color || "#555"}30`,
-                                color: sign?.color || "#fff",
+                    return (
+                      <div
+                        key={artistGroup.name}
+                        className={`rounded-xl border transition-all overflow-hidden mb-1.5 ${
+                          isArtistActive
+                            ? "bg-white/[0.07] border-cyan-500/40 shadow-sm"
+                            : "bg-zinc-950/60 border-white/10 hover:border-white/20"
+                        }`}
+                      >
+                        {/* Artist Header Bar */}
+                        <div
+                          onClick={() => toggleArtistExpand(artistGroup.name)}
+                          className="p-2.5 flex items-center justify-between gap-2 cursor-pointer select-none bg-white/[0.02] hover:bg-white/[0.06] transition-colors"
+                        >
+                          <div className="flex items-center gap-2 min-w-0 flex-1">
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleArtistExpand(artistGroup.name);
                               }}
+                              className="p-0.5 text-zinc-400 hover:text-white"
                             >
-                              {art.segno}
-                            </span>
-                            {art.tema_natale && (
-                              <span className="text-[9px] font-mono text-zinc-500">
-                                ☉{art.tema_natale.sole?.slice(0, 2) || "?"} ☽{art.tema_natale.luna?.slice(0, 2) || "?"} ♀{art.tema_natale.venere?.slice(0, 2) || "?"} ☿{art.tema_natale.mercurio?.slice(0, 2) || "?"}
-                              </span>
-                            )}
+                              {isExpanded ? (
+                                <ChevronDown className="w-3.5 h-3.5" />
+                              ) : (
+                                <ChevronRight className="w-3.5 h-3.5" />
+                              )}
+                            </button>
+
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center gap-2">
+                                <p className="text-xs font-bold text-white truncate">
+                                  {artistGroup.name}
+                                </p>
+                                <span className="text-[10px] px-1.5 py-0.2 rounded-full font-mono bg-cyan-500/15 text-cyan-300 border border-cyan-400/20 shrink-0">
+                                  {artistGroup.artworks.length} {artistGroup.artworks.length === 1 ? "opera" : "opere"}
+                                </span>
+                              </div>
+
+                              <div className="flex items-center gap-2 mt-0.5">
+                                <span
+                                  className="text-[9px] font-mono px-1.5 py-0.2 rounded shrink-0"
+                                  style={{
+                                    backgroundColor: `${sign?.color || "#555"}30`,
+                                    color: sign?.color || "#fff",
+                                  }}
+                                >
+                                  {artistGroup.segno}
+                                </span>
+                                {artistGroup.date_biografiche && (
+                                  <span className="text-[10px] text-zinc-400 font-mono truncate">
+                                    {artistGroup.date_biografiche}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Quick Add Artwork to this artist */}
+                          <div className="flex items-center gap-1 shrink-0">
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleAddArtworkToArtist(artistGroup);
+                              }}
+                              className="flex items-center gap-1 px-2 py-1 rounded-md bg-cyan-600/80 hover:bg-cyan-500 text-white text-[10px] font-mono font-medium transition-all shadow"
+                              title={`Aggiungi un'altra opera a ${artistGroup.name}`}
+                            >
+                              <Plus className="w-3 h-3" />
+                              <span>+ Opera</span>
+                            </button>
                           </div>
                         </div>
-                      </div>
 
-                      <div className="flex items-center gap-1 flex-shrink-0">
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleCloneArtwork(art);
-                          }}
-                          className="p-1.5 rounded-lg hover:bg-amber-500/20 text-zinc-400 hover:text-amber-300 transition-all"
-                          title="Clona quest'opera per inserire velocemente un'altra opera dello stesso artista"
-                        >
-                          <CopyPlus className="w-3.5 h-3.5" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDelete(art.id);
-                          }}
-                          className="p-1.5 rounded-lg hover:bg-rose-500/20 text-zinc-500 hover:text-rose-300 transition-all"
-                          title="Elimina"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
+                        {/* Artworks Sub-list (1-to-N) */}
+                        {isExpanded && (
+                          <div className="border-t border-white/5 divide-y divide-white/5 bg-black/40 pl-3">
+                            {artistGroup.artworks.map((art, idx) => {
+                              const isSelected = (editingArt && editingArt.id === art.id) || (formData.id === art.id);
+
+                              return (
+                                <div
+                                  key={art.id || idx}
+                                  onClick={() => handleStartEdit(art)}
+                                  className={`p-2 pr-3 flex items-center justify-between gap-2.5 cursor-pointer transition-all ${
+                                    isSelected
+                                      ? "bg-cyan-500/15 border-l-2 border-cyan-400 shadow-sm"
+                                      : "hover:bg-white/5 border-l-2 border-transparent"
+                                  }`}
+                                >
+                                  <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                                    <img
+                                      src={art.immagine}
+                                      alt=""
+                                      className="w-8 h-8 rounded-md object-cover bg-zinc-800 shrink-0 border border-white/10"
+                                    />
+                                    <div className="min-w-0 flex-1">
+                                      <p className="text-[11px] font-medium text-white truncate italic">
+                                        {art.titolo || "Senza titolo"}
+                                      </p>
+                                      <div className="flex items-center gap-1.5 text-[10px] text-zinc-400 font-mono truncate">
+                                        {art.anno && <span>{art.anno}</span>}
+                                        {art.tecnica && (
+                                          <>
+                                            <span>&bull;</span>
+                                            <span className="truncate">{art.tecnica}</span>
+                                          </>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div className="flex items-center gap-1 shrink-0">
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleCloneArtwork(art);
+                                      }}
+                                      className="p-1 rounded-md hover:bg-amber-500/20 text-zinc-400 hover:text-amber-300 transition-all"
+                                      title="Clona quest'opera per crearne una variante"
+                                    >
+                                      <CopyPlus className="w-3 h-3" />
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleDelete(art.id);
+                                      }}
+                                      className="p-1 rounded-md hover:bg-rose-500/20 text-zinc-500 hover:text-rose-300 transition-all"
+                                      title="Elimina quest'opera"
+                                    >
+                                      <Trash2 className="w-3 h-3" />
+                                    </button>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })
+                ) : (
+                  /* FLAT ARTWORKS VIEW */
+                  filteredList.map((art) => {
+                    const isSelected = (editingArt && editingArt.id === art.id) || (formData.id === art.id);
+                    const sign = ZODIAC_SIGNS.find(s => s.name.toLowerCase() === (art.segno || "").toLowerCase() || s.id === art.segno);
+
+                    return (
+                      <div
+                        key={art.id}
+                        onClick={() => handleStartEdit(art)}
+                        className={`p-3 rounded-xl flex items-center justify-between gap-3 cursor-pointer transition-all ${
+                          isSelected
+                            ? "bg-white/15 border border-white/30 shadow"
+                            : "hover:bg-white/5 border border-transparent"
+                        }`}
+                      >
+                        <div className="flex items-center gap-3 min-w-0">
+                          <img
+                            src={art.immagine}
+                            alt=""
+                            className="w-10 h-10 rounded-lg object-cover bg-zinc-800 flex-shrink-0"
+                          />
+                          <div className="min-w-0">
+                            <p className="text-xs font-bold text-white truncate">{art.artista || "Senza autore"}</p>
+                            {art.titolo && (
+                              <p className="text-[11px] text-cyan-300/80 truncate italic">{art.titolo}</p>
+                            )}
+                            {(art.data_nascita || art.anno_morte || art.date_biografiche) && (
+                              <p className="text-[10px] text-zinc-400 font-mono truncate">
+                                {formatBiographicalDates(art)}
+                              </p>
+                            )}
+                            <div className="flex items-center gap-1.5 mt-0.5">
+                              <span
+                                className="text-[9px] font-mono px-1.5 py-0.2 rounded"
+                                style={{
+                                  backgroundColor: `${sign?.color || "#555"}30`,
+                                  color: sign?.color || "#fff",
+                                }}
+                              >
+                                {art.segno}
+                              </span>
+                              {art.tema_natale && (
+                                <span className="text-[9px] font-mono text-zinc-500">
+                                  ☉{art.tema_natale.sole?.slice(0, 2) || "?"} ☽{art.tema_natale.luna?.slice(0, 2) || "?"} ♀{art.tema_natale.venere?.slice(0, 2) || "?"} ☿{art.tema_natale.mercurio?.slice(0, 2) || "?"}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-1 flex-shrink-0">
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleCloneArtwork(art);
+                            }}
+                            className="p-1.5 rounded-lg hover:bg-amber-500/20 text-zinc-400 hover:text-amber-300 transition-all"
+                            title="Clona quest'opera per inserire velocemente un'altra opera dello stesso artista"
+                          >
+                            <CopyPlus className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDelete(art.id);
+                            }}
+                            className="p-1.5 rounded-lg hover:bg-rose-500/20 text-zinc-500 hover:text-rose-300 transition-all"
+                            title="Elimina"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
               </div>
             </div>
 

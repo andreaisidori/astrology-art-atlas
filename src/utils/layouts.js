@@ -88,24 +88,74 @@ export function computeArtworkPositions(artworks, mode = 'manual', activeSignId 
     return result;
   }
 
-  // 3. MANUAL / DEFAULT CURATORIAL MODE (Balanced airy spacing)
+  // 4. MANUAL / CURATORIAL 3D CELESTIAL POSITIONING (With 1-to-N Artist Clustering & Anti-Overlap)
+  const bySign = {};
   artworks.forEach((art) => {
-    const signInfo = ZODIAC_SIGNS.find(s => s.name.toLowerCase() === (art.segno || '').toLowerCase() || s.id === art.segno);
+    const signKey = (art.segno || 'Ariete').toLowerCase();
+    if (!bySign[signKey]) bySign[signKey] = [];
+    bySign[signKey].push(art);
+  });
+
+  Object.entries(bySign).forEach(([signKey, signArtworks]) => {
+    const signInfo = ZODIAC_SIGNS.find(s => s.name.toLowerCase() === signKey || s.id === signKey);
     const baseAngle = signInfo ? signInfo.angle : 0;
 
-    // Check if custom manual 3D coordinates exist in JSON
-    if (art.posizione_manuale && typeof art.posizione_manuale.x === 'number') {
-      result[art.id] = [art.posizione_manuale.x, art.posizione_manuale.y, art.posizione_manuale.z];
-    } else {
-      const idHash = (art.id || '').split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-      const lonOffset = ((idHash % 22) - 11); // spread ±11 degrees in longitude
-      const latOffset = (((idHash * 5) % 20) - 10); // balanced vertical spread ±10 degrees
+    // Group within this sign by artist to handle 1-to-N artworks
+    const byArtist = {};
+    signArtworks.forEach((art) => {
+      const artistKey = (art.artista || 'Senza Autore').trim().toLowerCase();
+      if (!byArtist[artistKey]) byArtist[artistKey] = [];
+      byArtist[artistKey].push(art);
+    });
+
+    const artistKeys = Object.keys(byArtist);
+    const totalArtistsInSign = artistKeys.length;
+
+    artistKeys.forEach((artistKey, artistIndex) => {
+      const artistArtworks = byArtist[artistKey];
       
-      const lon = (baseAngle + 15 + lonOffset + 360) % 360;
-      const lat = latOffset;
-      const pos = sphericalToCartesian(sphereRadius, lon, lat, 0);
-      result[art.id] = pos;
-    }
+      // Calculate a stable base position for this artist within the 30° zodiac sector
+      // The sign sector extends from baseAngle to baseAngle + 30°
+      const artistSectorProgress = (artistIndex + 0.5) / Math.max(totalArtistsInSign, 1);
+      const artistBaseLon = baseAngle + 3 + (artistSectorProgress * 24); // 24 deg span within 30 deg sector
+      
+      // Stable hash for artist latitude to give varied vertical elevation (-14° to +14°)
+      const artistHash = artistKey.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+      const artistBaseLat = ((artistHash % 28) - 14);
+
+      artistArtworks.forEach((art, artIndex) => {
+        // If the artwork has a genuine manual 3D coordinate edited in Spatial Editor
+        // (Filter out the legacy dummy [40, 0, 10] coordinate bug)
+        const isDummyCoord = art.posizione_manuale &&
+          Math.abs(art.posizione_manuale.x - 40) < 6 &&
+          Math.abs(art.posizione_manuale.y) < 3 &&
+          Math.abs(art.posizione_manuale.z - 10) < 6 &&
+          signKey !== 'ariete';
+
+        if (art.posizione_manuale && typeof art.posizione_manuale.x === 'number' && !isDummyCoord) {
+          result[art.id] = [art.posizione_manuale.x, art.posizione_manuale.y, art.posizione_manuale.z];
+          return;
+        }
+
+        // For single artwork of artist
+        if (artistArtworks.length === 1) {
+          const lon = (artistBaseLon + 360) % 360;
+          const lat = artistBaseLat;
+          result[art.id] = sphericalToCartesian(sphereRadius, lon, lat, 0);
+        } else {
+          // Multiple artworks of the same artist: distribute in a micro-cluster around the artist center
+          const totalArt = artistArtworks.length;
+          const clusterAngle = (artIndex / totalArt) * Math.PI * 2;
+          const lonOffset = Math.cos(clusterAngle) * 3.8;
+          const latOffset = Math.sin(clusterAngle) * 3.8;
+
+          const lon = (artistBaseLon + lonOffset + 360) % 360;
+          const lat = Math.max(-18, Math.min(18, artistBaseLat + latOffset));
+          const radiusVariation = sphereRadius * (1 + ((artIndex % 3) - 1) * 0.015);
+          result[art.id] = sphericalToCartesian(radiusVariation, lon, lat, 0);
+        }
+      });
+    });
   });
 
   return result;

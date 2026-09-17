@@ -55,11 +55,6 @@
         "venere": "Toro",
         "mercurio": "Pesci"
       },
-      "posizione_manuale": {
-        "x": 40,
-        "y": 0,
-        "z": 10
-      },
       "parole_chiave": [
         "principio marziale",
         "rosso",
@@ -2701,11 +2696,6 @@
         "venere": "Bilancia",
         "mercurio": "Bilancia"
       },
-      "posizione_manuale": {
-        "x": 40,
-        "y": 0,
-        "z": 10
-      },
       "parole_chiave": [
         "principio mercuriale e uraniano",
         "griglie",
@@ -5228,11 +5218,6 @@
         "venere": "Toro",
         "mercurio": "Pesci"
       },
-      "posizione_manuale": {
-        "x": 39.96414232468555,
-        "y": 0.25817755018733735,
-        "z": 9.92468897648601
-      },
       "parole_chiave": [
         "principio marziale",
         "rosso",
@@ -5263,11 +5248,6 @@
         "luna": "Leone",
         "venere": "Toro",
         "mercurio": "Pesci"
-      },
-      "posizione_manuale": {
-        "x": 39.281286009532586,
-        "y": 0.7945482933534262,
-        "z": 9.64827236242355
       },
       "parole_chiave": [
         "principio marziale",
@@ -5300,11 +5280,6 @@
         "venere": "Toro",
         "mercurio": "Pesci"
       },
-      "posizione_manuale": {
-        "x": 38.68524688728156,
-        "y": 0.5198139432312634,
-        "z": 8.788208212153247
-      },
       "parole_chiave": [
         "principio marziale",
         "rosso",
@@ -5335,11 +5310,6 @@
         "luna": "Cancro",
         "venere": "Bilancia",
         "mercurio": "Bilancia"
-      },
-      "posizione_manuale": {
-        "x": 40.94243328266311,
-        "y": -0.3327988370511239,
-        "z": 10.371060373937334
       },
       "parole_chiave": [
         "principio mercuriale e uraniano",
@@ -5374,11 +5344,6 @@
         "venere": "Bilancia",
         "mercurio": "Bilancia"
       },
-      "posizione_manuale": {
-        "x": 42.0188382127184,
-        "y": -0.2131316137888497,
-        "z": 9.580476208683407
-      },
       "parole_chiave": [
         "principio mercuriale e uraniano",
         "griglie",
@@ -5411,11 +5376,6 @@
         "luna": "Cancro",
         "venere": "Bilancia",
         "mercurio": "Bilancia"
-      },
-      "posizione_manuale": {
-        "x": 41.6051259453866,
-        "y": -0.10954485365795064,
-        "z": 9.12663702223538
       },
       "parole_chiave": [
         "principio mercuriale e uraniano",
