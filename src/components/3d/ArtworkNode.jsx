@@ -139,7 +139,7 @@ export default function ArtworkNode({
 
   const signColor = signInfo ? signInfo.color : '#4361ee';
   const effectiveColor = isEditingSelected ? '#10b981' : signColor;
-  const isDarkSign = (artwork.segno || '').toLowerCase().trim() === 'scorpione' || effectiveColor === '#31353D' || effectiveColor === '#475569' || effectiveColor === '#1A1A1A';
+  const isDarkSign = (artwork.segno || '').toLowerCase().trim() === 'scorpione' || effectiveColor === '#28282D' || effectiveColor === '#31353D' || effectiveColor === '#1A1A1A';
 
   return (
     <group ref={meshRef} position={targetPosition}>
@@ -224,7 +224,7 @@ export default function ArtworkNode({
               <meshBasicMaterial
                 color={effectiveColor}
                 transparent
-                opacity={isDimmed ? 0.04 : hovered ? 0.65 : isSelected ? 0.5 : 0.28}
+                opacity={isDimmed ? 0.06 : hovered ? 0.75 : isSelected ? 0.65 : (isDarkSign ? 0.55 : 0.28)}
                 side={THREE.DoubleSide}
               />
             </mesh>
@@ -248,7 +248,7 @@ export default function ArtworkNode({
               <meshBasicMaterial
                 color={effectiveColor}
                 transparent
-                opacity={isDimmed ? 0.12 : hovered ? 1.0 : isSelected ? 0.95 : 0.8}
+                opacity={isDimmed ? 0.15 : hovered ? 1.0 : isSelected ? 0.95 : (isDarkSign ? 0.9 : 0.8)}
                 side={THREE.DoubleSide}
               />
             </mesh>

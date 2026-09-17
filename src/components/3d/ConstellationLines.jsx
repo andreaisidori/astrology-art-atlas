@@ -83,7 +83,7 @@ export default function ConstellationLines({ artworks, positions, activeSignId }
   return (
     <group>
       {linesBySign.map((line) => {
-        const isDarkLine = line.color === '#31353D' || line.color === '#475569' || line.color === '#1A1A1A' || line.id === 'scorpione';
+        const isDarkLine = line.color === '#28282D' || line.color === '#31353D' || line.color === '#475569' || line.color === '#1A1A1A' || line.id === 'scorpione';
         return (
           <group key={line.id}>
             {/* Dark gray shadow / halo layer specifically for black Scorpio constellation lines */}
