@@ -10,8 +10,20 @@ export default function ArchiveView({
   initialSignId,
 }) {
   const [selectedSign, setSelectedSign] = useState(initialSignId || 'all');
+  const [selectedArtist, setSelectedArtist] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('anno-asc');
+
+  // List of all unique sorted artists
+  const allArtists = useMemo(() => {
+    const set = new Set();
+    artworks.forEach((art) => {
+      if (art.artista && art.artista.trim()) {
+        set.add(art.artista.trim());
+      }
+    });
+    return Array.from(set).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+  }, [artworks]);
 
   // Filter and sort artworks
   const filteredArtworks = useMemo(() => {
@@ -21,6 +33,13 @@ export default function ArchiveView({
         if (selectedSign !== 'all') {
           const match = (art.segno || '').toLowerCase() === selectedSign.toLowerCase();
           if (!match) return false;
+        }
+
+        // Artist filter
+        if (selectedArtist !== 'all') {
+          if ((art.artista || '').trim().toLowerCase() !== selectedArtist.trim().toLowerCase()) {
+            return false;
+          }
         }
 
         // Search query filter
@@ -44,7 +63,7 @@ export default function ArchiveView({
         if (sortBy === 'artista') return (a.artista || '').localeCompare(b.artista || '');
         return 0;
       });
-  }, [artworks, selectedSign, searchQuery, sortBy]);
+  }, [artworks, selectedSign, selectedArtist, searchQuery, sortBy]);
 
   return (
     <div className="min-h-screen bg-zinc-50 text-zinc-900 pt-20 pb-28 px-4 md:px-12 overflow-y-auto">
@@ -52,10 +71,6 @@ export default function ArchiveView({
       <div className="max-w-7xl mx-auto mb-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-zinc-200">
           <div>
-            <div className="flex items-center gap-2 text-xs font-mono text-zinc-500 uppercase tracking-widest mb-1">
-              <Sparkles className="w-3.5 h-3.5 text-zinc-700" />
-              <span>Tavola Tassonomica Mnemosyne</span>
-            </div>
             <h2 className="text-3xl font-light tracking-tight text-zinc-950 font-serif">
               Archivio Ragionato delle Opere
             </h2>
@@ -73,16 +88,34 @@ export default function ArchiveView({
 
         {/* Filter controls row */}
         <div className="mt-6 flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
-          {/* Search bar */}
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
-            <input
-              type="text"
-              placeholder="Cerca artista, titolo, concetto o parola chiave..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 text-sm bg-white border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent shadow-sm"
-            />
+          <div className="flex flex-col sm:flex-row gap-3 flex-1 items-stretch sm:items-center">
+            {/* Search bar */}
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+              <input
+                type="text"
+                placeholder="Cerca artista, titolo, concetto o parola chiave..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 text-sm bg-white border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent shadow-sm"
+              />
+            </div>
+
+            {/* Artist filter */}
+            <div className="flex items-center gap-2">
+              <select
+                value={selectedArtist}
+                onChange={(e) => setSelectedArtist(e.target.value)}
+                className="w-full sm:w-auto text-xs bg-white border border-zinc-200 rounded-xl px-3.5 py-2.5 text-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-900 shadow-sm min-w-[170px]"
+              >
+                <option value="all">Tutti gli Artisti ({allArtists.length})</option>
+                {allArtists.map((artist) => (
+                  <option key={artist} value={artist}>
+                    {artist}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
           {/* Sort selector */}
