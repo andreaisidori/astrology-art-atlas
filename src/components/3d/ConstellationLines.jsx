@@ -86,15 +86,15 @@ export default function ConstellationLines({ artworks, positions, activeSignId }
         const isDarkLine = line.color === '#31353D' || line.color === '#475569' || line.color === '#1A1A1A' || line.id === 'scorpione';
         return (
           <group key={line.id}>
-            {/* Lighter contrast shadow / halo layer specifically for black Scorpio constellation lines */}
+            {/* Dark gray shadow / halo layer specifically for black Scorpio constellation lines */}
             {isDarkLine && (
               /* @ts-ignore */
               <lineSegments geometry={line.geometry}>
                 <lineBasicMaterial
-                  color="#e2e8f0"
+                  color="#52525b"
                   transparent
-                  opacity={line.opacity * 0.55}
-                  linewidth={3}
+                  opacity={line.opacity * 0.75}
+                  linewidth={4}
                   depthWrite={false}
                 />
               </lineSegments>

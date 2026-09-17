@@ -11,7 +11,7 @@ export const ZODIAC_SIGNS = [
   { id: 'leone', name: 'Leone', latin: 'Leo', symbol: '♌', element: 'Fuoco', angle: 120, color: '#E6B841', keywords: ['Centro', 'Splendore', 'Ego', 'Sovranità'] },
   { id: 'vergine', name: 'Vergine', latin: 'Virgo', symbol: '♍', element: 'Terra', angle: 150, color: '#FFFFFF', keywords: ['Tassonomia', 'Dettaglio', 'Misura', 'Archivio'] },
   { id: 'bilancia', name: 'Bilancia', latin: 'Libra', symbol: '♎', element: 'Aria', angle: 180, color: '#4DB6B1', keywords: ['Equilibrio', 'Forma', 'Relazione', 'Simmetria'] },
-  { id: 'scorpione', name: 'Scorpione', latin: 'Scorpio', symbol: '♏', element: 'Acqua', angle: 210, color: '#31353D', keywords: ['Metamorfosi', 'Abisso', 'Dionisiaco', 'Eros'] },
+  { id: 'scorpione', name: 'Scorpione', latin: 'Scorpio', symbol: '♏', element: 'Acqua', angle: 210, color: '#1A1A1A', keywords: ['Metamorfosi', 'Abisso', 'Dionisiaco', 'Eros'] },
   { id: 'sagittario', name: 'Sagittario', latin: 'Sagittarius', symbol: '♐', element: 'Fuoco', angle: 240, color: '#433ACB', keywords: ['Orizzonte', 'Visione', 'Traiettoria', 'Mito'] },
   { id: 'capricorno', name: 'Capricorno', latin: 'Capricornus', symbol: '♑', element: 'Terra', angle: 270, color: '#7C4B2A', keywords: ['Struttura', 'Tempo', 'Pietra', 'Limite'] },
   { id: 'acquario', name: 'Acquario', latin: 'Aquarius', symbol: '♒', element: 'Aria', angle: 300, color: '#A9AEB4', keywords: ['Utopia', 'Dispersione', 'Cosmo', 'Futuro'] },

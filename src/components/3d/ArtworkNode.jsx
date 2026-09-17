@@ -66,14 +66,14 @@ function ArtworkSquareMesh({ url, isHovered, dominantColor, isDimmed, isSelected
         )}
       </mesh>
 
-      {/* Lighter contrast shadow for black border */}
+      {/* Dark gray contrast shadow for black border */}
       {isDarkSign && (
         <mesh position={[0, 0, 0.008]}>
-          <ringGeometry args={[1.63, 1.75, 4, 1, Math.PI / 4]} />
+          <ringGeometry args={[1.63, 1.76, 4, 1, Math.PI / 4]} />
           <meshBasicMaterial
-            color="#e2e8f0"
+            color="#52525b"
             transparent
-            opacity={isDimmed ? 0.08 : hovered ? 0.5 : isSelected ? 0.45 : 0.28}
+            opacity={isDimmed ? 0.12 : hovered ? 0.7 : isSelected ? 0.6 : 0.45}
             side={THREE.DoubleSide}
           />
         </mesh>
@@ -160,14 +160,14 @@ export default function ArtworkNode({
           document.body.style.cursor = 'auto';
         }}
       >
-        {/* Lighter contrast shadow / halo for dark Scorpio shapes */}
+        {/* Dark gray shadow / halo for dark Scorpio shapes */}
         {isDarkSign && (
           <mesh position={[0, 0, -0.05]}>
             <planeGeometry args={[2.95, 2.95]} />
             <meshBasicMaterial
-              color="#e2e8f0"
+              color="#52525b"
               transparent
-              opacity={isDimmed ? 0.05 : hovered ? 0.45 : isSelected ? 0.35 : 0.22}
+              opacity={isDimmed ? 0.08 : hovered ? 0.55 : isSelected ? 0.45 : 0.3}
               depthWrite={false}
               side={THREE.DoubleSide}
             />
@@ -229,14 +229,14 @@ export default function ArtworkNode({
               />
             </mesh>
 
-            {/* Subtle lighter backing ring for the border when the color is black */}
+            {/* Dark gray shadow ring for the border */}
             {isDarkSign && (
               <mesh position={[0, 0, 0.008]}>
-                <ringGeometry args={[1.48, 1.60, 4, 1, Math.PI / 4]} />
+                <ringGeometry args={[1.48, 1.62, 4, 1, Math.PI / 4]} />
                 <meshBasicMaterial
-                  color="#e2e8f0"
+                  color="#52525b"
                   transparent
-                  opacity={isDimmed ? 0.06 : hovered ? 0.45 : isSelected ? 0.4 : 0.25}
+                  opacity={isDimmed ? 0.1 : hovered ? 0.7 : isSelected ? 0.6 : 0.45}
                   side={THREE.DoubleSide}
                 />
               </mesh>
@@ -255,14 +255,14 @@ export default function ArtworkNode({
           </group>
         )}
 
-        {/* Subtle lighter halo dot for black Scorpio star nucleus */}
+        {/* Dark gray shadow halo for Scorpio star nucleus */}
         {isDarkSign && (
           <mesh position={[0, 0, 0.058]}>
-            <sphereGeometry args={[0.20, 16, 16]} />
+            <sphereGeometry args={[0.22, 16, 16]} />
             <meshBasicMaterial
-              color="#e2e8f0"
+              color="#52525b"
               transparent
-              opacity={isDimmed ? 0.1 : hovered ? 0.6 : 0.4}
+              opacity={isDimmed ? 0.15 : hovered ? 0.8 : 0.6}
             />
           </mesh>
         )}
