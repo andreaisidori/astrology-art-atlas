@@ -24,8 +24,8 @@ export default function Header({
             src="/images/aaa-logo-gold.png"
             alt="AAA Logo"
             className="w-10 h-10 md:w-12 md:h-12 object-contain drop-shadow-[0_0_14px_rgba(243,203,114,0.5)] hover:rotate-12 transition-transform duration-500 cursor-pointer"
-            onClick={onOpenLanding || onResetSign}
-            title="AAA — Astrology Art Atlas (Clicca per tornare al portale iniziale)"
+            onClick={onOpenInfo || onOpenLanding || onResetSign}
+            title="informazioni sul progetto"
           />
         </div>
 
@@ -42,7 +42,13 @@ export default function Header({
               >
                 AAA
               </button>
-              <span className="text-[11px] font-normal opacity-60 lowercase font-mono">/ astrology art atlas</span>
+              <span
+                className="text-[11px] font-normal opacity-60 lowercase font-mono cursor-pointer"
+                onClick={onOpenInfo}
+                title="informazioni sul progetto"
+              >
+                / astrology art atlas
+              </span>
             </h1>
           </div>
           <div className="flex items-center gap-1 text-[10px] tracking-wide font-mono transition-colors">
