@@ -1,7 +1,29 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Filter, ArrowUpRight, Grid, List, Sparkles, Quote, ExternalLink } from 'lucide-react';
+import { Search, Filter, ArrowUpRight, Grid, List, Sparkles, Quote, ExternalLink, Tag } from 'lucide-react';
 import { ZODIAC_SIGNS, formatBiographicalDates } from '../../utils/astronomy';
 import ZodiacGlyph from './ZodiacGlyph';
+
+function getArtworkYear(art) {
+  if (art.anno) {
+    const match = String(art.anno).match(/\b(\d{4})\b/);
+    if (match) return parseInt(match[1], 10);
+    const n = Number(art.anno);
+    if (!isNaN(n) && n > 0) return n;
+  }
+  return 0;
+}
+
+function getArtistBirthYear(art) {
+  if (art.data_nascita) {
+    const match = String(art.data_nascita).match(/\b(\d{4})\b/);
+    if (match) return parseInt(match[1], 10);
+  }
+  if (art.date_biografiche) {
+    const match = String(art.date_biografiche).match(/\b(\d{4})\b/);
+    if (match) return parseInt(match[1], 10);
+  }
+  return 0;
+}
 
 export default function ArchiveView({
   artworks,
@@ -11,8 +33,9 @@ export default function ArchiveView({
 }) {
   const [selectedSign, setSelectedSign] = useState(initialSignId || 'all');
   const [selectedArtist, setSelectedArtist] = useState('all');
+  const [selectedSymbol, setSelectedSymbol] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState('anno-asc');
+  const [sortBy, setSortBy] = useState('opera-desc');
 
   // List of all unique sorted artists
   const allArtists = useMemo(() => {
@@ -23,6 +46,25 @@ export default function ArchiveView({
       }
     });
     return Array.from(set).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+  }, [artworks]);
+
+  // List of all unique sorted recurring symbols / keywords
+  const allSymbols = useMemo(() => {
+    const map = new Map();
+    artworks.forEach((art) => {
+      (art.parole_chiave || []).forEach((kw) => {
+        if (kw && typeof kw === 'string' && kw.trim()) {
+          const clean = kw.trim();
+          const lower = clean.toLowerCase();
+          if (!map.has(lower)) {
+            map.set(lower, clean);
+          }
+        }
+      });
+    });
+    return Array.from(map.entries())
+      .map(([key, label]) => ({ key, label }))
+      .sort((a, b) => a.label.localeCompare(b.label, undefined, { sensitivity: 'base' }));
   }, [artworks]);
 
   // Filter and sort artworks
@@ -42,6 +84,14 @@ export default function ArchiveView({
           }
         }
 
+        // Recurring symbol / Keyword filter
+        if (selectedSymbol !== 'all') {
+          const hasSymbol = (art.parole_chiave || []).some(
+            k => (k || '').trim().toLowerCase() === selectedSymbol.toLowerCase()
+          );
+          if (!hasSymbol) return false;
+        }
+
         // Search query filter
         if (searchQuery.trim()) {
           const q = searchQuery.toLowerCase();
@@ -58,12 +108,51 @@ export default function ArchiveView({
         return true;
       })
       .sort((a, b) => {
-        if (sortBy === 'anno-asc') return (a.anno || 0) - (b.anno || 0);
-        if (sortBy === 'anno-desc') return (b.anno || 0) - (a.anno || 0);
-        if (sortBy === 'artista') return (a.artista || '').localeCompare(b.artista || '');
+        // Sorting by Artworks
+        if (sortBy === 'opera-asc') {
+          const yA = getArtworkYear(a);
+          const yB = getArtworkYear(b);
+          if (yA && yB && yA !== yB) return yA - yB;
+          if (yA && !yB) return -1;
+          if (!yA && yB) return 1;
+          return (a.titolo || '').localeCompare(b.titolo || '', undefined, { sensitivity: 'base' });
+        }
+        if (sortBy === 'opera-desc') {
+          const yA = getArtworkYear(a);
+          const yB = getArtworkYear(b);
+          if (yA && yB && yA !== yB) return yB - yA;
+          if (yA && !yB) return -1;
+          if (!yA && yB) return 1;
+          return (a.titolo || '').localeCompare(b.titolo || '', undefined, { sensitivity: 'base' });
+        }
+        if (sortBy === 'opera-alpha') {
+          return (a.titolo || '').localeCompare(b.titolo || '', undefined, { sensitivity: 'base' });
+        }
+
+        // Sorting by Artists
+        if (sortBy === 'artista-asc') {
+          const yA = getArtistBirthYear(a);
+          const yB = getArtistBirthYear(b);
+          if (yA && yB && yA !== yB) return yA - yB;
+          if (yA && !yB) return -1;
+          if (!yA && yB) return 1;
+          return (a.artista || '').localeCompare(b.artista || '', undefined, { sensitivity: 'base' });
+        }
+        if (sortBy === 'artista-desc') {
+          const yA = getArtistBirthYear(a);
+          const yB = getArtistBirthYear(b);
+          if (yA && yB && yA !== yB) return yB - yA;
+          if (yA && !yB) return -1;
+          if (!yA && yB) return 1;
+          return (a.artista || '').localeCompare(b.artista || '', undefined, { sensitivity: 'base' });
+        }
+        if (sortBy === 'artista-alpha') {
+          return (a.artista || '').localeCompare(b.artista || '', undefined, { sensitivity: 'base' });
+        }
+
         return 0;
       });
-  }, [artworks, selectedSign, selectedArtist, searchQuery, sortBy]);
+  }, [artworks, selectedSign, selectedArtist, selectedSymbol, searchQuery, sortBy]);
 
   return (
     <div className="min-h-screen bg-zinc-50 text-zinc-900 pt-20 pb-28 px-4 md:px-12 overflow-y-auto">
@@ -84,26 +173,26 @@ export default function ArchiveView({
         </div>
 
         {/* Filter controls row */}
-        <div className="mt-6 flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
-          <div className="flex flex-col sm:flex-row gap-3 flex-1 items-stretch sm:items-center">
+        <div className="mt-6 flex flex-col lg:flex-row gap-3 items-stretch lg:items-center justify-between">
+          <div className="flex flex-col sm:flex-row gap-2.5 flex-1 items-stretch sm:items-center flex-wrap">
             {/* Search bar */}
-            <div className="relative flex-1 max-w-md">
+            <div className="relative flex-1 min-w-[220px]">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
               <input
                 type="text"
-                placeholder="Cerca artista, titolo, concetto o parola chiave..."
+                placeholder="Cerca artista, titolo, concetto..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 text-sm bg-white border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent shadow-sm"
+                className="w-full pl-10 pr-4 py-2 text-xs bg-white border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent shadow-sm"
               />
             </div>
 
             {/* Artist filter */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center">
               <select
                 value={selectedArtist}
                 onChange={(e) => setSelectedArtist(e.target.value)}
-                className="w-full sm:w-auto text-xs bg-white border border-zinc-200 rounded-xl px-3.5 py-2.5 text-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-900 shadow-sm min-w-[170px]"
+                className="w-full sm:w-auto text-xs bg-white border border-zinc-200 rounded-xl px-3 py-2 text-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-900 shadow-sm min-w-[160px]"
               >
                 <option value="all">Tutti gli Artisti ({allArtists.length})</option>
                 {allArtists.map((artist) => (
@@ -113,19 +202,42 @@ export default function ArchiveView({
                 ))}
               </select>
             </div>
+
+            {/* Recurring Symbols / Keywords filter */}
+            <div className="flex items-center">
+              <select
+                value={selectedSymbol}
+                onChange={(e) => setSelectedSymbol(e.target.value)}
+                className="w-full sm:w-auto text-xs bg-white border border-zinc-200 rounded-xl px-3 py-2 text-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-900 shadow-sm min-w-[160px]"
+              >
+                <option value="all">Tutti i Simboli ({allSymbols.length})</option>
+                {allSymbols.map((item) => (
+                  <option key={item.key} value={item.key}>
+                    #{item.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
-          {/* Sort selector */}
-          <div className="flex items-center gap-2">
+          {/* Sort selector (Artworks & Artists) */}
+          <div className="flex items-center gap-2 shrink-0">
             <span className="text-xs font-mono text-zinc-500 uppercase">Ordina:</span>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="text-xs bg-white border border-zinc-200 rounded-lg px-3 py-2 text-zinc-700 focus:outline-none focus:ring-1 focus:ring-zinc-900 shadow-sm"
+              className="w-full sm:w-auto text-xs bg-white border border-zinc-200 rounded-xl px-3 py-2 text-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-900 shadow-sm"
             >
-              <option value="anno-asc">Cronologico (più antico prima)</option>
-              <option value="anno-desc">Cronologico (più recente prima)</option>
-              <option value="artista">Artista (A-Z)</option>
+              <optgroup label="Ordina per Opere">
+                <option value="opera-desc">Opere: Più recenti prima</option>
+                <option value="opera-asc">Opere: Più antiche prima</option>
+                <option value="opera-alpha">Opere: Alfabetico per Titolo (A–Z)</option>
+              </optgroup>
+              <optgroup label="Ordina per Artisti">
+                <option value="artista-desc">Artisti: Più recenti prima</option>
+                <option value="artista-asc">Artisti: Più antichi prima</option>
+                <option value="artista-alpha">Artisti: Alfabetico (A–Z)</option>
+              </optgroup>
             </select>
           </div>
         </div>
@@ -298,14 +410,27 @@ export default function ArchiveView({
                 {/* Keywords Chips */}
                 {art.parole_chiave && art.parole_chiave.length > 0 && (
                   <div className="flex flex-wrap gap-1 pt-2 border-t border-zinc-100">
-                    {art.parole_chiave.slice(0, 3).map((kw, i) => (
-                      <span
-                        key={i}
-                        className="text-[10px] font-mono bg-zinc-100 text-zinc-600 px-1.5 py-0.5 rounded"
-                      >
-                        #{kw}
-                      </span>
-                    ))}
+                    {art.parole_chiave.slice(0, 3).map((kw, i) => {
+                      const isSelected = selectedSymbol.toLowerCase() === kw.trim().toLowerCase();
+                      return (
+                        <button
+                          key={i}
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedSymbol(isSelected ? 'all' : kw.trim().toLowerCase());
+                          }}
+                          className={`text-[10px] font-mono px-1.5 py-0.5 rounded transition-all cursor-pointer ${
+                            isSelected
+                              ? 'bg-zinc-900 text-white font-medium shadow-xs'
+                              : 'bg-zinc-100 hover:bg-zinc-200 text-zinc-600 hover:text-zinc-900'
+                          }`}
+                          title={`Filtra per il simbolo #${kw}`}
+                        >
+                          #{kw}
+                        </button>
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -320,9 +445,11 @@ export default function ArchiveView({
           <button
             onClick={() => {
               setSelectedSign('all');
+              setSelectedArtist('all');
+              setSelectedSymbol('all');
               setSearchQuery('');
             }}
-            className="mt-3 text-xs font-mono text-zinc-900 underline"
+            className="mt-3 text-xs font-mono text-zinc-900 underline hover:text-blue-600 transition-colors"
           >
             Azzera tutti i filtri
           </button>
