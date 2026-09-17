@@ -213,7 +213,7 @@ export default function ArchiveView({
                 <option value="all">Tutti i Simboli ({allSymbols.length})</option>
                 {allSymbols.map((item) => (
                   <option key={item.key} value={item.key}>
-                    #{item.label}
+                    {item.label}
                   </option>
                 ))}
               </select>
@@ -425,9 +425,9 @@ export default function ArchiveView({
                               ? 'bg-zinc-900 text-white font-medium shadow-xs'
                               : 'bg-zinc-100 hover:bg-zinc-200 text-zinc-600 hover:text-zinc-900'
                           }`}
-                          title={`Filtra per il simbolo #${kw}`}
+                          title={`Filtra per il simbolo ${kw}`}
                         >
-                          #{kw}
+                          {kw}
                         </button>
                       );
                     })}

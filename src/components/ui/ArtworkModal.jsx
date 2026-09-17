@@ -316,19 +316,6 @@ export default function ArtworkModal({
                 )}
               </div>
 
-              {/* Warburgian Symbolic Note */}
-              {artwork.nota_simbolica && (
-                <div className="p-3.5 rounded-xl bg-white/[0.04] border border-white/10 space-y-1.5">
-                  <div className="flex items-center gap-1.5 text-[11px] font-mono text-amber-400/90 uppercase tracking-wider">
-                    <Sparkles className="w-3.5 h-3.5" />
-                    <span>Affinità Mnemotecnica</span>
-                  </div>
-                  <p className="text-xs text-zinc-300 leading-relaxed font-sans">
-                    {artwork.nota_simbolica}
-                  </p>
-                </div>
-              )}
-
               {/* Curatorial Commentary */}
               {artwork.commento && (
                 <div className="p-3.5 rounded-xl bg-cyan-950/20 border border-cyan-500/20 space-y-1.5">
@@ -355,7 +342,7 @@ export default function ArtworkModal({
                         key={i}
                         className="px-2.5 py-0.5 rounded-md text-[11px] bg-white/10 text-zinc-300 font-mono border border-white/10"
                       >
-                        #{kw}
+                        {kw}
                       </span>
                     ))}
                   </div>
