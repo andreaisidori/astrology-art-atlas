@@ -109,7 +109,7 @@ export default function AdminCuratorPanel({
     posizione_manuale: { x: 40, y: 0, z: 10 },
     parole_chiave_str: "",
     nota_simbolica: "",
-    colore_dominante: "#e63946",
+    colore_dominante: "#E0362F",
     link_fonte: "",
     link_tema_natale: "",
     clonedFromArtist: "",
@@ -296,7 +296,7 @@ export default function AdminCuratorPanel({
       posizione_manuale: { x: 45, y: 0, z: 10 },
       parole_chiave_str: "",
       nota_simbolica: "",
-      colore_dominante: "#e63946",
+      colore_dominante: "#E0362F",
       link_fonte: "",
       link_tema_natale: "",
       clonedFromArtist: "",
@@ -361,7 +361,7 @@ export default function AdminCuratorPanel({
         ? baseArt.parole_chiave.join(", ")
         : (baseArt.parole_chiave_str || ""),
       nota_simbolica: baseArt.nota_simbolica || "",
-      colore_dominante: baseArt.colore_dominante || "#e63946",
+      colore_dominante: baseArt.colore_dominante || "#E0362F",
       link_fonte: baseArt.link_fonte || "",
       clonedFromArtist: baseArt.artista || "",
     });

@@ -118,18 +118,14 @@ export default function ArtworkNode({
 
   const baseScale = magnitude * individualScale * (hovered ? 1.45 : (isSelected || isEditingSelected) ? 1.25 : 1.0);
 
-  // Determine official sign color as vibrant foundation with fallback to dominant color
+  // Determine official sign color matching the constellation connection lines exactly
   const signInfo = useMemo(() => {
     const raw = (artwork.segno || '').toLowerCase().trim();
     return ZODIAC_SIGNS.find(s => s.name.toLowerCase() === raw || s.id === raw);
   }, [artwork.segno]);
 
   const signColor = signInfo ? signInfo.color : '#4361ee';
-  const effectiveColor = isEditingSelected
-    ? '#10b981'
-    : (artwork.colore_dominante && artwork.colore_dominante !== '#ffffff'
-        ? artwork.colore_dominante
-        : signColor);
+  const effectiveColor = isEditingSelected ? '#10b981' : signColor;
 
   return (
     <group ref={meshRef} position={targetPosition}>
