@@ -139,7 +139,7 @@ export default function ArtworkNode({
 
   const signColor = signInfo ? signInfo.color : '#4361ee';
   const effectiveColor = isEditingSelected ? '#10b981' : signColor;
-  const isDarkSign = (artwork.segno || '').toLowerCase().trim() === 'scorpione' || effectiveColor === '#1A1A1A';
+  const isDarkSign = (artwork.segno || '').toLowerCase().trim() === 'scorpione' || effectiveColor === '#475569' || effectiveColor === '#1A1A1A';
 
   return (
     <group ref={meshRef} position={targetPosition}>
