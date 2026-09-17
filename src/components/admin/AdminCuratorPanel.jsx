@@ -554,6 +554,17 @@ export default function AdminCuratorPanel({
     await handleCommitAndSync();
   };
 
+  // Save Legal & Disclaimer Form
+  const handleSaveLegal = async (e) => {
+    e.preventDefault();
+    if (onUpdateLegal) {
+      onUpdateLegal(legalForm);
+    }
+    setLegalSaved(true);
+    setTimeout(() => setLegalSaved(false), 2500);
+    await handleCommitAndSync();
+  };
+
   // Delete artwork
   const handleDelete = (id) => {
     if (window.confirm("Sei sicuro di voler eliminare questa voce dall’atlante?")) {
