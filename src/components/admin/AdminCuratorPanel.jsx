@@ -46,8 +46,11 @@ export default function AdminCuratorPanel({
   const [bioForm, setBioForm] = useState({
     nome: bioData?.nome || "Giacomo Isidori",
     ruolo: bioData?.ruolo || "Curatore & Ideatore",
+    titolo_biografia: bioData?.titolo_biografia || "Biografia",
     biografia: bioData?.biografia || "",
+    titolo_visione: bioData?.titolo_visione || "Visione & Metodo Curatoriale",
     visione: bioData?.visione || "",
+    titolo_contatti: bioData?.titolo_contatti || "Contatti Ufficiali & Curatela",
     instagram: bioData?.instagram || "https://instagram.com/astro.expression",
     email: bioData?.email || "astro.expression@gmail.com",
   });
@@ -58,8 +61,11 @@ export default function AdminCuratorPanel({
       setBioForm({
         nome: bioData.nome || "Giacomo Isidori",
         ruolo: bioData.ruolo || "Curatore & Ideatore",
+        titolo_biografia: bioData.titolo_biografia || "Biografia",
         biografia: bioData.biografia || "",
+        titolo_visione: bioData.titolo_visione || "Visione & Metodo Curatoriale",
         visione: bioData.visione || "",
+        titolo_contatti: bioData.titolo_contatti || "Contatti Ufficiali & Curatela",
         instagram: bioData.instagram || "https://instagram.com/astro.expression",
         email: bioData.email || "astro.expression@gmail.com",
       });
@@ -71,8 +77,11 @@ export default function AdminCuratorPanel({
     titolo: infoData?.titolo || "AAA — Astrology Art Atlas",
     sottotitolo: infoData?.sottotitolo || "Visione Concettuale • Dottorato di Ricerca",
     crediti: infoData?.crediti || "Curatela e ricerca di Giacomo Isidori • Ispirato ad Aby Warburg",
+    titolo_concettuale: infoData?.titolo_concettuale || "1. Premessa Teorica & Metodo Mnemosyne (Aby Warburg)",
     testo_concettuale: infoData?.testo_concettuale || "Questo atlante celeste dinamico in 3D costituisce la parte pratica di una ricerca di storia dell'arte ispirata al metodo di Aby Warburg e al suo celebre Bilderatlas Mnemosyne: un sistema aperto, non gerarchico, per orientarsi nell'immaginario collettivo attraverso il montaggio associativo di immagini anziché una narrazione lineare.",
+    titolo_struttura: infoData?.titolo_struttura || "2. La Struttura Astrologica come Archivio Non Divinatorio",
     testo_struttura: infoData?.testo_struttura || "Non si tratta di un progetto astrologico in senso divinatorio: lo zodiaco è impiegato come struttura archivistica e mnemotecnica, un sistema di 12 categorie simboliche per organizzare un vasto corpus di opere d'arte contemporanea.",
+    titolo_cupola: infoData?.titolo_cupola || "3. Dalla Volta Web all'Installazione su Cupola",
     testo_cupola: infoData?.testo_cupola || "Il sito è progettato per essere fruibile nel browser ed essere successivamente proiettato dall'alto su una semisfera/cupola tramite specchio sferico. Nel buio dell'installazione, il pubblico sdraiato a terra \"naviga\" tra le immagini con lo sguardo rivolto verso l'alto — un'esperienza di pensiero associativo, orizzontale e onirico.",
     box_1_titolo: infoData?.box_1_titolo || "Esplorazione 360°",
     box_1_testo: infoData?.box_1_testo || "Trascina per guardare in alto e intorno a te; usa la rotella per zoomare.",
@@ -89,8 +98,11 @@ export default function AdminCuratorPanel({
         titolo: infoData.titolo || "AAA — Astrology Art Atlas",
         sottotitolo: infoData.sottotitolo || "Visione Concettuale • Dottorato di Ricerca",
         crediti: infoData.crediti || "Curatela e ricerca di Giacomo Isidori • Ispirato ad Aby Warburg",
+        titolo_concettuale: infoData.titolo_concettuale || "1. Premessa Teorica & Metodo Mnemosyne (Aby Warburg)",
         testo_concettuale: infoData.testo_concettuale || "",
+        titolo_struttura: infoData.titolo_struttura || "2. La Struttura Astrologica come Archivio Non Divinatorio",
         testo_struttura: infoData.testo_struttura || "",
+        titolo_cupola: infoData.titolo_cupola || "3. Dalla Volta Web all'Installazione su Cupola",
         testo_cupola: infoData.testo_cupola || "",
         box_1_titolo: infoData.box_1_titolo || "Esplorazione 360°",
         box_1_testo: infoData.box_1_testo || "Trascina per guardare in alto e intorno a te; usa la rotella per zoomare.",
@@ -890,22 +902,44 @@ export default function AdminCuratorPanel({
                 </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-mono text-zinc-400 mb-1.5 flex items-center justify-between">
-                  <span>Biografia Completa</span>
+              <div className="p-4 rounded-xl bg-zinc-900/90 border border-white/10 space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-mono text-amber-300">Titolo Sezione Biografia</label>
+                  <span className="text-[10px] text-zinc-500">Titolo visualizzato nella scheda</span>
+                </div>
+                <input
+                  type="text"
+                  value={bioForm.titolo_biografia}
+                  onChange={(e) => setBioForm({ ...bioForm, titolo_biografia: e.target.value })}
+                  className="w-full px-3.5 py-2 rounded-xl bg-black/50 border border-white/15 text-white text-xs font-mono focus:ring-1 focus:ring-amber-400"
+                  placeholder="Biografia"
+                />
+                <label className="block text-xs font-mono text-zinc-400 mt-2 flex items-center justify-between">
+                  <span>Testo Biografia Completa</span>
                   <span className="text-[10px] text-zinc-500">Supporta ritorni a capo per i paragrafi</span>
                 </label>
                 <textarea
                   rows={6}
                   value={bioForm.biografia}
                   onChange={(e) => setBioForm({ ...bioForm, biografia: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-white/15 text-white text-xs leading-relaxed focus:ring-1 focus:ring-amber-400"
+                  className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/15 text-white text-xs leading-relaxed focus:ring-1 focus:ring-amber-400"
                   placeholder="Scrivi qui la tua biografia, il percorso accademico, curatoriale e di ricerca..."
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-mono text-zinc-400 mb-1.5 flex items-center justify-between">
+              <div className="p-4 rounded-xl bg-zinc-900/90 border border-white/10 space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-mono text-amber-300">Titolo Sezione Visione & Metodo</label>
+                  <span className="text-[10px] text-zinc-500">Titolo visualizzato nella scheda</span>
+                </div>
+                <input
+                  type="text"
+                  value={bioForm.titolo_visione}
+                  onChange={(e) => setBioForm({ ...bioForm, titolo_visione: e.target.value })}
+                  className="w-full px-3.5 py-2 rounded-xl bg-black/50 border border-white/15 text-white text-xs font-mono focus:ring-1 focus:ring-amber-400"
+                  placeholder="Visione & Metodo Curatoriale"
+                />
+                <label className="block text-xs font-mono text-zinc-400 mt-2 flex items-center justify-between">
                   <span>Dichiarazione di Visione & Metodo Curatoriale</span>
                   <span className="text-[10px] text-zinc-500">Opzionale: citazione o testo metodologico</span>
                 </label>
@@ -913,37 +947,49 @@ export default function AdminCuratorPanel({
                   rows={4}
                   value={bioForm.visione}
                   onChange={(e) => setBioForm({ ...bioForm, visione: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-white/15 text-white text-xs leading-relaxed focus:ring-1 focus:ring-amber-400 font-serif"
+                  className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/15 text-white text-xs leading-relaxed focus:ring-1 focus:ring-amber-400 font-serif"
                   placeholder="La visione del progetto AAA, il riferimento ad Aby Warburg, la metodologia simbolica..."
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-4 rounded-xl bg-zinc-900/90 border border-white/10 space-y-3">
                 <div>
-                  <label className="block text-xs font-mono text-zinc-400 mb-1.5 flex items-center gap-1.5">
-                    <Instagram className="w-3.5 h-3.5 text-pink-400" />
-                    <span>Profilo Instagram</span>
-                  </label>
+                  <label className="block text-xs font-mono text-amber-300 mb-1.5">Titolo Sezione Contatti</label>
                   <input
                     type="text"
-                    value={bioForm.instagram}
-                    onChange={(e) => setBioForm({ ...bioForm, instagram: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-white/15 text-white text-xs focus:ring-1 focus:ring-amber-400 font-mono"
-                    placeholder="https://instagram.com/astro.expression"
+                    value={bioForm.titolo_contatti}
+                    onChange={(e) => setBioForm({ ...bioForm, titolo_contatti: e.target.value })}
+                    className="w-full px-3.5 py-2 rounded-xl bg-black/50 border border-white/15 text-white text-xs font-mono focus:ring-1 focus:ring-amber-400"
+                    placeholder="Contatti Ufficiali & Curatela"
                   />
                 </div>
-                <div>
-                  <label className="block text-xs font-mono text-zinc-400 mb-1.5 flex items-center gap-1.5">
-                    <Mail className="w-3.5 h-3.5 text-amber-400" />
-                    <span>Email di Contatto</span>
-                  </label>
-                  <input
-                    type="email"
-                    value={bioForm.email}
-                    onChange={(e) => setBioForm({ ...bioForm, email: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-white/15 text-white text-xs focus:ring-1 focus:ring-amber-400 font-mono"
-                    placeholder="astro.expression@gmail.com"
-                  />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+                  <div>
+                    <label className="block text-xs font-mono text-zinc-400 mb-1.5 flex items-center gap-1.5">
+                      <Instagram className="w-3.5 h-3.5 text-pink-400" />
+                      <span>Profilo Instagram</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={bioForm.instagram}
+                      onChange={(e) => setBioForm({ ...bioForm, instagram: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-white text-xs focus:ring-1 focus:ring-amber-400 font-mono"
+                      placeholder="https://instagram.com/astro.expression"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-mono text-zinc-400 mb-1.5 flex items-center gap-1.5">
+                      <Mail className="w-3.5 h-3.5 text-amber-400" />
+                      <span>Email di Contatto</span>
+                    </label>
+                    <input
+                      type="email"
+                      value={bioForm.email}
+                      onChange={(e) => setBioForm({ ...bioForm, email: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-white text-xs focus:ring-1 focus:ring-amber-400 font-mono"
+                      placeholder="astro.expression@gmail.com"
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -1025,44 +1071,80 @@ export default function AdminCuratorPanel({
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-mono text-zinc-400 mb-1.5 flex items-center justify-between">
-                  <span>1. Premessa Teorica & Metodo Mnemosyne (Aby Warburg)</span>
-                  <span className="text-[10px] text-zinc-500">Paragrafo principale di inquadramento metodologico</span>
+              {/* Paragrafo 1 */}
+              <div className="p-4 rounded-xl bg-zinc-900/90 border border-white/10 space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-mono text-purple-300">Titolo Paragrafo 1</label>
+                  <span className="text-[10px] text-zinc-500">Intestazione o tema del paragrafo</span>
+                </div>
+                <input
+                  type="text"
+                  value={infoForm.titolo_concettuale}
+                  onChange={(e) => setInfoForm({ ...infoForm, titolo_concettuale: e.target.value })}
+                  className="w-full px-3.5 py-2 rounded-xl bg-black/50 border border-white/15 text-white text-xs font-mono focus:ring-1 focus:ring-purple-400"
+                  placeholder="1. Premessa Teorica & Metodo Mnemosyne (Aby Warburg)"
+                />
+                <label className="block text-xs font-mono text-zinc-400 mt-2 flex items-center justify-between">
+                  <span>Testo Premessa Teorica & Metodo Mnemosyne</span>
+                  <span className="text-[10px] text-zinc-500">Paragrafo principale di inquadramento</span>
                 </label>
                 <textarea
                   rows={4}
                   value={infoForm.testo_concettuale}
                   onChange={(e) => setInfoForm({ ...infoForm, testo_concettuale: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-white/15 text-white text-xs leading-relaxed focus:ring-1 focus:ring-purple-400"
+                  className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/15 text-white text-xs leading-relaxed focus:ring-1 focus:ring-purple-400"
                   placeholder="Questo atlante celeste dinamico in 3D costituisce la parte pratica di una ricerca di storia dell'arte ispirata al metodo di Aby Warburg..."
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-mono text-zinc-400 mb-1.5 flex items-center justify-between">
-                  <span>2. La Struttura Astrologica come Archivio Non Divinatorio</span>
+              {/* Paragrafo 2 */}
+              <div className="p-4 rounded-xl bg-zinc-900/90 border border-white/10 space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-mono text-purple-300">Titolo Paragrafo 2</label>
+                  <span className="text-[10px] text-zinc-500">Intestazione o tema del paragrafo</span>
+                </div>
+                <input
+                  type="text"
+                  value={infoForm.titolo_struttura}
+                  onChange={(e) => setInfoForm({ ...infoForm, titolo_struttura: e.target.value })}
+                  className="w-full px-3.5 py-2 rounded-xl bg-black/50 border border-white/15 text-white text-xs font-mono focus:ring-1 focus:ring-purple-400"
+                  placeholder="2. La Struttura Astrologica come Archivio Non Divinatorio"
+                />
+                <label className="block text-xs font-mono text-zinc-400 mt-2 flex items-center justify-between">
+                  <span>Testo Struttura Astrologica come Archivio</span>
                   <span className="text-[10px] text-zinc-500">Spiegazione delle 12 categorie mnemotecniche</span>
                 </label>
                 <textarea
                   rows={3}
                   value={infoForm.testo_struttura}
                   onChange={(e) => setInfoForm({ ...infoForm, testo_struttura: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-white/15 text-white text-xs leading-relaxed focus:ring-1 focus:ring-purple-400"
+                  className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/15 text-white text-xs leading-relaxed focus:ring-1 focus:ring-purple-400"
                   placeholder="Non si tratta di un progetto astrologico in senso divinatorio: lo zodiaco è impiegato come struttura archivistica e mnemotecnica..."
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-mono text-amber-400 mb-1.5 flex items-center justify-between">
-                  <span>3. Dalla Volta Web all'Installazione su Cupola</span>
-                  <span className="text-[10px] text-zinc-500">Testo per proiezione semisferica e fruizione immersiva</span>
+              {/* Paragrafo 3 */}
+              <div className="p-4 rounded-xl bg-zinc-900/90 border border-amber-400/30 space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-mono text-amber-300">Titolo Paragrafo 3</label>
+                  <span className="text-[10px] text-zinc-500">Intestazione per cupola / proiezione</span>
+                </div>
+                <input
+                  type="text"
+                  value={infoForm.titolo_cupola}
+                  onChange={(e) => setInfoForm({ ...infoForm, titolo_cupola: e.target.value })}
+                  className="w-full px-3.5 py-2 rounded-xl bg-black/50 border border-amber-400/30 text-white text-xs font-mono focus:ring-1 focus:ring-amber-400"
+                  placeholder="3. Dalla Volta Web all'Installazione su Cupola"
+                />
+                <label className="block text-xs font-mono text-zinc-400 mt-2 flex items-center justify-between">
+                  <span>Testo Dalla Volta Web all'Installazione su Cupola</span>
+                  <span className="text-[10px] text-zinc-500">Testo per proiezione semisferica</span>
                 </label>
                 <textarea
                   rows={4}
                   value={infoForm.testo_cupola}
                   onChange={(e) => setInfoForm({ ...infoForm, testo_cupola: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-amber-400/20 text-white text-xs leading-relaxed focus:ring-1 focus:ring-amber-400"
+                  className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/15 text-white text-xs leading-relaxed focus:ring-1 focus:ring-amber-400"
                   placeholder="Il sito è progettato per essere fruibile nel browser ed essere successivamente proiettato dall'alto su una semisfera/cupola tramite specchio sferico..."
                 />
               </div>

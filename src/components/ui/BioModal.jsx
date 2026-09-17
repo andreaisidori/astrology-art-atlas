@@ -53,7 +53,7 @@ export default function BioModal({ isOpen, onClose, bioData }) {
           <div className="space-y-3 bg-white/[0.02] p-5 rounded-2xl border border-white/5">
             <div className="flex items-center gap-2 text-xs font-mono tracking-widest uppercase text-[#e5b869]">
               <BookOpen className="w-4 h-4" />
-              <span>Biografia</span>
+              <span>{curatore.titolo_biografia || "Biografia"}</span>
             </div>
             <div className="whitespace-pre-line text-zinc-200">
               {curatore.biografia || "Biografia in attesa di compilazione."}
@@ -65,7 +65,7 @@ export default function BioModal({ isOpen, onClose, bioData }) {
             <div className="space-y-3 bg-white/[0.02] p-5 rounded-2xl border border-white/5">
               <div className="flex items-center gap-2 text-xs font-mono tracking-widest uppercase text-[#e5b869]">
                 <Compass className="w-4 h-4" />
-                <span>Visione & Metodo Curatoriale</span>
+                <span>{curatore.titolo_visione || "Visione & Metodo Curatoriale"}</span>
               </div>
               <div className="whitespace-pre-line italic text-zinc-300 font-serif">
                 "{curatore.visione}"
@@ -77,7 +77,7 @@ export default function BioModal({ isOpen, onClose, bioData }) {
           <div className="space-y-3">
             <div className="flex items-center gap-2 text-xs font-mono tracking-widest uppercase text-[#e5b869]">
               <Sparkles className="w-4 h-4" />
-              <span>Contatti Ufficiali & Curatela</span>
+              <span>{curatore.titolo_contatti || "Contatti Ufficiali & Curatela"}</span>
             </div>
             <div className="flex flex-wrap gap-3">
               {curatore.instagram && (

@@ -7,7 +7,10 @@
       "biografia": "Giacomo Isidori è ricercatore e ideatore del progetto AAA Astrology Art Atlas. La sua ricerca indaga le corrispondenze tra archetipi mitologici, astrologia simbolica e storia dell’arte contemporanea, riprendendo e rielaborando l'opera di Aby Warburg.",
       "visione": "AAA è un Atlante e un Archivio dell'immaginario zodiacale",
       "instagram": "https://instagram.com/astro.expression",
-      "email": "giacomo.isidori@gmail.com"
+      "email": "giacomo.isidori@gmail.com",
+      "titolo_biografia": "Biografia",
+      "titolo_visione": "Visione & Metodo Curatoriale",
+      "titolo_contatti": "Contatti Ufficiali & Curatela"
     },
     "info": {
       "titolo": "AAA — Astrology Art Atlas",
@@ -21,7 +24,10 @@
       "box_2_titolo": "Riconfigurazioni",
       "box_2_testo": "Filtra per segno, elemento o secolo per osservare nuove affinità visive.",
       "box_3_titolo": "Archivio Bianco",
-      "box_3_testo": "Clicca su qualsiasi opera per visualizzare scheda, autore e interpretazione."
+      "box_3_testo": "Clicca su qualsiasi opera per visualizzare scheda, autore e interpretazione.",
+      "titolo_concettuale": "1. Premessa Teorica & Metodo Mnemosyne (Aby Warburg)",
+      "titolo_struttura": "2. La Struttura Astrologica come Archivio Non Divinatorio",
+      "titolo_cupola": "3. Dalla Volta Web all'Installazione su Cupola"
     },
     "descrizione": "Atlante mnemotecnico e archivio dinamico in 3D per l'immaginario artistico contemporaneo.",
     "ispirazione": "Aby Warburg — Bilderatlas Mnemosyne",
