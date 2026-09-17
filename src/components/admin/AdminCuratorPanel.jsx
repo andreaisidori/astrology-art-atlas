@@ -74,6 +74,12 @@ export default function AdminCuratorPanel({
     testo_concettuale: infoData?.testo_concettuale || "Questo atlante celeste dinamico in 3D costituisce la parte pratica di una ricerca di storia dell'arte ispirata al metodo di Aby Warburg e al suo celebre Bilderatlas Mnemosyne: un sistema aperto, non gerarchico, per orientarsi nell'immaginario collettivo attraverso il montaggio associativo di immagini anziché una narrazione lineare.",
     testo_struttura: infoData?.testo_struttura || "Non si tratta di un progetto astrologico in senso divinatorio: lo zodiaco è impiegato come struttura archivistica e mnemotecnica, un sistema di 12 categorie simboliche per organizzare un vasto corpus di opere d'arte contemporanea.",
     testo_cupola: infoData?.testo_cupola || "Il sito è progettato per essere fruibile nel browser ed essere successivamente proiettato dall'alto su una semisfera/cupola tramite specchio sferico. Nel buio dell'installazione, il pubblico sdraiato a terra \"naviga\" tra le immagini con lo sguardo rivolto verso l'alto — un'esperienza di pensiero associativo, orizzontale e onirico.",
+    box_1_titolo: infoData?.box_1_titolo || "Esplorazione 360°",
+    box_1_testo: infoData?.box_1_testo || "Trascina per guardare in alto e intorno a te; usa la rotella per zoomare.",
+    box_2_titolo: infoData?.box_2_titolo || "Riconfigurazioni",
+    box_2_testo: infoData?.box_2_testo || "Usa i tasti di layout per riordinare le stelle in modo cronologico o cromatico.",
+    box_3_titolo: infoData?.box_3_titolo || "Archivio Bianco",
+    box_3_testo: infoData?.box_3_testo || "Passa alla vista Giorno per consultare la catalogazione tassonomica delle opere.",
   });
   const [infoSaved, setInfoSaved] = useState(false);
 
@@ -86,6 +92,12 @@ export default function AdminCuratorPanel({
         testo_concettuale: infoData.testo_concettuale || "",
         testo_struttura: infoData.testo_struttura || "",
         testo_cupola: infoData.testo_cupola || "",
+        box_1_titolo: infoData.box_1_titolo || "Esplorazione 360°",
+        box_1_testo: infoData.box_1_testo || "Trascina per guardare in alto e intorno a te; usa la rotella per zoomare.",
+        box_2_titolo: infoData.box_2_titolo || "Riconfigurazioni",
+        box_2_testo: infoData.box_2_testo || "Usa i tasti di layout per riordinare le stelle in modo cronologico o cromatico.",
+        box_3_titolo: infoData.box_3_titolo || "Archivio Bianco",
+        box_3_testo: infoData.box_3_testo || "Passa alla vista Giorno per consultare la catalogazione tassonomica delle opere.",
       });
     }
   }, [infoData]);
@@ -1044,7 +1056,7 @@ export default function AdminCuratorPanel({
               <div>
                 <label className="block text-xs font-mono text-amber-400 mb-1.5 flex items-center justify-between">
                   <span>3. Dalla Volta Web all'Installazione su Cupola</span>
-                  <span className="text-[10px] text-zinc-500">Box evidenziato per proiezione semisferica e fruizione immersiva</span>
+                  <span className="text-[10px] text-zinc-500">Testo per proiezione semisferica e fruizione immersiva</span>
                 </label>
                 <textarea
                   rows={4}
@@ -1053,6 +1065,76 @@ export default function AdminCuratorPanel({
                   className="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-amber-400/20 text-white text-xs leading-relaxed focus:ring-1 focus:ring-amber-400"
                   placeholder="Il sito è progettato per essere fruibile nel browser ed essere successivamente proiettato dall'alto su una semisfera/cupola tramite specchio sferico..."
                 />
+              </div>
+
+              {/* 3 Box Informativi / Feature nella Modale */}
+              <div className="pt-4 border-t border-white/10 space-y-4">
+                <div className="text-xs font-mono text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>3 Box Informativi / Istruzioni nella Modale</span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* Box 1 */}
+                  <div className="p-3.5 rounded-xl bg-zinc-900/90 border border-white/10 space-y-2">
+                    <label className="block text-[11px] font-mono text-cyan-300">Box 1 — Titolo</label>
+                    <input
+                      type="text"
+                      value={infoForm.box_1_titolo}
+                      onChange={(e) => setInfoForm({ ...infoForm, box_1_titolo: e.target.value })}
+                      className="w-full px-3 py-1.5 rounded-lg bg-black/50 border border-white/15 text-white text-xs font-mono focus:ring-1 focus:ring-cyan-400"
+                      placeholder="Esplorazione 360°"
+                    />
+                    <label className="block text-[11px] font-mono text-zinc-400 mt-2">Box 1 — Testo</label>
+                    <textarea
+                      rows={3}
+                      value={infoForm.box_1_testo}
+                      onChange={(e) => setInfoForm({ ...infoForm, box_1_testo: e.target.value })}
+                      className="w-full px-3 py-1.5 rounded-lg bg-black/50 border border-white/15 text-white text-xs leading-relaxed focus:ring-1 focus:ring-cyan-400"
+                      placeholder="Trascina per guardare in alto e intorno a te; usa la rotella per zoomare."
+                    />
+                  </div>
+
+                  {/* Box 2 */}
+                  <div className="p-3.5 rounded-xl bg-zinc-900/90 border border-white/10 space-y-2">
+                    <label className="block text-[11px] font-mono text-amber-300">Box 2 — Titolo</label>
+                    <input
+                      type="text"
+                      value={infoForm.box_2_titolo}
+                      onChange={(e) => setInfoForm({ ...infoForm, box_2_titolo: e.target.value })}
+                      className="w-full px-3 py-1.5 rounded-lg bg-black/50 border border-white/15 text-white text-xs font-mono focus:ring-1 focus:ring-amber-400"
+                      placeholder="Riconfigurazioni"
+                    />
+                    <label className="block text-[11px] font-mono text-zinc-400 mt-2">Box 2 — Testo</label>
+                    <textarea
+                      rows={3}
+                      value={infoForm.box_2_testo}
+                      onChange={(e) => setInfoForm({ ...infoForm, box_2_testo: e.target.value })}
+                      className="w-full px-3 py-1.5 rounded-lg bg-black/50 border border-white/15 text-white text-xs leading-relaxed focus:ring-1 focus:ring-amber-400"
+                      placeholder="Usa i tasti di layout per riordinare le stelle in modo cronologico o cromatico."
+                    />
+                  </div>
+
+                  {/* Box 3 */}
+                  <div className="p-3.5 rounded-xl bg-zinc-900/90 border border-white/10 space-y-2">
+                    <label className="block text-[11px] font-mono text-emerald-300">Box 3 — Titolo</label>
+                    <input
+                      type="text"
+                      value={infoForm.box_3_titolo}
+                      onChange={(e) => setInfoForm({ ...infoForm, box_3_titolo: e.target.value })}
+                      className="w-full px-3 py-1.5 rounded-lg bg-black/50 border border-white/15 text-white text-xs font-mono focus:ring-1 focus:ring-emerald-400"
+                      placeholder="Archivio Bianco"
+                    />
+                    <label className="block text-[11px] font-mono text-zinc-400 mt-2">Box 3 — Testo</label>
+                    <textarea
+                      rows={3}
+                      value={infoForm.box_3_testo}
+                      onChange={(e) => setInfoForm({ ...infoForm, box_3_testo: e.target.value })}
+                      className="w-full px-3 py-1.5 rounded-lg bg-black/50 border border-white/15 text-white text-xs leading-relaxed focus:ring-1 focus:ring-emerald-400"
+                      placeholder="Passa alla vista Giorno per consultare la catalogazione tassonomica delle opere."
+                    />
+                  </div>
+                </div>
               </div>
 
               <div className="pt-4 flex items-center justify-end">

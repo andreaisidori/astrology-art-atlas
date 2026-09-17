@@ -38,7 +38,7 @@ export default function Header({
                 type="button"
                 onClick={onOpenInfo}
                 className="text-amber-400 hover:text-amber-300 font-extrabold tracking-widest hover:underline underline-offset-4 cursor-pointer transition-all focus:outline-none drop-shadow-[0_0_10px_rgba(243,203,114,0.3)]"
-                title="Informazioni sul Progetto, Visione Mnemosyne e Metodo (AAA)"
+                title="informazioni sul progetto"
               >
                 AAA
               </button>
@@ -52,7 +52,7 @@ export default function Header({
               className={`transition-all text-left flex items-center gap-0.5 group/bio font-medium font-mono ${
                 isNight ? 'text-amber-300/90 hover:text-amber-300' : 'text-amber-700 hover:text-amber-800'
               }`}
-              title="Leggi la biografia di Giacomo Isidori"
+              title="bio"
             >
               <span className="group-hover/bio:underline underline-offset-2">Giacomo Isidori</span>
               <span className="text-[9px] opacity-60">↗</span>

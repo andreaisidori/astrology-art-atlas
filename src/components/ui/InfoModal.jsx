@@ -1,15 +1,22 @@
 import React from 'react';
-import { X, Sparkles, Orbit, Compass, Eye, BookOpen } from 'lucide-react';
+import { X, Orbit, Compass, BookOpen } from 'lucide-react';
 
 export default function InfoModal({ isOpen, onClose, infoData }) {
   if (!isOpen) return null;
 
   const titolo = infoData?.titolo || "AAA — Astrology Art Atlas";
-  const sottotitolo = infoData?.sottotitolo || "Visione Concettuale • Dottorato di Ricerca";
   const crediti = infoData?.crediti || "Curatela e ricerca di Giacomo Isidori • Ispirato ad Aby Warburg";
   const testoConcettuale = infoData?.testo_concettuale || "Questo atlante celeste dinamico in 3D costituisce la parte pratica di una ricerca di storia dell'arte ispirata al metodo di Aby Warburg e al suo celebre Bilderatlas Mnemosyne: un sistema aperto, non gerarchico, per orientarsi nell'immaginario collettivo attraverso il montaggio associativo di immagini anziché una narrazione lineare.";
   const testoStruttura = infoData?.testo_struttura || "Non si tratta di un progetto astrologico in senso divinatorio: lo zodiaco è impiegato come struttura archivistica e mnemotecnica, un sistema di 12 categorie simboliche per organizzare un vasto corpus di opere d'arte contemporanea.";
   const testoCupola = infoData?.testo_cupola || "Il sito è progettato per essere fruibile nel browser ed essere successivamente proiettato dall'alto su una semisfera/cupola tramite specchio sferico. Nel buio dell'installazione, il pubblico sdraiato a terra \"naviga\" tra le immagini con lo sguardo rivolto verso l'alto — un'esperienza di pensiero associativo, orizzontale e onirico.";
+
+  // Dynamic 3 boxes titles and texts
+  const box1Titolo = infoData?.box_1_titolo || "Esplorazione 360°";
+  const box1Testo = infoData?.box_1_testo || "Trascina per guardare in alto e intorno a te; usa la rotella per zoomare.";
+  const box2Titolo = infoData?.box_2_titolo || "Riconfigurazioni";
+  const box2Testo = infoData?.box_2_testo || "Usa i tasti di layout per riordinare le stelle in modo cronologico o cromatico.";
+  const box3Titolo = infoData?.box_3_titolo || "Archivio Bianco";
+  const box3Testo = infoData?.box_3_testo || "Passa alla vista Giorno per consultare la catalogazione tassonomica delle opere.";
 
   // Split multi-paragraph custom text cleanly
   const renderParagraphs = (text) => {
@@ -38,7 +45,7 @@ export default function InfoModal({ isOpen, onClose, infoData }) {
           <X className="w-4 h-4" />
         </button>
 
-        {/* Title & Subtitle */}
+        {/* Title & Credits */}
         <div className="flex items-center gap-4">
           <img
             src="/images/aaa-logo-gold.png"
@@ -46,10 +53,6 @@ export default function InfoModal({ isOpen, onClose, infoData }) {
             className="w-14 h-14 object-contain drop-shadow-[0_0_15px_rgba(243,203,114,0.4)] flex-shrink-0"
           />
           <div className="space-y-1">
-            <div className="flex items-center gap-2 text-xs font-mono text-cyan-400 uppercase tracking-widest">
-              <Sparkles className="w-4 h-4" />
-              <span>{sottotitolo}</span>
-            </div>
             <h2 className="text-2xl font-bold tracking-tight font-serif">{titolo}</h2>
             <p className="text-xs font-mono text-zinc-400">{crediti}</p>
           </div>
@@ -59,55 +62,34 @@ export default function InfoModal({ isOpen, onClose, infoData }) {
         <div className="space-y-4 text-sm text-zinc-300 leading-relaxed font-sans border-y border-white/10 py-5">
           {renderParagraphs(testoConcettuale)}
           {renderParagraphs(testoStruttura)}
-
-          {testoCupola && (
-            <div className="p-4 rounded-xl bg-white/[0.04] border border-white/10 space-y-2">
-              <h4 className="text-xs font-mono text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
-                <Eye className="w-3.5 h-3.5" />
-                <span>Dalla Volta Web all'Installazione su Cupola</span>
-              </h4>
-              <div className="text-xs text-zinc-300 space-y-1">
-                {renderParagraphs(testoCupola)}
-              </div>
-            </div>
-          )}
+          {renderParagraphs(testoCupola)}
         </div>
 
-        {/* Navigation Instructions */}
+        {/* Navigation Instructions / 3 Customizable Boxes */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
           <div className="p-3 rounded-lg bg-white/5 border border-white/10 space-y-1">
             <div className="font-semibold text-white flex items-center gap-1.5">
               <Orbit className="w-3.5 h-3.5 text-cyan-400" />
-              <span className="font-mono text-[11px]">Esplorazione 360°</span>
+              <span className="font-mono text-[11px]">{box1Titolo}</span>
             </div>
-            <p className="text-zinc-400 text-[11px]">Trascina per guardare in alto e intorno a te; usa la rotella per zoomare.</p>
+            <p className="text-zinc-400 text-[11px]">{box1Testo}</p>
           </div>
 
           <div className="p-3 rounded-lg bg-white/5 border border-white/10 space-y-1">
             <div className="font-semibold text-white flex items-center gap-1.5">
               <Compass className="w-3.5 h-3.5 text-amber-400" />
-              <span className="font-mono text-[11px]">Riconfigurazioni</span>
+              <span className="font-mono text-[11px]">{box2Titolo}</span>
             </div>
-            <p className="text-zinc-400 text-[11px]">Usa i tasti di layout per riordinare le stelle in modo cronologico o cromatico.</p>
+            <p className="text-zinc-400 text-[11px]">{box2Testo}</p>
           </div>
 
           <div className="p-3 rounded-lg bg-white/5 border border-white/10 space-y-1">
             <div className="font-semibold text-white flex items-center gap-1.5">
               <BookOpen className="w-3.5 h-3.5 text-emerald-400" />
-              <span className="font-mono text-[11px]">Archivio Bianco</span>
+              <span className="font-mono text-[11px]">{box3Titolo}</span>
             </div>
-            <p className="text-zinc-400 text-[11px]">Passa alla vista Giorno per consultare la catalogazione tassonomica delle opere.</p>
+            <p className="text-zinc-400 text-[11px]">{box3Testo}</p>
           </div>
-        </div>
-
-        {/* Footer */}
-        <div className="pt-2 flex justify-end">
-          <button
-            onClick={onClose}
-            className="px-5 py-2 rounded-xl bg-white text-zinc-950 font-medium text-xs hover:bg-zinc-200 transition-all shadow-lg font-mono"
-          >
-            Entra nell'Atlante
-          </button>
         </div>
       </div>
     </div>
