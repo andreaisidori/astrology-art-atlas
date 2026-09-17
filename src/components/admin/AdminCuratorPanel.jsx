@@ -305,8 +305,6 @@ export default function AdminCuratorPanel({
     };
   }, [passwordInput]);
 
-  if (!isOpen) return null;
-
   // Start creating new artist with first artwork
   const handleStartNew = () => {
     setEditingArt(null);
@@ -741,6 +739,8 @@ export default function AdminCuratorPanel({
       return matchArtist || matchAnyWork;
     });
   }, [artworks, searchFilter]);
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-6 bg-black/85 backdrop-blur-xl animate-fadeIn text-white">
