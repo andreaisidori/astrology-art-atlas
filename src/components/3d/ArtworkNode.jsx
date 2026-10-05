@@ -73,7 +73,7 @@ function ArtworkSquareMesh({ url, isHovered, dominantColor, isDimmed, isSelected
           <meshBasicMaterial
             color="#52525b"
             transparent
-            opacity={isDimmed ? 0.12 : hovered ? 0.7 : isSelected ? 0.6 : 0.45}
+            opacity={isDimmed ? 0.12 : isHovered ? 0.7 : isSelected ? 0.6 : 0.45}
             side={THREE.DoubleSide}
           />
         </mesh>
