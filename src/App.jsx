@@ -139,6 +139,7 @@ export default function App() {
         body: JSON.stringify({
           data: exportObject,
           githubToken: githubToken.trim() || undefined,
+          adminPassword: sessionStorage.getItem('aaa_admin_password') || '',
         }),
       });
 

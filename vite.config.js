@@ -1,10 +1,11 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import fs from 'fs'
 import path from 'path'
+import { checkAdminPassword } from './api/_auth.js'
 
 // Vite plugin to handle /api/save-atlas and /api/get-atlas in local dev
-function localSaveAtlasPlugin() {
+function localSaveAtlasPlugin(adminPassword) {
   return {
     name: 'local-save-atlas-plugin',
     configureServer(server) {
@@ -27,6 +28,23 @@ function localSaveAtlasPlugin() {
         }
       })
 
+      server.middlewares.use('/api/verify-admin', (req, res) => {
+        let body = ''
+        req.on('data', chunk => {
+          body += chunk
+        })
+        req.on('end', () => {
+          let password
+          try {
+            password = JSON.parse(body || '{}').password
+          } catch (e) {}
+          const auth = checkAdminPassword(password, adminPassword)
+          res.statusCode = auth.ok ? 200 : auth.status
+          res.setHeader('Content-Type', 'application/json')
+          res.end(JSON.stringify(auth.ok ? { success: true } : { error: auth.error }))
+        })
+      })
+
       server.middlewares.use('/api/save-atlas', (req, res) => {
         if (req.method === 'POST') {
           let body = ''
@@ -35,7 +53,14 @@ function localSaveAtlasPlugin() {
           })
           req.on('end', () => {
             try {
-              const { data } = JSON.parse(body)
+              const { data, adminPassword: candidate } = JSON.parse(body)
+              const auth = checkAdminPassword(candidate, adminPassword)
+              if (!auth.ok) {
+                res.statusCode = auth.status
+                res.setHeader('Content-Type', 'application/json')
+                res.end(JSON.stringify({ error: auth.error }))
+                return
+              }
               if (!data || !data.opere) {
                 res.statusCode = 400
                 res.setHeader('Content-Type', 'application/json')
@@ -69,11 +94,10 @@ function localSaveAtlasPlugin() {
 }
 
 // https://vite.dev/config/
-export default defineConfig({
-  plugins: [react(), localSaveAtlasPlugin()],
+export default defineConfig(({ mode }) => ({
+  plugins: [react(), localSaveAtlasPlugin(loadEnv(mode, process.cwd(), '').ADMIN_PASSWORD)],
   server: {
     port: 3000,
     host: true
   }
-})
-
+}))

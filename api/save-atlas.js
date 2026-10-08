@@ -1,27 +1,19 @@
 import fs from 'fs';
 import path from 'path';
+import { checkAdminPassword } from './_auth.js';
 
 export default async function handler(req, res) {
-  // Set CORS headers
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-  );
-
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
-  }
-
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
   try {
-    const { data, githubToken } = req.body || {};
+    const { data, githubToken, adminPassword } = req.body || {};
+
+    const auth = checkAdminPassword(adminPassword);
+    if (!auth.ok) {
+      return res.status(auth.status).json({ error: auth.error });
+    }
 
     if (!data || !data.opere) {
       return res.status(400).json({ error: 'Dati non validi: manca il campo opere.' });
@@ -84,7 +76,7 @@ export default async function handler(req, res) {
       return res.status(200).json({
         success: true,
         mode: 'github_commit',
-        message: `Dataset salvato e committato con successo su GitHub (${data.opere.length} opere)! Il nuovo deploy Vercel si avvierà automaticamente.`,
+        message: `Dataset salvato e committato con successo su GitHub (${data.opere.length} opere).`,
         commit: commitResult.commit?.sha,
       });
     }
@@ -99,11 +91,9 @@ export default async function handler(req, res) {
         message: `File public/data/atlas.json salvato con successo su disco (${data.opere.length} opere)!`,
       });
     } catch (fsErr) {
-      // Serverless environment read-only filesystem
-      return res.status(200).json({
-        success: true,
-        mode: 'memory',
-        message: `Dati sincronizzati con successo (${data.opere.length} opere). Per rendere il commit permanente su GitHub, configura la variabile GITHUB_TOKEN su Vercel.`,
+      // Serverless environment read-only filesystem: nothing was persisted
+      return res.status(500).json({
+        error: 'Salvataggio NON eseguito: GITHUB_TOKEN non configurato e filesystem in sola lettura. Configura GITHUB_TOKEN su Vercel.',
       });
     }
   } catch (error) {

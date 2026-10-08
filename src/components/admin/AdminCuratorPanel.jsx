@@ -251,9 +251,23 @@ export default function AdminCuratorPanel({
   };
 
   // Authentication check - Only triggered by physical slider swipe completion
-  const verifyPasswordOnSwipe = () => {
-    const valid = passwordInput.trim() === "warburg" || passwordInput.trim() === "aaa" || passwordInput.trim() === "admin";
+  const verifyPasswordOnSwipe = async () => {
+    const password = passwordInput.trim();
+    let valid = false;
+    try {
+      const res = await fetch("/api/verify-admin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
+      valid = res.ok;
+    } catch (e) {
+      console.warn("Admin verification:", e);
+    }
     if (valid) {
+      try {
+        sessionStorage.setItem("aaa_admin_password", password);
+      } catch (e) {}
       setIsAuthenticated(true);
       setAuthError(false);
       setSliderProgress(100);
