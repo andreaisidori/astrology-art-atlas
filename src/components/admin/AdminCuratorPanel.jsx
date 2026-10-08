@@ -198,38 +198,27 @@ export default function AdminCuratorPanel({
     reader.onload = (event) => {
       const img = new window.Image();
       img.onload = () => {
-        // Max dimension for crystal clear display without lagging WebGL 3D rendering
-        const MAX_DIMENSION = 1400;
-        let width = img.width;
-        let height = img.height;
+        // Light versions: images travel inside atlas.json (Vercel request limit 4.5 MB)
+        const renderJpeg = (maxDimension, quality) => {
+          const scale = Math.min(1, maxDimension / Math.max(img.width, img.height));
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.round(img.width * scale);
+          canvas.height = Math.round(img.height * scale);
+          const ctx = canvas.getContext("2d");
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = "high";
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          const dataUrl = canvas.toDataURL("image/jpeg", quality);
+          return { dataUrl, width: canvas.width, height: canvas.height, kb: Math.round((dataUrl.length * 3) / 4 / 1024) };
+        };
 
-        if (width > height) {
-          if (width > MAX_DIMENSION) {
-            height = Math.round((height * MAX_DIMENSION) / width);
-            width = MAX_DIMENSION;
-          }
-        } else {
-          if (height > MAX_DIMENSION) {
-            width = Math.round((width * MAX_DIMENSION) / height);
-            height = MAX_DIMENSION;
-          }
-        }
+        // Full image for the artwork card, small thumbnail for 3D nodes and archive
+        const full = renderJpeg(1200, 0.8);
+        const thumb = renderJpeg(320, 0.75);
 
-        const canvas = document.createElement("canvas");
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext("2d");
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = "high";
-        ctx.drawImage(img, 0, 0, width, height);
-
-        // Compress to high quality JPEG at 0.84 quality
-        const optimizedDataUrl = canvas.toDataURL("image/jpeg", 0.84);
-        const optimizedSizeKb = Math.round((optimizedDataUrl.length * 3) / 4 / 1024);
-
-        setFormData(prev => ({ ...prev, immagine: optimizedDataUrl }));
+        setFormData(prev => ({ ...prev, immagine: full.dataUrl, miniatura: thumb.dataUrl }));
         setIsOptimizingImage(false);
-        setImageUploadStatus(`✓ Ottimizzata con successo: ${originalSizeKb} KB → ${optimizedSizeKb} KB (${width}×${height}px)`);
+        setImageUploadStatus(`✓ Ottimizzata con successo: ${originalSizeKb} KB → ${full.kb} KB (${full.width}×${full.height}px) + miniatura ${thumb.kb} KB`);
 
         if (fileInputRef.current) fileInputRef.current.value = "";
       };
@@ -531,7 +520,7 @@ export default function AdminCuratorPanel({
       link_fonte: formData.link_fonte,
       scala: typeof (editingArt?.scala || formData.scala) === 'number' ? (editingArt?.scala || formData.scala) : 1.0,
       dimensione: typeof (editingArt?.dimensione || formData.dimensione) === 'number' ? (editingArt?.dimensione || formData.dimensione) : 1.0,
-      miniatura: editingArt?.miniatura || formData.miniatura || formData.immagine,
+      miniatura: formData.miniatura || formData.immagine,
     };
 
     let newArtworksList;
@@ -654,7 +643,7 @@ export default function AdminCuratorPanel({
         link_fonte: formData.link_fonte,
         scala: typeof (editingArt?.scala || formData.scala) === 'number' ? (editingArt?.scala || formData.scala) : 1.0,
         dimensione: typeof (editingArt?.dimensione || formData.dimensione) === 'number' ? (editingArt?.dimensione || formData.dimensione) : 1.0,
-        miniatura: editingArt?.miniatura || formData.miniatura || formData.immagine,
+        miniatura: formData.miniatura || formData.immagine,
       };
 
       if (editingArt) {
@@ -2080,7 +2069,7 @@ export default function AdminCuratorPanel({
                             <button
                               type="button"
                               onClick={() => {
-                                setFormData(prev => ({ ...prev, immagine: "" }));
+                                setFormData(prev => ({ ...prev, immagine: "", miniatura: "" }));
                                 setImageUploadStatus("");
                               }}
                               className="px-2.5 py-2 rounded-xl bg-white/5 hover:bg-rose-500/20 text-zinc-400 hover:text-rose-300 text-xs font-mono transition-all"
@@ -2100,7 +2089,7 @@ export default function AdminCuratorPanel({
                           <input
                             type="url"
                             value={formData.immagine}
-                            onChange={(e) => setFormData({ ...formData, immagine: e.target.value })}
+                            onChange={(e) => setFormData({ ...formData, immagine: e.target.value, miniatura: "" })}
                             className="w-full px-3 py-1.5 rounded-lg bg-zinc-950/80 border border-white/10 text-white text-xs font-mono placeholder:text-zinc-600"
                             placeholder="Oppure incolla qui un link URL esterno (https://...)"
                           />

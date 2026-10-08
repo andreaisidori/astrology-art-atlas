@@ -87,7 +87,16 @@ Ogni segno ha una tinta definita in `src/utils/astronomy.js`; nodi e linee di co
 - "Salva & Committa" crea un commit di `atlas.json` su GitHub (serve `GITHUB_TOKEN`, già configurato su Vercel). Se il salvataggio non riesce, il pannello mostra un errore: non segnala più "salvato" quando non lo è.
 
 ### D. Limiti noti
-- **Immagini caricate dal pannello**: vengono ancora incorporate in `atlas.json` come base64. Vercel accetta richieste fino a **4,5 MB**: con molti caricamenti il salvataggio online fallirà (errore 413). L'8/10/2026 le 18 immagini esistenti sono state estratte in `public/artworks/` (il file è sceso da 4,3 MB a 0,2 MB). Soluzione definitiva: storage immagini (previsto con la migrazione a Supabase).
+- **Immagini caricate dal pannello**: vengono incorporate in `atlas.json` come base64, già alleggerite dal browser (immagine max 1200 px JPEG q80, miniatura separata max 320 px; circa 150–300 KB per opera). Vercel accetta richieste fino a **4,5 MB**: oltre **4 MB** il pannello blocca il salvataggio con un messaggio, senza perdere nulla. Per riportare il file leggero:
+  ```bash
+  git pull --rebase origin main
+  node scripts/lighten-images.cjs          # anteprima
+  node scripts/lighten-images.cjs --write  # applica (solo campi immagine/miniatura)
+  npm run build && npx vercel --prod --yes # PRIMA il deploy...
+  git add -A && git commit -m "chore: alleggerimento immagini" && git push origin main  # ...POI il push
+  ```
+  Soluzione definitiva: storage immagini (es. Supabase), se il progetto crescerà.
+- **Modifica di un'opera dal modulo**: i campi non gestiti dal modulo (es. `anno_nascita`, ridondante con `data_nascita` e non usato dal sito) vengono rimossi al salvataggio.
 - **Salvataggi concorrenti**: se due persone salvano insieme, vince l'ultimo salvataggio.
 
 ---

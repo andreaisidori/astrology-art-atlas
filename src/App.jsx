@@ -133,14 +133,24 @@ export default function App() {
 
     try {
       const githubToken = localStorage.getItem('aaa_github_token') || '';
+      const body = JSON.stringify({
+        data: exportObject,
+        githubToken: githubToken.trim() || undefined,
+        adminPassword: sessionStorage.getItem('aaa_admin_password') || '',
+      });
+
+      // Vercel rejects requests above 4.5 MB: stop early with a clear message
+      const bodyMb = new Blob([body]).size / (1024 * 1024);
+      if (bodyMb > 4) {
+        const errorMsg = `Salvataggio bloccato: l'atlante pesa ${bodyMb.toFixed(1)} MB (limite 4 MB) a causa delle immagini caricate. Serve un alleggerimento (scripts/lighten-images.cjs) prima di nuovi caricamenti.`;
+        setSyncStatus3D({ type: 'error', message: errorMsg });
+        return { success: false, error: errorMsg };
+      }
+
       const res = await fetch('/api/save-atlas', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          data: exportObject,
-          githubToken: githubToken.trim() || undefined,
-          adminPassword: sessionStorage.getItem('aaa_admin_password') || '',
-        }),
+        body,
       });
 
       const json = await res.json();
