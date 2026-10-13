@@ -97,7 +97,9 @@ function localSaveAtlasPlugin(adminPassword) {
 export default defineConfig(({ mode }) => ({
   plugins: [react(), localSaveAtlasPlugin(loadEnv(mode, process.cwd(), '').ADMIN_PASSWORD)],
   server: {
-    port: 3000,
+    // 3300 riservata ad AAA (la 3000 è di FutsalMatch); strictPort: errore invece di cambiare porta
+    port: 3300,
+    strictPort: true,
     host: true
   }
 }))

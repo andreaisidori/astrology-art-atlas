@@ -7,6 +7,24 @@ Panoramica dell'architettura del progetto **Astrology Art Atlas (AAA)** per prof
 
 ---
 
+## 0. Situazione da sanare (aggiornato al 13 ottobre 2026)
+
+> **Prima di qualsiasi deploy da questa cartella leggere questa sezione.** Nessun deploy di Astrology finché il collegamento Vercel non è sistemato.
+
+Cosa è successo il 12 ottobre 2026 (verificato sui registri di Vercel e di git):
+- Alle 17:16 questa cartella è stata collegata per errore al progetto Vercel **futsalmanager** (team `futsalmanager`), un altro progetto del responsabile.
+- Alle 17:17 da qui è partito un deploy: il sito di astrologia (commit `7c686ea`) è andato online su www.futsalmanager.app per circa 3 minuti, poi sostituito.
+- La cartella è stata **sganciata**: il file di collegamento è stato rinominato in `.vercel/project.json.collegamento-errato-futsalmanager` (conservato, non cancellato). Ora la cartella non è collegata a nessun progetto Vercel.
+- Il codice non è stato toccato: la cartella era identica a GitHub (`andreaisidori/astrology-art-atlas`, commit `7c686ea`).
+
+Da fare, un passo alla volta e con OK del responsabile:
+1. Ricollegare la cartella al progetto Vercel **`aaa`** usando l'account di Giacomo (team `giacomoisidori-2449s-projects`): l'account Vercel di Andrea su questo Mac (`andreaisidori-9053`) non vede quel team. Prima di ogni `npx vercel --prod` controllare che `.vercel/project.json` contenga `"projectName":"aaa"`.
+2. ✅ *Risolto il 13 ottobre 2026.* Porta locale: `npm run dev` di Astrology usava la porta 3000, la stessa di FutsalMatch (`~/futsal-match`). Ora usa la **3300**, riservata ad AAA; se è occupata il server si ferma con un errore invece di spostarsi su un'altra porta.
+3. ✅ *Porta corretta il 13 ottobre 2026* (`.claude/launch.json` ora usa la 3300; resta valida la regola di una sessione per progetto). `.claude/launch.json` di questa cartella avviava Astrology sulla porta 3000: una sessione di Claude nata qui e poi spostata su un altro progetto continua ad avviare Astrology dal pannello di anteprima (successo il 12 ottobre). Lavorare su ogni progetto in una sessione aperta direttamente nella sua cartella.
+4. Fa parte del lavoro più ampio di separazione netta dei tre progetti (FutsalManager, FutsalMatch, Astrology Art Atlas), annotato anche nel `CLAUDE.md` di FutsalManager.
+
+---
+
 ## 1. La Mappa dell'Ecosistema
 
 ```mermaid
@@ -61,7 +79,7 @@ Giacomo/
 │   └── main.jsx
 ├── scripts/                     # Script una-tantum (temi natali degli artisti)
 ├── design/                      # Sorgenti grafici non usati dal sito (glifi originali, screenshot)
-├── vite.config.js               # Dev server (porta 3000) + simulazione locale delle API
+├── vite.config.js               # Dev server (porta 3300, riservata ad AAA) + simulazione locale delle API
 ├── .env.local                   # NON versionato: ADMIN_PASSWORD per lo sviluppo locale
 └── .vercel/project.json         # Collegamento al progetto Vercel "aaa"
 ```
@@ -111,7 +129,7 @@ Ogni segno ha una tinta definita in `src/utils/astronomy.js`; nodi e linee di co
 ```bash
 npm run dev
 ```
-Apri **`http://127.0.0.1:3000`**. In locale il Curator Studio salva direttamente su `public/data/atlas.json` (non su GitHub).
+Apri **`http://localhost:3300`**. In locale il Curator Studio salva direttamente su `public/data/atlas.json` (non su GitHub).
 
 ### Fase 3: Pubblicazione
 Prerequisito una tantum: `npx vercel login` (la sessione resta salvata sul Mac) e credenziali GitHub nel portachiavi macOS. **Non inserire token nei comandi**: finiscono nella cronologia del terminale.
