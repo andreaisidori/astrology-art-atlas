@@ -6,7 +6,11 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "vercel:login": "bash scripts/vercel-aaa.sh login",
+    "vercel:link": "bash scripts/vercel-aaa.sh link",
+    "vercel:check": "bash scripts/vercel-aaa.sh check",
+    "deploy": "bash scripts/vercel-aaa.sh deploy"
   },
   "dependencies": {
     "@react-three/drei": "^9.120.4",

@@ -18,7 +18,10 @@ Cosa è successo il 12 ottobre 2026 (verificato sui registri di Vercel e di git)
 - Il codice non è stato toccato: la cartella era identica a GitHub (`andreaisidori/astrology-art-atlas`, commit `7c686ea`).
 
 Da fare, un passo alla volta e con OK del responsabile:
-1. Ricollegare la cartella al progetto Vercel **`aaa`** usando l'account di Giacomo (team `giacomoisidori-2449s-projects`): l'account Vercel di Andrea su questo Mac (`andreaisidori-9053`) non vede quel team. Prima di ogni `npx vercel --prod` controllare che `.vercel/project.json` contenga `"projectName":"aaa"`.
+1. Ricollegare la cartella al progetto Vercel **`aaa`** usando l'account di Giacomo (team `giacomoisidori-2449s-projects`): l'account Vercel di Andrea su questo Mac (`andreaisidori-9053`) non vede quel team.
+   - **Regola:** su Vercel di AAA si va **solo con l'account di Giacomo**; per tutti gli altri progetti si usa l'account di Andrea (configurazione predefinita del Mac).
+   - *Predisposto il 13 ottobre 2026:* `scripts/vercel-aaa.sh` tiene le credenziali di Giacomo in `~/.vercel-aaa`, separate da quelle predefinite. `npm run deploy` si rifiuta di partire se l'account non è `giacomoisidori-2449` o se `.vercel/project.json` non punta ad `aaa` del team di Giacomo.
+   - Da fare: `npm run vercel:login` (Andrea, nel browser, con l'account di Giacomo), poi `npm run vercel:link` e `npm run vercel:check`.
 2. ✅ *Risolto il 13 ottobre 2026.* Porta locale: `npm run dev` di Astrology usava la porta 3000, la stessa di FutsalMatch (`~/futsal-match`). Ora usa la **3300**, riservata ad AAA; se è occupata il server si ferma con un errore invece di spostarsi su un'altra porta.
 3. ✅ *Porta corretta il 13 ottobre 2026* (`.claude/launch.json` ora usa la 3300; resta valida la regola di una sessione per progetto). `.claude/launch.json` di questa cartella avviava Astrology sulla porta 3000: una sessione di Claude nata qui e poi spostata su un altro progetto continua ad avviare Astrology dal pannello di anteprima (successo il 12 ottobre). Lavorare su ogni progetto in una sessione aperta direttamente nella sua cartella.
 4. Fa parte del lavoro più ampio di separazione netta dei tre progetti (FutsalManager, FutsalMatch, Astrology Art Atlas), annotato anche nel `CLAUDE.md` di FutsalManager.
@@ -30,7 +33,7 @@ Da fare, un passo alla volta e con OK del responsabile:
 ```mermaid
 flowchart LR
     A["💻 Mac Locale<br/>/Users/andrea/Desktop/Giacomo"] -->|"git push"| B["🐙 GitHub<br/>andreaisidori/astrology-art-atlas"]
-    A -->|"npx vercel --prod"| C["▲ Vercel<br/>Progetto: aaa"]
+    A -->|"npm run deploy (account Giacomo)"| C["▲ Vercel<br/>Progetto: aaa"]
     E["🎛️ Curator Studio (sito live)"] -->|"/api/save-atlas → commit di atlas.json"| B
     B -->|"/api/get-atlas legge atlas.json dall'ultimo commit"| D["🌐 Sito live<br/>aaa-orpin-nu.vercel.app"]
     C -->|"codice + file statici (immagini)"| D
@@ -110,7 +113,7 @@ Ogni segno ha una tinta definita in `src/utils/astronomy.js`; nodi e linee di co
   git pull --rebase origin main
   node scripts/lighten-images.cjs          # anteprima
   node scripts/lighten-images.cjs --write  # applica (solo campi immagine/miniatura)
-  npm run build && npx vercel --prod --yes # PRIMA il deploy...
+  npm run deploy                           # PRIMA il deploy...
   git add -A && git commit -m "chore: alleggerimento immagini" && git push origin main  # ...POI il push
   ```
   Soluzione definitiva: storage immagini (es. Supabase), se il progetto crescerà.
@@ -132,7 +135,7 @@ npm run dev
 Apri **`http://localhost:3300`**. In locale il Curator Studio salva direttamente su `public/data/atlas.json` (non su GitHub).
 
 ### Fase 3: Pubblicazione
-Prerequisito una tantum: `npx vercel login` (la sessione resta salvata sul Mac) e credenziali GitHub nel portachiavi macOS. **Non inserire token nei comandi**: finiscono nella cronologia del terminale.
+Prerequisito una tantum: `npm run vercel:login` con l'**account di Giacomo** (salvato in `~/.vercel-aaa`, non tocca l'account Vercel predefinito del Mac) e credenziali GitHub nel portachiavi macOS. **Non usare `npx vercel` direttamente in questa cartella**: userebbe l'account sbagliato. **Non inserire token nei comandi**: finiscono nella cronologia del terminale.
 
 1. Allinearsi con eventuali salvataggi fatti dal Curator Studio online:
    ```bash
@@ -140,7 +143,7 @@ Prerequisito una tantum: `npx vercel login` (la sessione resta salvata sul Mac) 
    ```
 2. Deploy su Vercel (codice + immagini):
    ```bash
-   npm run build && npx vercel --prod --yes
+   npm run deploy   # controlla account e progetto, poi build + deploy
    ```
 3. Push su GitHub (dati + storico):
    ```bash
